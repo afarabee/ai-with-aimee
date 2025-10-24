@@ -1,0 +1,373 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Neon 80s Color Palette */
+    --background: 262 71% 12%;
+    --foreground: 180 100% 50%;
+
+    --card: 262 71% 12%;
+    --card-foreground: 180 100% 50%;
+
+    --popover: 262 71% 12%;
+    --popover-foreground: 180 100% 50%;
+
+    --primary: 180 100% 50%;
+    --primary-foreground: 262 71% 12%;
+
+    --secondary: 320 95% 50%;
+    --secondary-foreground: 262 71% 12%;
+
+    --muted: 262 60% 20%;
+    --muted-foreground: 180 100% 70%;
+
+    --accent: 60 94% 61%;
+    --accent-foreground: 262 71% 12%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 180 100% 50%;
+    --input: 262 60% 20%;
+    --ring: 180 100% 50%;
+
+    --radius: 0.5rem;
+
+    /* Neon Brand Colors */
+    --neon-cyan: 180 100% 50%;
+    --neon-pink: 320 95% 50%;
+    --neon-yellow: 60 94% 61%;
+    --neon-purple: 280 100% 50%;
+    --deep-purple: 262 71% 12%;
+    --dark-navy: 240 50% 8%;
+    
+    /* Legacy colors for compatibility */
+    --rose-quartz: 320 95% 50%;
+    --sage-gray: 180 100% 70%;
+    --lavender-fog: 280 100% 70%;
+    --dark-graphite: 262 71% 12%;
+    
+    /* Case Study Brand Colors */
+    --rose-quartz-case: 320 95% 50%;
+    --sage-gray-case: 180 100% 70%;
+    --lavender-fog-case: 280 100% 70%;
+    --ivory-white: 180 100% 50%;
+    --dark-graphite-case: 262 71% 12%;
+
+    /* Gradient Colors */
+    --gradient-start: 262 71% 12%;
+    --gradient-mid: 280 100% 30%;
+    --gradient-end: 262 71% 12%;
+
+    --sidebar-background: 262 71% 12%;
+    --sidebar-foreground: 180 100% 50%;
+    --sidebar-primary: 180 100% 50%;
+    --sidebar-primary-foreground: 262 71% 12%;
+    --sidebar-accent: 262 60% 20%;
+    --sidebar-accent-foreground: 180 100% 50%;
+    --sidebar-border: 180 100% 50%;
+    --sidebar-ring: 180 100% 50%;
+
+    /* Project-specific brand colors */
+    --clr-bg-dark: 262 45% 12%;
+    --clr-bg-deep: 261 74% 6%;
+    --clr-pink: 320 95% 50%;
+    --clr-yellow: 60 94% 61%;
+    --clr-cyan: 180 100% 56%;
+    --clr-text-light: 0 0% 97%;
+    --clr-text-dim: 168 69% 81%;
+
+    /* Font families */
+    --font-title: "Rajdhani", sans-serif;
+    --font-subtitle: "Josefin Sans", sans-serif;
+    --font-body: "IBM Plex Sans", sans-serif;
+    --font-mono: "Titillium Web", monospace;
+
+    /* Transitions */
+    --transition-smooth: all 0.3s ease-in-out;
+    --transition-slow: all 0.5s ease-in-out;
+  }
+
+  .dark {
+    --background: 262 71% 12%;
+    --foreground: 180 100% 50%;
+    --card: 262 71% 12%;
+    --card-foreground: 180 100% 50%;
+    --popover: 262 71% 12%;
+    --popover-foreground: 180 100% 50%;
+    --primary: 180 100% 50%;
+    --primary-foreground: 262 71% 12%;
+    --secondary: 320 95% 50%;
+    --secondary-foreground: 262 71% 12%;
+    --muted: 262 60% 20%;
+    --muted-foreground: 180 100% 70%;
+    --accent: 60 94% 61%;
+    --accent-foreground: 262 71% 12%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 180 100% 50%;
+    --input: 262 60% 20%;
+    --ring: 180 100% 50%;
+    --sidebar-background: 262 71% 12%;
+    --sidebar-foreground: 180 100% 50%;
+    --sidebar-primary: 180 100% 50%;
+    --sidebar-primary-foreground: 262 71% 12%;
+    --sidebar-accent: 262 60% 20%;
+    --sidebar-accent-foreground: 180 100% 50%;
+    --sidebar-border: 180 100% 50%;
+    --sidebar-ring: 180 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background font-ibm;
+    color: #e6e6e6;
+    line-height: 1.5em;
+  }
+
+  /* Custom animations and styles */
+  .gradient-bg {
+    background: linear-gradient(135deg, hsl(var(--gradient-start)) 0%, hsl(var(--gradient-mid)) 50%, hsl(var(--gradient-end)) 100%);
+  }
+
+  /* Unified Glow System - Adjusted intensities */
+  .neon-text-yellow {
+    color: hsl(var(--clr-yellow));
+    text-shadow: 0 0 20px hsl(var(--clr-yellow) / 0.8), 0 0 35px hsl(var(--clr-yellow) / 0.4);
+  }
+
+  .neon-text-cyan {
+    color: hsl(var(--clr-cyan));
+    text-shadow: 0 0 15px hsl(var(--clr-cyan) / 0.7), 0 0 25px hsl(var(--clr-cyan) / 0.4);
+  }
+
+  .neon-text-pink {
+    color: hsl(var(--clr-pink));
+    text-shadow: 0 0 15px hsl(var(--clr-pink) / 0.6), 0 0 25px hsl(var(--clr-pink) / 0.3);
+  }
+
+  .neon-border-cyan {
+    border: 2px solid hsl(var(--neon-cyan));
+    box-shadow: 0 0 12px hsl(var(--neon-cyan) / 0.7),
+                inset 0 0 10px hsl(var(--neon-cyan) / 0.2);
+  }
+
+  .neon-border-pink {
+    border: 2px solid #f50ca0;
+    box-shadow: 0 0 3px #f50ca0, 0 0 7px #8e00e0,
+                inset 0 0 10px rgba(245, 12, 160, 0.2);
+  }
+
+  .nav-link {
+    position: relative;
+    font-family: 'Titillium Web', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #00ffff;
+    text-shadow: 0 0 6px #33ffff, 0 0 14px #99ffff;
+    transition: all 0.3s ease;
+  }
+
+  .nav-link:hover {
+    color: #f50ca0;
+    text-shadow: 0 0 3px #f50ca0, 0 0 7px #8e00e0;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background: linear-gradient(90deg, hsl(var(--neon-cyan)), hsl(var(--neon-pink)));
+    box-shadow: 0 0 10px hsl(var(--neon-cyan) / 0.8);
+    transition: width 0.3s ease;
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  @keyframes blink {
+    0%, 50% { border-color: hsl(var(--neon-yellow)); }
+    51%, 100% { border-color: transparent; }
+  }
+
+  .typing-animation {
+    border-right: 3px solid hsl(var(--neon-yellow));
+    animation: blink 1s infinite;
+  }
+
+  .hero-button {
+    position: relative;
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    background-color: #00ffff;
+    color: hsl(var(--background));
+    border: 2px solid #00ffff;
+    transition: all 0.4s ease-in-out;
+    box-shadow: 0 0 8px #33ffff, 0 0 16px #99ffff;
+  }
+
+  .hero-button:hover {
+    background-color: #f50ca0;
+    border-color: #f50ca0;
+    color: hsl(var(--background));
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(245, 12, 160, 0.8), 0 0 20px rgba(245, 12, 160, 0.5);
+  }
+
+  @keyframes neonPulseHover {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 8px rgba(0, 255, 255, 0.5), 0 0 16px rgba(0, 255, 255, 0.3);
+    }
+    50% {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px rgba(0, 255, 255, 0.7), 0 0 24px rgba(0, 255, 255, 0.5);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 8px rgba(0, 255, 255, 0.5), 0 0 16px rgba(0, 255, 255, 0.3);
+    }
+  }
+
+  .neon-pulse-hover:hover {
+    animation: neonPulseHover 0.4s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes neonGlowFade {
+    0% {
+      opacity: 0.15;
+      box-shadow: 0 0 80px rgba(57, 225, 227, 0.15);
+    }
+    40% {
+      opacity: 0.6;
+      box-shadow: 0 0 120px rgba(57, 225, 227, 0.6);
+    }
+    100% {
+      opacity: 0;
+      box-shadow: 0 0 80px rgba(57, 225, 227, 0);
+    }
+  }
+
+  @keyframes pageEnter {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { 
+      filter: drop-shadow(0 0 10px hsl(var(--neon-cyan) / 0.8));
+    }
+    50% { 
+      filter: drop-shadow(0 0 20px hsl(var(--neon-cyan)));
+    }
+  }
+
+  @keyframes scanlines {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100%; }
+  }
+
+  @keyframes flicker {
+    0%, 100% { opacity: 1; text-shadow: 0 0 3px #f50ca0, 0 0 7px #8e00e0; }
+    50% { opacity: 0.8; text-shadow: 0 0 6px #f50ca0, 0 0 10px #8e00e0; }
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% { 
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.35), 0 0 25px rgba(245, 12, 160, 0.2);
+    }
+    50% { 
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.55), 0 0 40px rgba(245, 12, 160, 0.35);
+    }
+  }
+
+  .animate-flicker {
+    animation: flicker 3s ease-in-out infinite;
+  }
+
+  .hover-lift {
+    transition: var(--transition-smooth);
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-8px);
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  /* Project card glow effects */
+  .project-glow-cyan {
+    box-shadow: 0 0 15px hsl(var(--clr-cyan) / 0.3);
+    transition: var(--transition-smooth);
+  }
+
+  .project-glow-cyan:hover {
+    box-shadow: 0 0 25px hsl(var(--clr-cyan) / 0.5), 0 0 35px hsl(var(--clr-pink) / 0.2);
+  }
+
+  .project-glow-pink {
+    box-shadow: 0 0 15px hsl(var(--clr-pink) / 0.4);
+    transition: var(--transition-smooth);
+  }
+
+  .project-glow-pink:hover {
+    box-shadow: 0 0 25px hsl(var(--clr-pink) / 0.6), 0 0 35px hsl(var(--clr-cyan) / 0.3);
+  }
+}
+
+/* Blog carousel spacing and stacking context */
+.blog-carousel-section,
+.blog-carousel-wrapper,
+.carousel-container,
+.section {
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* make sure the wave is under the button */
+.section::after, 
+.wave-shape, 
+.background-wave {
+  z-index: 0 !important;
+}
+
+/* Carousel section spacing */
+.blog-carousel-section {
+  margin-bottom: 6px !important;
+}
+
+/* Wave background wrapper */
+.wave-background { z-index: 0 !important; pointer-events: none; }
