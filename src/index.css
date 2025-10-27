@@ -467,22 +467,18 @@ All colors MUST be HSL.
   @keyframes neonPulse {
     0%, 100% {
       text-shadow:
-        0 0 2px hsl(var(--color-yellow)),
-        0 0 4px hsl(var(--color-yellow)),
-        0 0 6px hsl(var(--color-yellow));
-      opacity: 1;
+        0 0 1px hsl(var(--color-yellow) / 0.15),
+        0 0 2px hsl(var(--color-yellow) / 0.1);
     }
     50% {
       text-shadow:
-        0 0 3px hsl(var(--color-yellow)),
-        0 0 8px hsl(var(--color-yellow)),
-        0 0 12px hsl(var(--color-yellow));
-      opacity: 0.95;
+        0 0 2px hsl(var(--color-yellow) / 0.2),
+        0 0 4px hsl(var(--color-yellow) / 0.15);
     }
   }
 
   .neon-pulse-yellow {
-    animation: neonPulse 48s ease-in-out infinite;
+    animation: neonPulse 120s ease-in-out infinite;
   }
 
   /* Respect prefers-reduced-motion */

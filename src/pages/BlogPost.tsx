@@ -279,16 +279,14 @@ const BlogPost = () => {
               className="inline-flex items-center gap-2 text-sm font-montserrat transition-all duration-300 neon-pulse-yellow"
               style={{
                 color: 'hsl(var(--color-yellow))',
-                textShadow: '0 0 8px hsl(var(--color-yellow) / 0.3)',
+                textShadow: '0 0 1px hsl(var(--color-yellow) / 0.15), 0 0 2px hsl(var(--color-yellow) / 0.1)',
                 fontWeight: 300,
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.color = 'hsl(var(--color-yellow))';
-                e.currentTarget.style.textShadow = '0 0 10px hsl(var(--color-yellow) / 0.35)';
+                e.currentTarget.style.textShadow = '0 0 2px hsl(var(--color-yellow) / 0.2), 0 0 4px hsl(var(--color-yellow) / 0.15)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'hsl(var(--color-yellow))';
-                e.currentTarget.style.textShadow = '0 0 8px hsl(var(--color-yellow) / 0.3)';
+                e.currentTarget.style.textShadow = '0 0 1px hsl(var(--color-yellow) / 0.15), 0 0 2px hsl(var(--color-yellow) / 0.1)';
               }}
             >
               <ArrowLeft size={16} />
