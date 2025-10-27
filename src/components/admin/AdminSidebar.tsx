@@ -1,4 +1,4 @@
-import { FileText, Image, Brain, Mail, BarChart3, LogOut, ArrowLeft, LayoutDashboard } from 'lucide-react';
+import { FileText, Image, Brain, Mail, BarChart3, LogOut, ArrowLeft, LayoutDashboard, Rocket } from 'lucide-react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   Sidebar,
@@ -26,6 +26,12 @@ const adminModules = [
     url: '/admin/blog-dashboard',
     icon: FileText,
     description: 'Create and manage blog posts',
+  },
+  {
+    title: 'Project Management',
+    url: '/admin/project-dashboard',
+    icon: Rocket,
+    description: 'Manage AI projects and applied work',
   },
   {
     title: 'Asset Gallery',

@@ -17,6 +17,8 @@ import BlogEditor from "./pages/admin/BlogEditor";
 import BlogDashboard from "./pages/admin/BlogDashboard";
 import AdminLayout from "./components/admin/AdminLayout";
 import AdminHome from "./pages/admin/AdminHome";
+import ProjectDashboard from "./pages/admin/ProjectDashboard";
+import ProjectEditor from "./pages/admin/ProjectEditor";
 
 
 const queryClient = new QueryClient();
@@ -42,10 +44,12 @@ const App = () => (
             <Route path="/blog/:slug" element={<BlogPost />} />
             {/* Admin routes with nested layout */}
             <Route path="/admin" element={<AdminLayout><Outlet /></AdminLayout>}>
-              <Route index element={<AdminHome />} />
-              <Route path="blog-dashboard" element={<BlogDashboard />} />
-              <Route path="blog-editor" element={<BlogEditor />} />
-              <Route path="blog-editor/:slug" element={<BlogEditor />} />
+            <Route index element={<AdminHome />} />
+            <Route path="blog-dashboard" element={<BlogDashboard />} />
+            <Route path="blog-editor" element={<BlogEditor />} />
+            <Route path="blog-editor/:slug" element={<BlogEditor />} />
+            <Route path="project-dashboard" element={<ProjectDashboard />} />
+            <Route path="project-editor" element={<ProjectEditor />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
