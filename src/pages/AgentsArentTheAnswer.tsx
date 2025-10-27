@@ -22,15 +22,15 @@ const AgentsArentTheAnswer = () => {
             to="/" 
             className="inline-flex items-center gap-2 transition-all duration-300 font-montserrat text-sm"
             style={{
-              color: '#f27f9b',
-              textShadow: '0 0 8px rgba(242, 127, 155, 0.5)',
+              color: 'hsl(var(--neon-pink))',
+              textShadow: '0 0 8px hsl(var(--neon-pink) / 0.5)',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.textShadow = '0 0 12px rgba(242, 127, 155, 0.8), 0 0 20px rgba(242, 127, 155, 0.4)';
+              e.currentTarget.style.textShadow = '0 0 12px hsl(var(--neon-pink) / 0.8), 0 0 20px hsl(var(--neon-pink) / 0.4)';
               e.currentTarget.style.textDecoration = 'underline';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.textShadow = '0 0 8px rgba(242, 127, 155, 0.5)';
+              e.currentTarget.style.textShadow = '0 0 8px hsl(var(--neon-pink) / 0.5)';
               e.currentTarget.style.textDecoration = 'none';
             }}
           >
