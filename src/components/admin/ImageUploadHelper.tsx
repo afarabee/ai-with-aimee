@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -63,22 +62,24 @@ export default function ImageUploadHelper({ onBannerInsert, onBodyInsert }: Imag
 
     setUploading(true);
     try {
-      const fileName = `${Date.now()}-${file.name}`;
-      
-      const { error: uploadError } = await supabase.storage
-        .from('blog-images')
-        .upload(fileName, file, {
-          cacheControl: '3600',
-          upsert: false
-        });
+      const formData = new FormData();
+      formData.append('file', file);
 
-      if (uploadError) throw uploadError;
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload-blog-image`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: formData,
+      });
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('blog-images')
-        .getPublicUrl(fileName);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Upload failed');
+      }
 
-      setUploadedImage({ url: publicUrl, name: file.name });
+      const { url } = await response.json();
+      setUploadedImage({ url, name: file.name });
       setAltText(file.name.split('.')[0]); // Auto-fill alt text
       
       toast.success('Image uploaded successfully!', {
@@ -90,7 +91,7 @@ export default function ImageUploadHelper({ onBannerInsert, onBodyInsert }: Imag
       });
     } catch (error) {
       console.error('Upload error:', error);
-      toast.error('Failed to upload image', {
+      toast.error(error instanceof Error ? error.message : 'Failed to upload image', {
         style: {
           background: 'rgba(245, 12, 160, 0.1)',
           border: '1px solid hsl(var(--color-pink))',

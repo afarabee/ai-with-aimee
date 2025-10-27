@@ -4,7 +4,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Upload, Link as LinkIcon } from 'lucide-react';
 
@@ -41,28 +40,30 @@ export default function ImageUploadModal({ open, onClose, onInsert }: ImageUploa
 
     setUploading(true);
     try {
-      const fileName = `${Date.now()}-${file.name}`;
-      
-      const { error: uploadError } = await supabase.storage
-        .from('blog-images')
-        .upload(fileName, file, {
-          cacheControl: '3600',
-          upsert: false
-        });
+      const formData = new FormData();
+      formData.append('file', file);
 
-      if (uploadError) throw uploadError;
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload-blog-image`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: formData,
+      });
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('blog-images')
-        .getPublicUrl(fileName);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Upload failed');
+      }
 
-      onInsert(publicUrl, alt || file.name);
+      const { url } = await response.json();
+      onInsert(url, alt || file.name);
       toast.success('Image uploaded successfully');
       setAlt('');
       onClose();
     } catch (error) {
       console.error('Upload error:', error);
-      toast.error('Failed to upload image');
+      toast.error(error instanceof Error ? error.message : 'Failed to upload image');
     } finally {
       setUploading(false);
     }
