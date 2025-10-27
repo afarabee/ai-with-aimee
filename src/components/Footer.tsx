@@ -69,6 +69,16 @@ const Footer = () => {
           </a>
         </div>
 
+        {/* Admin access - discreet placement */}
+        <div className="flex justify-center mb-4">
+          <NavLink 
+            to="/admin/blog-editor"
+            className="text-xs neon-text-cyan/30 hover:neon-text-yellow transition-colors focus:ring-2 focus:ring-yellow-400/50 focus:outline-none"
+          >
+            Admin
+          </NavLink>
+        </div>
+
         <p className="neon-text-cyan/50 text-sm text-center">© 2025 Aimee Farabee. Built with passion and curiosity.</p>
       </div>
     </footer>
