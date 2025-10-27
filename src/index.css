@@ -47,6 +47,23 @@ All colors MUST be HSL.
     --deep-purple: 262 71% 12%;
     --dark-navy: 240 50% 8%;
     
+    /* === Official AI with Aimee Brand Colors === */
+    /* Exact brand specifications - DO NOT MODIFY */
+    --color-cyan: 180 100% 50%;        /* #00ffff - Primary Brand Color */
+    --color-pink: 320 95% 50%;         /* #f50ca0 - Secondary Brand Color */
+    --color-yellow: 60 93% 61%;        /* #f9f940 - Accent Color */
+    --color-violet: 262 71% 12%;       /* #1a0b2e - Background */
+    --color-light-text: 0 0% 90%;      /* #e6e6e6 - Body Text */
+    --color-shadow: 345 12% 42%;       /* #705e63 - Depth/Shadow */
+    
+    /* Brand Aliases (for backward compatibility + semantic clarity) */
+    --brand-cyan: var(--color-cyan);
+    --brand-pink: var(--color-pink);
+    --brand-yellow: var(--color-yellow);
+    --brand-violet: var(--color-violet);
+    --brand-light-text: var(--color-light-text);
+    --brand-shadow: var(--color-shadow);
+    
     /* Legacy colors for compatibility */
     --rose-quartz: 320 95% 50%;
     --sage-gray: 180 100% 70%;
@@ -345,6 +362,105 @@ All colors MUST be HSL.
 
   .project-glow-pink:hover {
     box-shadow: 0 0 25px hsl(var(--clr-pink) / 0.6), 0 0 35px hsl(var(--clr-cyan) / 0.3);
+  }
+
+  /* === Blog Post Typography Utilities === */
+  .blog-h1 {
+    font-family: var(--font-title);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 700;
+    color: hsl(var(--color-pink));
+    text-shadow: 0 0 20px hsl(var(--color-pink) / 0.8), 
+                 0 0 30px hsl(var(--color-pink) / 0.4);
+    line-height: 1.2;
+  }
+
+  .blog-h2 {
+    font-family: var(--font-title);
+    font-size: clamp(1.25rem, 2.6vw, 2rem);
+    font-weight: 600;
+    color: hsl(var(--color-pink));
+    text-shadow: 0 0 15px hsl(var(--color-pink) / 0.6);
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .blog-h3 {
+    font-family: var(--font-title);
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    font-weight: 600;
+    color: hsl(var(--color-cyan));
+    text-shadow: 0 0 12px hsl(var(--color-cyan) / 0.6);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .blog-subtitle {
+    font-family: var(--font-subtitle);
+    font-style: italic;
+    font-size: clamp(1.25rem, 2.5vw, 2rem);
+    color: hsl(var(--color-cyan));
+    text-shadow: 0 0 15px hsl(var(--color-cyan) / 0.5);
+    line-height: 1.4;
+  }
+
+  .blog-author {
+    font-family: "Titillium Web", sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: hsl(var(--color-yellow));
+    text-shadow: 0 0 10px hsl(var(--color-yellow) / 0.6);
+    letter-spacing: 0.5px;
+  }
+
+  .blog-body {
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    color: hsl(var(--color-light-text));
+    line-height: 1.5;
+  }
+
+  .blog-blockquote {
+    position: relative;
+    padding: 1.5rem 1.5rem 1.5rem 2rem;
+    margin: 2rem 0;
+    border-left: 4px solid hsl(var(--color-cyan));
+    background: hsl(var(--color-violet) / 0.3);
+    border-radius: 0 0.5rem 0.5rem 0;
+    box-shadow: -4px 0 15px hsl(var(--color-cyan) / 0.3);
+  }
+
+  .blog-blockquote p {
+    font-family: var(--font-subtitle);
+    font-style: italic;
+    font-size: 1.1rem;
+    color: hsl(var(--color-cyan) / 0.9);
+    margin: 0;
+  }
+
+  .blog-callout {
+    position: relative;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border: 2px solid hsl(var(--color-cyan) / 0.6);
+    background: hsl(var(--color-violet) / 0.5);
+    border-radius: 0.75rem;
+    box-shadow: 0 0 20px hsl(var(--color-cyan) / 0.2),
+                inset 0 0 15px hsl(var(--color-cyan) / 0.05);
+  }
+
+  .blog-divider {
+    width: 100%;
+    height: 2px;
+    margin: 3rem auto;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsl(var(--color-cyan) / 0.8) 25%,
+      hsl(var(--color-cyan) / 0.8) 75%,
+      transparent 100%
+    );
+    box-shadow: 0 0 15px hsl(var(--color-cyan) / 0.5);
   }
 }
 
