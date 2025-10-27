@@ -10,6 +10,7 @@ import { ArrowLeft, Eye, EyeOff, Image, Save, Trash2 } from 'lucide-react';
 import PasswordGate from '@/components/admin/PasswordGate';
 import BlogPreview from '@/components/admin/BlogPreview';
 import ImageUploadModal from '@/components/admin/ImageUploadModal';
+import ImageUploadHelper from '@/components/admin/ImageUploadHelper';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -277,6 +278,29 @@ export default function BlogEditor() {
     setValue('body', body + '\n\n' + markdown + '\n\n');
   };
 
+  const handleBannerInsert = (url: string) => {
+    setValue('banner_image', url);
+    toast.success('Banner image set!', {
+      style: {
+        background: 'rgba(0, 255, 255, 0.1)',
+        border: '1px solid hsl(var(--color-cyan))',
+        color: 'hsl(var(--color-cyan))',
+      },
+    });
+  };
+
+  const handleBodyInsertFromHelper = (url: string, alt: string) => {
+    const markdown = `![${alt}](${url})`;
+    setBody((prev) => prev + '\n\n' + markdown + '\n\n');
+    toast.success('Image inserted into body!', {
+      style: {
+        background: 'rgba(0, 255, 255, 0.1)',
+        border: '1px solid hsl(var(--color-cyan))',
+        color: 'hsl(var(--color-cyan))',
+      },
+    });
+  };
+
   // Auto-save every 30 seconds
   useAutosave(
     formData,
@@ -463,6 +487,12 @@ export default function BlogEditor() {
                         />
                       </div>
                     </div>
+
+                    {/* Image Upload Helper */}
+                    <ImageUploadHelper
+                      onBannerInsert={handleBannerInsert}
+                      onBodyInsert={handleBodyInsertFromHelper}
+                    />
 
                     <div>
                       <Label htmlFor="banner_image">Banner Image URL</Label>

@@ -524,6 +524,66 @@ All colors MUST be HSL.
   .w-md-editor-text-input code {
     color: hsl(var(--color-light-text)) !important;
   }
+
+  /* Image Upload Helper Component */
+  .upload-helper-card {
+    background: rgba(26, 11, 46, 0.6);
+    backdrop-filter: blur(10px);
+    border: 2px dashed hsl(var(--color-cyan) / 0.4);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 0 20px hsl(var(--color-cyan) / 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .upload-helper-card:hover {
+    border-color: hsl(var(--color-cyan) / 0.8);
+    box-shadow: 0 0 30px hsl(var(--color-cyan) / 0.4);
+  }
+
+  .upload-helper-card.drag-over {
+    border-color: hsl(var(--color-pink));
+    box-shadow: 0 0 40px hsl(var(--color-pink) / 0.5);
+    transform: scale(1.02);
+    background: rgba(245, 12, 160, 0.05);
+  }
+
+  .action-button-primary {
+    background: rgba(0, 255, 255, 0.2) !important;
+    border: 2px solid hsl(var(--color-cyan)) !important;
+    color: hsl(var(--color-cyan)) !important;
+    box-shadow: 0 0 15px hsl(var(--color-cyan) / 0.3) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700 !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .action-button-primary:hover:not(:disabled) {
+    background: rgba(245, 12, 160, 0.2) !important;
+    border-color: hsl(var(--color-pink)) !important;
+    color: hsl(var(--color-pink)) !important;
+    box-shadow: 0 0 20px hsl(var(--color-pink) / 0.4) !important;
+  }
+
+  .action-button-primary:disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+  }
+
+  .action-button-secondary {
+    background: transparent !important;
+    border: 2px solid hsl(var(--color-yellow) / 0.5) !important;
+    color: hsl(var(--color-yellow)) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700 !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .action-button-secondary:hover {
+    background: rgba(249, 249, 64, 0.1) !important;
+    border-color: hsl(var(--color-yellow)) !important;
+    box-shadow: 0 0 15px hsl(var(--color-yellow) / 0.3) !important;
+  }
 }
 
 /* Blog carousel spacing and stacking context */
