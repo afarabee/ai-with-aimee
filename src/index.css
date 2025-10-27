@@ -456,11 +456,11 @@ All colors MUST be HSL.
     background: linear-gradient(
       90deg,
       transparent 0%,
-      hsl(var(--color-cyan) / 0.8) 25%,
-      hsl(var(--color-cyan) / 0.8) 75%,
+      hsl(var(--color-cyan)) 35%,
+      hsl(var(--color-pink)) 65%,
       transparent 100%
     );
-    box-shadow: 0 0 15px hsl(var(--color-cyan) / 0.5);
+    box-shadow: 0 0 15px hsl(var(--color-cyan) / 0.4), 0 0 15px hsl(var(--color-pink) / 0.4);
   }
 }
 

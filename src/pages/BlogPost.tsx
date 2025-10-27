@@ -192,6 +192,24 @@ const BlogPost = () => {
         </div>
       </section>
 
+      {/* Banner Image (if exists) */}
+      {(post as any).banner_image && (
+        <section className="relative py-8">
+          <div className="max-w-[740px] mx-auto px-6">
+            <img
+              src={(post as any).banner_image}
+              alt={post.title}
+              loading="lazy"
+              className="w-full rounded-xl"
+              style={{
+                border: '2px solid hsl(var(--color-cyan) / 0.5)',
+                boxShadow: '0 0 25px hsl(var(--color-cyan) / 0.4), 0 0 35px hsl(var(--color-pink) / 0.2)',
+              }}
+            />
+          </div>
+        </section>
+      )}
+
       {/* Article Content */}
       <article className="relative py-16">
         <div className="max-w-[740px] mx-auto px-6">

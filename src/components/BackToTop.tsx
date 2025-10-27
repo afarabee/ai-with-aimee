@@ -6,11 +6,7 @@ const BackToTop = () => {
 
   useEffect(() => {
     const toggleVisibility = () => {
-      const scrolled = window.scrollY;
-      const pageHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercentage = (scrolled / pageHeight) * 100;
-      
-      setIsVisible(scrollPercentage >= 30);
+      setIsVisible(window.scrollY > 400);
     };
 
     window.addEventListener('scroll', toggleVisibility);
@@ -32,16 +28,16 @@ const BackToTop = () => {
       }`}
       style={{
         backgroundColor: 'hsl(var(--background))',
-        border: '2px solid #39e1e3',
-        boxShadow: '0 0 12px rgba(57, 225, 227, 0.6), inset 0 0 8px rgba(57, 225, 227, 0.2)',
+        border: '2px solid hsl(var(--color-cyan))',
+        boxShadow: '0 0 12px hsl(var(--color-cyan) / 0.6), inset 0 0 8px hsl(var(--color-cyan) / 0.2)',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.border = '2px solid #f446a0';
-        e.currentTarget.style.boxShadow = '0 0 16px rgba(244, 70, 160, 0.7), inset 0 0 10px rgba(244, 70, 160, 0.3)';
+        e.currentTarget.style.border = '2px solid hsl(var(--color-pink))';
+        e.currentTarget.style.boxShadow = '0 0 16px hsl(var(--color-pink) / 0.7), inset 0 0 10px hsl(var(--color-pink) / 0.3)';
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.border = '2px solid #39e1e3';
-        e.currentTarget.style.boxShadow = '0 0 12px rgba(57, 225, 227, 0.6), inset 0 0 8px rgba(57, 225, 227, 0.2)';
+        e.currentTarget.style.border = '2px solid hsl(var(--color-cyan))';
+        e.currentTarget.style.boxShadow = '0 0 12px hsl(var(--color-cyan) / 0.6), inset 0 0 8px hsl(var(--color-cyan) / 0.2)';
       }}
       aria-label="Back to top"
     >
@@ -49,7 +45,7 @@ const BackToTop = () => {
         size={24} 
         className="neon-text-cyan transition-all duration-300 hover:neon-text-pink"
         style={{
-          filter: 'drop-shadow(0 0 6px rgba(57, 225, 227, 0.8))',
+          filter: 'drop-shadow(0 0 6px hsl(var(--color-cyan) / 0.8))',
         }}
       />
     </button>
