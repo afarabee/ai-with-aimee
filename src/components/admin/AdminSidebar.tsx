@@ -1,4 +1,4 @@
-import { FileText, Image, Brain, Mail, BarChart3, LogOut, ArrowLeft } from 'lucide-react';
+import { FileText, Image, Brain, Mail, BarChart3, LogOut, ArrowLeft, LayoutDashboard } from 'lucide-react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   Sidebar,
@@ -15,6 +15,12 @@ import {
 import { toast } from 'sonner';
 
 const adminModules = [
+  {
+    title: 'Dashboard',
+    url: '/admin',
+    icon: LayoutDashboard,
+    description: 'Overview & quick actions',
+  },
   {
     title: 'Blog Management',
     url: '/admin/blog-dashboard',
@@ -56,7 +62,14 @@ export default function AdminSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   
-  const isActive = (path: string) => location.pathname.startsWith(path);
+  const isActive = (path: string) => {
+    // Exact match for dashboard
+    if (path === '/admin' && location.pathname === '/admin') {
+      return true;
+    }
+    // Prefix match for other routes
+    return path !== '/admin' && location.pathname.startsWith(path);
+  };
 
   const handleLogout = () => {
     sessionStorage.removeItem('adminAuthenticated');
