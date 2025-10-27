@@ -22,7 +22,8 @@ const BlogPost = () => {
         .from('blogs')
         .select('*')
         .eq('slug', slug)
-        .single();
+        .is('deleted_at', null)
+        .maybeSingle();
 
       if (error) throw error;
       return data;

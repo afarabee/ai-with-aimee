@@ -22,6 +22,7 @@ export type Database = {
           category: string | null
           created_at: string
           date_published: string
+          deleted_at: string | null
           excerpt: string
           id: string
           slug: string
@@ -38,6 +39,7 @@ export type Database = {
           category?: string | null
           created_at?: string
           date_published?: string
+          deleted_at?: string | null
           excerpt: string
           id?: string
           slug: string
@@ -54,6 +56,7 @@ export type Database = {
           category?: string | null
           created_at?: string
           date_published?: string
+          deleted_at?: string | null
           excerpt?: string
           id?: string
           slug?: string

@@ -14,6 +14,7 @@ import Projects from "./pages/Projects";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import BlogEditor from "./pages/admin/BlogEditor";
+import BlogDashboard from "./pages/admin/BlogDashboard";
 
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
             {/* Dynamic blog post handler - renders all posts via BlogPost.tsx */}
             <Route path="/blog/:slug" element={<BlogPost />} />
             {/* Admin routes */}
+            <Route path="/admin/blog-dashboard" element={<BlogDashboard />} />
             <Route path="/admin/blog-editor" element={<BlogEditor />} />
             <Route path="/admin/blog-editor/:slug" element={<BlogEditor />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

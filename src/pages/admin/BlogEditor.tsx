@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -54,6 +54,8 @@ type BlogFormData = z.infer<typeof blogSchema>;
 
 export default function BlogEditor() {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+  const blogIdFromUrl = searchParams.get('id');
   const navigate = useNavigate();
   const [blogId, setBlogId] = useState<string | null>(null);
   const [body, setBody] = useState('');
@@ -95,10 +97,12 @@ export default function BlogEditor() {
 
   // Load existing post if editing
   useEffect(() => {
-    if (slug) {
+    if (blogIdFromUrl) {
+      loadPostById(blogIdFromUrl);
+    } else if (slug) {
       loadPost(slug);
     }
-  }, [slug]);
+  }, [blogIdFromUrl, slug]);
 
   const loadPost = async (postSlug: string) => {
     setLoading(true);
@@ -130,6 +134,42 @@ export default function BlogEditor() {
       }
     } catch (error) {
       console.error('Error loading post:', error);
+      toast.error('Failed to load post');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadPostById = async (postId: string) => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('blogs')
+        .select('*')
+        .eq('id', postId)
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setBlogId(data.id);
+        reset({
+          title: data.title,
+          subtitle: data.subtitle || '',
+          author: data.author || 'Aimee Farabee',
+          slug: data.slug,
+          excerpt: data.excerpt,
+          category: data.category || '',
+          tags: data.tags || '',
+          banner_image: data.banner_image || '',
+          body: data.body,
+          status: (data.status || 'draft') as 'draft' | 'published',
+          date_published: new Date(data.date_published).toISOString().split('T')[0],
+        });
+        setBody(data.body);
+      }
+    } catch (error) {
+      console.error('Error loading post by ID:', error);
       toast.error('Failed to load post');
     } finally {
       setLoading(false);

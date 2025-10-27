@@ -26,6 +26,7 @@ const Blog = () => {
       const { data, error } = await supabase
         .from('blogs')
         .select('*')
+        .is('deleted_at', null)
         .order('date_published', { ascending: false });
       
       if (error) throw error;
