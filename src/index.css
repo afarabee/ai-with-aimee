@@ -27,7 +27,7 @@ All colors MUST be HSL.
     --muted: 262 60% 20%;
     --muted-foreground: 180 100% 70%;
 
-    --accent: 60 94% 61%;
+    --accent: 60 93% 61%;
     --accent-foreground: 262 71% 12%;
 
     --destructive: 0 84.2% 60.2%;
@@ -42,7 +42,7 @@ All colors MUST be HSL.
     /* Neon Brand Colors */
     --neon-cyan: 180 100% 50%;
     --neon-pink: 320 95% 50%;
-    --neon-yellow: 60 94% 61%;
+    --neon-yellow: 60 93% 61%;
     --neon-purple: 280 100% 50%;
     --deep-purple: 262 71% 12%;
     --dark-navy: 240 50% 8%;
@@ -78,7 +78,7 @@ All colors MUST be HSL.
     --clr-bg-dark: 262 45% 12%;
     --clr-bg-deep: 261 74% 6%;
     --clr-pink: 320 95% 50%;
-    --clr-yellow: 60 94% 61%;
+    --clr-yellow: 60 93% 61%;
     --clr-cyan: 180 100% 56%;
     --clr-text-light: 0 0% 97%;
     --clr-text-dim: 168 69% 81%;
@@ -107,7 +107,7 @@ All colors MUST be HSL.
     --secondary-foreground: 262 71% 12%;
     --muted: 262 60% 20%;
     --muted-foreground: 180 100% 70%;
-    --accent: 60 94% 61%;
+    --accent: 60 93% 61%;
     --accent-foreground: 262 71% 12%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%;
