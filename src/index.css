@@ -503,6 +503,36 @@ All colors MUST be HSL.
     }
   }
 
+  /* Asset Card Animations */
+  .asset-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .asset-card:hover {
+    transform: translateY(-5px) scale(1.03);
+    border-color: hsl(var(--color-pink));
+    box-shadow: 0 0 30px rgba(245, 12, 160, 0.4);
+  }
+
+  .asset-card-thumbnail {
+    transition: transform 0.3s ease;
+  }
+
+  .asset-card:hover .asset-card-thumbnail {
+    transform: scale(1.1);
+  }
+
+  /* Upload Zone Animations */
+  .upload-zone {
+    transition: all 0.3s ease;
+  }
+
+  .upload-zone.dragging {
+    border-color: hsl(var(--color-pink));
+    background: rgba(245, 12, 160, 0.05);
+    box-shadow: 0 0 30px rgba(245, 12, 160, 0.3);
+  }
+
   .animate-shimmer {
     animation: shimmer 2s ease-in-out infinite;
   }

@@ -34,11 +34,11 @@ const adminModules = [
     description: 'Manage AI projects and applied work',
   },
   {
-    title: 'Asset Gallery',
-    url: '/admin/assets',
+    title: 'Asset Library',
+    url: '/admin/asset-gallery',
     icon: Image,
-    description: 'Upload and organize images',
-    disabled: true,
+    description: 'Manage uploaded brand and blog images',
+    disabled: false,
   },
   {
     title: 'Prompt Library',

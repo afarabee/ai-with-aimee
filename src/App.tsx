@@ -19,6 +19,7 @@ import AdminLayout from "./components/admin/AdminLayout";
 import AdminHome from "./pages/admin/AdminHome";
 import ProjectDashboard from "./pages/admin/ProjectDashboard";
 import ProjectEditor from "./pages/admin/ProjectEditor";
+import AssetGallery from "./pages/admin/AssetGallery";
 
 
 const queryClient = new QueryClient();
@@ -48,8 +49,9 @@ const App = () => (
             <Route path="blog-dashboard" element={<BlogDashboard />} />
             <Route path="blog-editor" element={<BlogEditor />} />
             <Route path="blog-editor/:slug" element={<BlogEditor />} />
-            <Route path="project-dashboard" element={<ProjectDashboard />} />
-            <Route path="project-editor" element={<ProjectEditor />} />
+              <Route path="project-dashboard" element={<ProjectDashboard />} />
+              <Route path="project-editor" element={<ProjectEditor />} />
+              <Route path="asset-gallery" element={<AssetGallery />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
