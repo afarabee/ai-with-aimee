@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Eye, EyeOff } from 'lucide-react';
 import AboutBackground from '@/components/AboutBackground';
 
 interface PasswordGateProps {
@@ -14,6 +14,7 @@ export default function PasswordGate({ children }: PasswordGateProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const stored = sessionStorage.getItem(STORAGE_KEY);
@@ -63,18 +64,52 @@ export default function PasswordGate({ children }: PasswordGateProps) {
           </p>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
-                className="w-full"
-                style={{
-                  background: 'rgba(26, 11, 46, 0.6)',
-                  borderColor: error ? 'hsl(var(--color-pink))' : 'hsl(var(--color-cyan) / 0.3)',
-                  color: 'hsl(var(--color-light-text))',
-                }}
-              />
+              <div className="relative w-full">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter password"
+                  className="w-full rounded-md border-2 px-4 py-3 pr-12 font-ibm-plex text-base transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                  style={{
+                    background: 'rgba(26, 11, 46, 0.6)',
+                    borderColor: error ? 'hsl(var(--color-pink))' : 'hsl(var(--color-cyan) / 0.3)',
+                    color: 'hsl(var(--color-light-text))',
+                    boxShadow: error 
+                      ? '0 0 15px hsl(var(--color-pink) / 0.3)' 
+                      : '0 0 10px hsl(var(--color-cyan) / 0.2)',
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'hsl(var(--color-pink))';
+                    e.currentTarget.style.boxShadow = '0 0 20px hsl(var(--color-pink) / 0.4)';
+                  }}
+                  onBlur={(e) => {
+                    if (!error) {
+                      e.currentTarget.style.borderColor = 'hsl(var(--color-cyan) / 0.3)';
+                      e.currentTarget.style.boxShadow = '0 0 10px hsl(var(--color-cyan) / 0.2)';
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label="Toggle password visibility"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 transition-all duration-250 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-400 rounded p-1"
+                  style={{
+                    color: 'hsl(var(--color-cyan))',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = 'hsl(var(--color-pink))';
+                    e.currentTarget.style.textShadow = '0 0 10px hsl(var(--color-pink) / 0.6)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = 'hsl(var(--color-cyan))';
+                    e.currentTarget.style.textShadow = 'none';
+                  }}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
               {error && (
                 <p
                   className="mt-2 text-sm font-rajdhani animate-pulse"
