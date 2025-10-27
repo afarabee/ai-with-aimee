@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       blogs: {
         Row: {
+          author: string | null
           banner_image: string | null
           body: string
           created_at: string
@@ -23,10 +24,12 @@ export type Database = {
           excerpt: string
           id: string
           slug: string
+          subtitle: string | null
           title: string
           updated_at: string
         }
         Insert: {
+          author?: string | null
           banner_image?: string | null
           body: string
           created_at?: string
@@ -34,10 +37,12 @@ export type Database = {
           excerpt: string
           id?: string
           slug: string
+          subtitle?: string | null
           title: string
           updated_at?: string
         }
         Update: {
+          author?: string | null
           banner_image?: string | null
           body?: string
           created_at?: string
@@ -45,6 +50,7 @@ export type Database = {
           excerpt?: string
           id?: string
           slug?: string
+          subtitle?: string | null
           title?: string
           updated_at?: string
         }

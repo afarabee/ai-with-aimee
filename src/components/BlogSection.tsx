@@ -84,7 +84,7 @@ const BlogSection = () => {
       title: "Agents Aren't Always the Answer",
       description: "Why AI agents aren't always the solution you need. Exploring when to use agents and when simpler approaches work better.",
       readTime: "6 min read",
-      slug: "agents-arent-the-answer",
+      slug: "agents-arent-always-the-answer",
     },
     {
       id: 3,
