@@ -280,6 +280,7 @@ const BlogPost = () => {
               style={{
                 color: 'hsl(var(--color-yellow))',
                 textShadow: '0 0 8px hsl(var(--color-yellow) / 0.3)',
+                fontWeight: 300,
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.color = 'hsl(var(--color-yellow))';

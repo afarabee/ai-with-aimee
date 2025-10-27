@@ -482,7 +482,7 @@ All colors MUST be HSL.
   }
 
   .neon-pulse-yellow {
-    animation: neonPulse 12s ease-in-out infinite;
+    animation: neonPulse 48s ease-in-out infinite;
   }
 
   /* Respect prefers-reduced-motion */
