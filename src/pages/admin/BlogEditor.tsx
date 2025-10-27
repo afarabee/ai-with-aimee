@@ -239,10 +239,21 @@ export default function BlogEditor() {
       }
     } catch (error: any) {
       console.error('Error saving post:', error);
+      
       if (error.code === '23505') {
-        toast.error('Slug already exists');
+        toast.error('Slug already exists. Please use a different slug.');
+      } else if (error.code === '42501') {
+        toast.error('Permission denied. Please check database policies.');
+        console.error('RLS Policy Error:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint
+        });
+      } else if (error.message?.includes('row-level security')) {
+        toast.error('Database security policy prevented save.');
+        console.error('RLS Error Details:', error);
       } else {
-        toast.error('Failed to save post');
+        toast.error(`Failed to save post: ${error.message || 'Unknown error'}`);
       }
     }
   };
