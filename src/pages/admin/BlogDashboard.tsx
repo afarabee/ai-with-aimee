@@ -5,10 +5,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Plus, Edit, Eye, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
-import PasswordGate from '@/components/admin/PasswordGate';
-import AboutBackground from '@/components/AboutBackground';
-import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -142,13 +138,9 @@ export default function BlogDashboard() {
   };
 
   return (
-    <PasswordGate>
-      <div className="min-h-screen relative">
-        <AboutBackground />
-        <Navigation />
-        
-        <div className="relative z-10 container mx-auto px-4 py-12 max-w-[1800px]">
-          <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <>
+      <div className="container mx-auto px-4 py-12 max-w-[1800px]">
+        <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <h1 
               className="text-4xl font-rajdhani font-bold"
               style={{ color: 'hsl(var(--color-cyan))' }}
@@ -459,10 +451,7 @@ export default function BlogDashboard() {
           )}
         </div>
 
-        <Footer />
-      </div>
-
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent
           style={{
             background: 'rgba(26, 11, 46, 0.95)',
@@ -508,6 +497,6 @@ export default function BlogDashboard() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </PasswordGate>
+    </>
   );
 }

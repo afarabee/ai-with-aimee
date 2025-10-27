@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import ScrollToTop from "@/components/ScrollToTop";
 import PageTransition from "@/components/PageTransition";
 import BackToTop from "@/components/BackToTop";
@@ -15,6 +15,7 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import BlogEditor from "./pages/admin/BlogEditor";
 import BlogDashboard from "./pages/admin/BlogDashboard";
+import AdminLayout from "./components/admin/AdminLayout";
 
 
 const queryClient = new QueryClient();
@@ -38,10 +39,13 @@ const App = () => (
             <Route path="/blog/agents-arent-the-answer" element={<Navigate to="/blog/agents-arent-always-the-answer" replace />} />
             {/* Dynamic blog post handler - renders all posts via BlogPost.tsx */}
             <Route path="/blog/:slug" element={<BlogPost />} />
-            {/* Admin routes */}
-            <Route path="/admin/blog-dashboard" element={<BlogDashboard />} />
-            <Route path="/admin/blog-editor" element={<BlogEditor />} />
-            <Route path="/admin/blog-editor/:slug" element={<BlogEditor />} />
+            {/* Admin routes with nested layout */}
+            <Route path="/admin" element={<AdminLayout><Outlet /></AdminLayout>}>
+              <Route index element={<Navigate to="/admin/blog-dashboard" replace />} />
+              <Route path="blog-dashboard" element={<BlogDashboard />} />
+              <Route path="blog-editor" element={<BlogEditor />} />
+              <Route path="blog-editor/:slug" element={<BlogEditor />} />
+            </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

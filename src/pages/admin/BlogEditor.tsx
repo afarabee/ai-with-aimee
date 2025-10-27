@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -7,7 +7,6 @@ import MDEditor from '@uiw/react-md-editor';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { ArrowLeft, Eye, EyeOff, Image, Save, Trash2 } from 'lucide-react';
-import PasswordGate from '@/components/admin/PasswordGate';
 import BlogPreview from '@/components/admin/BlogPreview';
 import ImageUploadModal from '@/components/admin/ImageUploadModal';
 import ImageUploadHelper from '@/components/admin/ImageUploadHelper';
@@ -33,8 +32,6 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useAutosave } from '@/hooks/useAutosave';
-import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
 
 const blogSchema = z.object({
   title: z.string().min(1, 'Title required').max(200),
@@ -374,30 +371,31 @@ export default function BlogEditor() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #0f0b1d 0%, #1f0d36 100%)' }}>
+      <div className="min-h-screen flex items-center justify-center">
         <p style={{ color: 'hsl(var(--color-cyan))' }}>Loading...</p>
       </div>
     );
   }
 
   return (
-    <PasswordGate>
-      <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #0f0b1d 0%, #1f0d36 100%)' }}>
-        <Navigation />
-        
-        <div className="pt-24 pb-16 px-6">
-          <div className="max-w-[1800px] mx-auto">
-            {/* Header */}
-            <div className="mb-8 flex items-center justify-between">
-              <Link
-                to="/blog"
-                className="inline-flex items-center gap-2 font-rajdhani transition-all"
-                style={{ color: 'hsl(var(--color-cyan))' }}
-              >
-                <ArrowLeft size={18} />
-                Back to Blog
-              </Link>
-              <div className="flex gap-2">
+    <>
+      <div className="pt-24 pb-16 px-6">
+        <div className="max-w-[1800px] mx-auto">
+        {/* Header */}
+        <div className="mb-8 flex items-center justify-between">
+          <Button
+            onClick={() => navigate('/admin/blog-dashboard')}
+            className="inline-flex items-center gap-2 font-rajdhani transition-all"
+            style={{ 
+              background: 'rgba(0, 255, 255, 0.2)',
+              border: '2px solid hsl(var(--color-cyan))',
+              color: 'hsl(var(--color-cyan))',
+            }}
+          >
+            <ArrowLeft size={18} />
+            Back to Dashboard
+          </Button>
+          <div className="flex gap-2">
                 <Button
                   onClick={() => setViewMode('edit')}
                   variant={viewMode === 'edit' ? 'default' : 'outline'}
@@ -699,8 +697,6 @@ export default function BlogEditor() {
           </div>
         </div>
 
-        <Footer />
-
         {/* Image Upload Modal */}
         <ImageUploadModal
           open={imageModalOpen}
@@ -721,9 +717,8 @@ export default function BlogEditor() {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
             </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
-    </PasswordGate>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
