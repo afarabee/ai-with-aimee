@@ -19,12 +19,15 @@ export type Database = {
           author: string | null
           banner_image: string | null
           body: string
+          category: string | null
           created_at: string
           date_published: string
           excerpt: string
           id: string
           slug: string
+          status: string | null
           subtitle: string | null
+          tags: string | null
           title: string
           updated_at: string
         }
@@ -32,12 +35,15 @@ export type Database = {
           author?: string | null
           banner_image?: string | null
           body: string
+          category?: string | null
           created_at?: string
           date_published?: string
           excerpt: string
           id?: string
           slug: string
+          status?: string | null
           subtitle?: string | null
+          tags?: string | null
           title: string
           updated_at?: string
         }
@@ -45,12 +51,15 @@ export type Database = {
           author?: string | null
           banner_image?: string | null
           body?: string
+          category?: string | null
           created_at?: string
           date_published?: string
           excerpt?: string
           id?: string
           slug?: string
+          status?: string | null
           subtitle?: string | null
+          tags?: string | null
           title?: string
           updated_at?: string
         }

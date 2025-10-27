@@ -487,6 +487,43 @@ All colors MUST be HSL.
       animation: none;
     }
   }
+
+  /* MDEditor Styling Overrides */
+  .w-md-editor {
+    background: rgba(26, 11, 46, 0.8) !important;
+    border: 2px solid hsl(var(--color-cyan) / 0.4) !important;
+    box-shadow: 0 0 20px hsl(var(--color-cyan) / 0.3) !important;
+    color: hsl(var(--color-light-text)) !important;
+  }
+
+  .w-md-editor-toolbar {
+    background: rgba(26, 11, 46, 0.95) !important;
+    border-bottom: 1px solid hsl(var(--color-cyan) / 0.3) !important;
+  }
+
+  .w-md-editor-toolbar button,
+  .w-md-editor-toolbar li button {
+    color: hsl(var(--color-cyan)) !important;
+  }
+
+  .w-md-editor-toolbar button:hover,
+  .w-md-editor-toolbar li button:hover {
+    background: hsl(var(--color-pink) / 0.2) !important;
+    color: hsl(var(--color-pink)) !important;
+  }
+
+  .w-md-editor-content,
+  .w-md-editor-text,
+  .w-md-editor-text-pre,
+  .w-md-editor-text-input {
+    color: hsl(var(--color-light-text)) !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+  }
+
+  .w-md-editor-text-pre code,
+  .w-md-editor-text-input code {
+    color: hsl(var(--color-light-text)) !important;
+  }
 }
 
 /* Blog carousel spacing and stacking context */
