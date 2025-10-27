@@ -72,7 +72,7 @@ const Footer = () => {
         {/* Admin access - discreet placement */}
         <div className="flex justify-center mb-4">
           <NavLink 
-            to="/admin/blog-editor"
+            to="/admin"
             className="text-xs neon-text-cyan/30 hover:neon-text-yellow transition-colors focus:ring-2 focus:ring-yellow-400/50 focus:outline-none"
           >
             Admin

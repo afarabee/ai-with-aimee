@@ -1,4 +1,4 @@
-import { FileText, Image, Brain, Mail, BarChart3, LogOut } from 'lucide-react';
+import { FileText, Image, Brain, Mail, BarChart3, LogOut, ArrowLeft } from 'lucide-react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   Sidebar,
@@ -86,15 +86,33 @@ export default function AdminSidebar() {
       />
       
       <SidebarContent>
-        {/* Logo/Branding */}
+        {/* Logo/Branding with Return to Website link */}
         <div className="p-4 border-b border-cyan-500/20">
-          {open && (
-            <h2 
-              className="text-xl font-rajdhani font-bold"
-              style={{ color: 'hsl(var(--color-cyan))' }}
+          {open ? (
+            <>
+              <h2 
+                className="text-xl font-rajdhani font-bold mb-2"
+                style={{ color: 'hsl(var(--color-cyan))' }}
+              >
+                🧠 Admin Center
+              </h2>
+              <NavLink
+                to="/"
+                className="text-sm font-rajdhani transition-all hover:underline"
+                style={{ color: 'hsl(var(--color-pink))' }}
+              >
+                ← Return to Website
+              </NavLink>
+            </>
+          ) : (
+            <NavLink
+              to="/"
+              title="Return to Website"
+              className="flex justify-center"
+              style={{ color: 'hsl(var(--color-pink))' }}
             >
-              🧠 Admin Center
-            </h2>
+              <ArrowLeft className="h-5 w-5" />
+            </NavLink>
           )}
         </div>
 
