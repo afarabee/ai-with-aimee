@@ -100,7 +100,7 @@ const BlogPost = () => {
       <Navigation />
 
       {/* Hero Banner with Animated Background */}
-      <section className="relative py-16 overflow-hidden">
+      <section className="relative pt-24 md:pt-32 pb-16 overflow-hidden min-h-[40vh]">
         {/* AboutBackground for consistent dark gradient */}
         <AboutBackground />
         
