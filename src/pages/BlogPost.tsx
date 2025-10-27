@@ -276,7 +276,7 @@ const BlogPost = () => {
           <div className="text-center">
             <Link 
               to="/" 
-              className="inline-flex items-center gap-2 text-sm font-montserrat transition-all duration-300"
+              className="inline-flex items-center gap-2 text-sm font-montserrat transition-all duration-300 neon-pulse-yellow"
               style={{
                 color: 'hsl(var(--color-yellow))',
                 textShadow: '0 0 15px hsl(var(--color-yellow) / 0.6)',

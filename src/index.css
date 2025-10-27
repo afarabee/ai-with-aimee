@@ -462,6 +462,35 @@ All colors MUST be HSL.
     );
     box-shadow: 0 0 15px hsl(var(--color-cyan) / 0.4), 0 0 15px hsl(var(--color-pink) / 0.4);
   }
+
+  /* Neon Pulse Animation for Yellow Links */
+  @keyframes neonPulse {
+    0%, 100% {
+      text-shadow:
+        0 0 4px hsl(var(--color-yellow)),
+        0 0 8px hsl(var(--color-yellow)),
+        0 0 12px hsl(var(--color-yellow));
+      opacity: 1;
+    }
+    50% {
+      text-shadow:
+        0 0 6px hsl(var(--color-yellow)),
+        0 0 16px hsl(var(--color-yellow)),
+        0 0 24px hsl(var(--color-yellow));
+      opacity: 0.9;
+    }
+  }
+
+  .neon-pulse-yellow {
+    animation: neonPulse 3s ease-in-out infinite;
+  }
+
+  /* Respect prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .neon-pulse-yellow {
+      animation: none;
+    }
+  }
 }
 
 /* Blog carousel spacing and stacking context */
