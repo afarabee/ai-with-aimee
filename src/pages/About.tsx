@@ -22,11 +22,11 @@ const About = () => {
         {/* Ambient glow effects */}
         <div 
           className="absolute top-20 left-10 w-96 h-96 rounded-full blur-3xl opacity-20 -z-10"
-          style={{ background: '#f50ca0' }}
+          style={{ background: 'hsl(320 95% 50%)' }}
         />
         <div 
           className="absolute bottom-20 right-10 w-96 h-96 rounded-full blur-3xl opacity-15 -z-10"
-          style={{ background: '#00ffff' }}
+          style={{ background: 'hsl(180 100% 56%)' }}
         />
         
         <div className="max-w-6xl mx-auto">
@@ -35,8 +35,8 @@ const About = () => {
             <h1 
               className="text-5xl md:text-6xl font-rajdhani font-bold mb-6"
               style={{
-                color: '#f50ca0',
-                textShadow: '0 0 20px rgba(245, 12, 160, 0.8), 0 0 40px rgba(245, 12, 160, 0.4)',
+                color: 'hsl(320 95% 50%)',
+                textShadow: '0 0 20px hsl(320 95% 50% / 0.8), 0 0 40px hsl(320 95% 50% / 0.4)',
               }}
             >
               Meet Aimee
@@ -44,8 +44,8 @@ const About = () => {
             <p 
               className="text-2xl md:text-3xl font-josefin italic"
               style={{
-                color: '#b8f2e3',
-                textShadow: '0 0 10px rgba(184, 242, 227, 0.6)',
+                color: 'hsl(180 100% 56%)',
+                textShadow: '0 0 10px hsl(180 100% 56% / 0.6)',
               }}
             >
               Human first, AI always.
@@ -60,16 +60,16 @@ const About = () => {
                 <div 
                   className="w-full h-full rounded-full overflow-hidden border-4 relative"
                   style={{
-                    borderColor: '#00ffff',
-                    boxShadow: '0 0 8px #33ffff, 0 0 20px #99ffff, inset 0 0 40px rgba(245, 12, 160, 0.15)',
+                    borderColor: 'hsl(180 100% 56%)',
+                    boxShadow: '0 0 8px hsl(180 100% 56% / 0.6), 0 0 20px hsl(180 100% 56% / 0.4), inset 0 0 40px hsl(320 95% 50% / 0.15)',
                   }}
                 >
                   <div className="w-full h-full bg-gradient-to-br from-purple-900/20 to-pink-900/20 flex items-center justify-center">
                     <span 
                       className="text-8xl font-rajdhani font-semibold" 
                       style={{ 
-                        color: '#f9f940', 
-                        textShadow: '0 0 10px #fafa70, 0 0 20px #fbfba0' 
+                        color: 'hsl(60 93% 61%)', 
+                        textShadow: '0 0 10px hsl(60 93% 61% / 0.7), 0 0 20px hsl(60 93% 61% / 0.5)' 
                       }}
                     >
                       AF
@@ -79,7 +79,7 @@ const About = () => {
                 {/* Reflection effect */}
                 <div 
                   className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-3/4 h-10 rounded-full blur-2xl opacity-30"
-                  style={{ background: '#00ffff' }}
+                  style={{ background: 'hsl(180 100% 56%)' }}
                 />
               </div>
             </div>
@@ -115,17 +115,17 @@ const About = () => {
                 rel={social.external ? 'noopener noreferrer' : undefined}
                 className="w-16 h-16 rounded-full flex items-center justify-center border-2 transition-all duration-400 focus:ring-2 focus:ring-cyan-400/50 focus:outline-none cursor-pointer"
                 style={{
-                  borderColor: '#00ffff',
-                  boxShadow: '0 0 8px #33ffff, 0 0 16px #99ffff',
+                  borderColor: 'hsl(180 100% 56%)',
+                  boxShadow: '0 0 8px hsl(180 100% 56% / 0.6), 0 0 16px hsl(180 100% 56% / 0.4)',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#f50ca0';
-                  e.currentTarget.style.boxShadow = '0 0 12px #f50ca0, 0 0 20px #cf33c3';
+                  e.currentTarget.style.borderColor = 'hsl(320 95% 50%)';
+                  e.currentTarget.style.boxShadow = '0 0 12px hsl(320 95% 50% / 0.7), 0 0 20px hsl(320 95% 50% / 0.5)';
                   e.currentTarget.style.transform = 'scale(1.05)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = '#00ffff';
-                  e.currentTarget.style.boxShadow = '0 0 8px #33ffff, 0 0 16px #99ffff';
+                  e.currentTarget.style.borderColor = 'hsl(180 100% 56%)';
+                  e.currentTarget.style.boxShadow = '0 0 8px hsl(180 100% 56% / 0.6), 0 0 16px hsl(180 100% 56% / 0.4)';
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
@@ -140,9 +140,9 @@ const About = () => {
             <div 
               className="w-full max-w-md h-px"
               style={{
-                background: 'linear-gradient(90deg, transparent 0%, #00ffff 30%, #f50ca0 70%, transparent 100%)',
+                background: 'linear-gradient(90deg, transparent 0%, hsl(180 100% 56%) 30%, hsl(320 95% 50%) 70%, transparent 100%)',
                 opacity: 0.5,
-                boxShadow: '0 0 8px rgba(0, 255, 255, 0.4)',
+                boxShadow: '0 0 8px hsl(180 100% 56% / 0.4)',
               }}
             />
 
@@ -156,11 +156,11 @@ const About = () => {
                   padding: '1rem 1.5rem'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = '0 0 12px rgba(245, 12, 160, 0.7), 0 0 20px rgba(245, 12, 160, 0.5)';
+                  e.currentTarget.style.boxShadow = '0 0 12px hsl(320 95% 50% / 0.7), 0 0 20px hsl(320 95% 50% / 0.5)';
                   e.currentTarget.style.transform = 'scale(1.05)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = '0 0 8px #33ffff, 0 0 16px #99ffff';
+                  e.currentTarget.style.boxShadow = '0 0 8px hsl(180 100% 56% / 0.6), 0 0 16px hsl(180 100% 56% / 0.4)';
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
@@ -176,11 +176,11 @@ const About = () => {
                     padding: '1rem 1.5rem'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = '0 0 12px rgba(245, 12, 160, 0.7), 0 0 20px rgba(245, 12, 160, 0.5)';
+                    e.currentTarget.style.boxShadow = '0 0 12px hsl(320 95% 50% / 0.7), 0 0 20px hsl(320 95% 50% / 0.5)';
                     e.currentTarget.style.transform = 'scale(1.05)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = '0 0 8px #33ffff, 0 0 16px #99ffff';
+                    e.currentTarget.style.boxShadow = '0 0 8px hsl(180 100% 56% / 0.6), 0 0 16px hsl(180 100% 56% / 0.4)';
                     e.currentTarget.style.transform = 'scale(1)';
                   }}
                 >
@@ -197,11 +197,11 @@ const About = () => {
                     padding: '1rem 1.5rem'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = '0 0 12px rgba(245, 12, 160, 0.7), 0 0 20px rgba(245, 12, 160, 0.5)';
+                    e.currentTarget.style.boxShadow = '0 0 12px hsl(320 95% 50% / 0.7), 0 0 20px hsl(320 95% 50% / 0.5)';
                     e.currentTarget.style.transform = 'scale(1.05)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = '0 0 8px #33ffff, 0 0 16px #99ffff';
+                    e.currentTarget.style.boxShadow = '0 0 8px hsl(180 100% 56% / 0.6), 0 0 16px hsl(180 100% 56% / 0.4)';
                     e.currentTarget.style.transform = 'scale(1)';
                   }}
                 >

@@ -10,15 +10,15 @@ All colors MUST be HSL.
   :root {
     /* Neon 80s Color Palette */
     --background: 262 71% 12%;
-    --foreground: 180 100% 50%;
+    --foreground: 180 100% 56%;
 
     --card: 262 71% 12%;
-    --card-foreground: 180 100% 50%;
+    --card-foreground: 180 100% 56%;
 
     --popover: 262 71% 12%;
-    --popover-foreground: 180 100% 50%;
+    --popover-foreground: 180 100% 56%;
 
-    --primary: 180 100% 50%;
+    --primary: 180 100% 56%;
     --primary-foreground: 262 71% 12%;
 
     --secondary: 320 95% 50%;
@@ -33,14 +33,14 @@ All colors MUST be HSL.
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 180 100% 50%;
+    --border: 180 100% 56%;
     --input: 262 60% 20%;
-    --ring: 180 100% 50%;
+    --ring: 180 100% 56%;
 
     --radius: 0.5rem;
 
     /* Neon Brand Colors */
-    --neon-cyan: 180 100% 50%;
+    --neon-cyan: 180 100% 56%;
     --neon-pink: 320 95% 50%;
     --neon-yellow: 60 93% 61%;
     --neon-purple: 280 100% 50%;
@@ -57,7 +57,7 @@ All colors MUST be HSL.
     --rose-quartz-case: 320 95% 50%;
     --sage-gray-case: 180 100% 70%;
     --lavender-fog-case: 280 100% 70%;
-    --ivory-white: 180 100% 50%;
+    --ivory-white: 180 100% 56%;
     --dark-graphite-case: 262 71% 12%;
 
     /* Gradient Colors */
@@ -66,13 +66,13 @@ All colors MUST be HSL.
     --gradient-end: 262 71% 12%;
 
     --sidebar-background: 262 71% 12%;
-    --sidebar-foreground: 180 100% 50%;
-    --sidebar-primary: 180 100% 50%;
+    --sidebar-foreground: 180 100% 56%;
+    --sidebar-primary: 180 100% 56%;
     --sidebar-primary-foreground: 262 71% 12%;
     --sidebar-accent: 262 60% 20%;
-    --sidebar-accent-foreground: 180 100% 50%;
-    --sidebar-border: 180 100% 50%;
-    --sidebar-ring: 180 100% 50%;
+    --sidebar-accent-foreground: 180 100% 56%;
+    --sidebar-border: 180 100% 56%;
+    --sidebar-ring: 180 100% 56%;
 
     /* Project-specific brand colors */
     --clr-bg-dark: 262 45% 12%;
@@ -96,12 +96,12 @@ All colors MUST be HSL.
 
   .dark {
     --background: 262 71% 12%;
-    --foreground: 180 100% 50%;
+    --foreground: 180 100% 56%;
     --card: 262 71% 12%;
-    --card-foreground: 180 100% 50%;
+    --card-foreground: 180 100% 56%;
     --popover: 262 71% 12%;
-    --popover-foreground: 180 100% 50%;
-    --primary: 180 100% 50%;
+    --popover-foreground: 180 100% 56%;
+    --primary: 180 100% 56%;
     --primary-foreground: 262 71% 12%;
     --secondary: 320 95% 50%;
     --secondary-foreground: 262 71% 12%;
@@ -111,17 +111,17 @@ All colors MUST be HSL.
     --accent-foreground: 262 71% 12%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%;
-    --border: 180 100% 50%;
+    --border: 180 100% 56%;
     --input: 262 60% 20%;
-    --ring: 180 100% 50%;
+    --ring: 180 100% 56%;
     --sidebar-background: 262 71% 12%;
-    --sidebar-foreground: 180 100% 50%;
-    --sidebar-primary: 180 100% 50%;
+    --sidebar-foreground: 180 100% 56%;
+    --sidebar-primary: 180 100% 56%;
     --sidebar-primary-foreground: 262 71% 12%;
     --sidebar-accent: 262 60% 20%;
-    --sidebar-accent-foreground: 180 100% 50%;
-    --sidebar-border: 180 100% 50%;
-    --sidebar-ring: 180 100% 50%;
+    --sidebar-accent-foreground: 180 100% 56%;
+    --sidebar-border: 180 100% 56%;
+    --sidebar-ring: 180 100% 56%;
   }
 }
 
@@ -164,9 +164,9 @@ All colors MUST be HSL.
   }
 
   .neon-border-pink {
-    border: 2px solid #f50ca0;
-    box-shadow: 0 0 3px #f50ca0, 0 0 7px #8e00e0,
-                inset 0 0 10px rgba(245, 12, 160, 0.2);
+    border: 2px solid hsl(var(--neon-pink));
+    box-shadow: 0 0 3px hsl(var(--neon-pink)), 0 0 7px hsl(280 100% 50%),
+                inset 0 0 10px hsl(var(--neon-pink) / 0.2);
   }
 
   .nav-link {
@@ -174,14 +174,14 @@ All colors MUST be HSL.
     font-family: 'Titillium Web', sans-serif;
     font-weight: 600;
     text-transform: uppercase;
-    color: #00ffff;
-    text-shadow: 0 0 6px #33ffff, 0 0 14px #99ffff;
+    color: hsl(var(--neon-cyan));
+    text-shadow: 0 0 6px hsl(var(--neon-cyan) / 0.6), 0 0 14px hsl(var(--neon-cyan) / 0.4);
     transition: all 0.3s ease;
   }
 
   .nav-link:hover {
-    color: #f50ca0;
-    text-shadow: 0 0 3px #f50ca0, 0 0 7px #8e00e0;
+    color: hsl(var(--neon-pink));
+    text-shadow: 0 0 3px hsl(var(--neon-pink)), 0 0 7px hsl(280 100% 50%);
   }
 
   .nav-link::after {
@@ -216,19 +216,19 @@ All colors MUST be HSL.
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
     letter-spacing: 1px;
-    background-color: #00ffff;
+    background-color: hsl(var(--neon-cyan));
     color: hsl(var(--background));
-    border: 2px solid #00ffff;
+    border: 2px solid hsl(var(--neon-cyan));
     transition: all 0.4s ease-in-out;
-    box-shadow: 0 0 8px #33ffff, 0 0 16px #99ffff;
+    box-shadow: 0 0 8px hsl(var(--neon-cyan) / 0.6), 0 0 16px hsl(var(--neon-cyan) / 0.4);
   }
 
   .hero-button:hover {
-    background-color: #f50ca0;
-    border-color: #f50ca0;
+    background-color: hsl(var(--neon-pink));
+    border-color: hsl(var(--neon-pink));
     color: hsl(var(--background));
     transform: scale(1.05);
-    box-shadow: 0 0 12px rgba(245, 12, 160, 0.8), 0 0 20px rgba(245, 12, 160, 0.5);
+    box-shadow: 0 0 12px hsl(var(--neon-pink) / 0.8), 0 0 20px hsl(var(--neon-pink) / 0.5);
   }
 
   @keyframes neonPulseHover {
@@ -302,16 +302,16 @@ All colors MUST be HSL.
   }
 
   @keyframes flicker {
-    0%, 100% { opacity: 1; text-shadow: 0 0 3px #f50ca0, 0 0 7px #8e00e0; }
-    50% { opacity: 0.8; text-shadow: 0 0 6px #f50ca0, 0 0 10px #8e00e0; }
+    0%, 100% { opacity: 1; text-shadow: 0 0 3px hsl(var(--neon-pink)), 0 0 7px hsl(280 100% 50%); }
+    50% { opacity: 0.8; text-shadow: 0 0 6px hsl(var(--neon-pink)), 0 0 10px hsl(280 100% 50%); }
   }
 
   @keyframes glow-pulse {
     0%, 100% { 
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.35), 0 0 25px rgba(245, 12, 160, 0.2);
+      box-shadow: 0 0 15px hsl(var(--neon-cyan) / 0.35), 0 0 25px hsl(var(--neon-pink) / 0.2);
     }
     50% { 
-      box-shadow: 0 0 25px rgba(0, 255, 255, 0.55), 0 0 40px rgba(245, 12, 160, 0.35);
+      box-shadow: 0 0 25px hsl(var(--neon-cyan) / 0.55), 0 0 40px hsl(var(--neon-pink) / 0.35);
     }
   }
 

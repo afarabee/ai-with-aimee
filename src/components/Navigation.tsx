@@ -15,10 +15,10 @@ const Navigation = () => {
 
   const navLinkStyle = (isActive: boolean) => ({
     textShadow: isActive 
-      ? '0 0 8px rgba(244, 70, 160, 0.8)' 
+      ? '0 0 8px hsl(320 95% 50% / 0.8)' 
       : undefined,
-    borderBottomColor: isActive ? '#f446a0' : 'transparent',
-    boxShadow: isActive ? '0 2px 8px rgba(244, 70, 160, 0.6)' : undefined,
+    borderBottomColor: isActive ? 'hsl(320 95% 50%)' : 'transparent',
+    boxShadow: isActive ? '0 2px 8px hsl(320 95% 50% / 0.6)' : undefined,
   });
 
   return (
@@ -35,12 +35,12 @@ const Navigation = () => {
               className={navLinkClass}
               style={({ isActive }) => navLinkStyle(isActive)}
               onMouseEnter={(e) => {
-                e.currentTarget.style.textShadow = '0 0 10px rgba(184, 242, 227, 0.8)';
+                e.currentTarget.style.textShadow = '0 0 10px hsl(180 100% 56% / 0.8)';
               }}
               onMouseLeave={(e) => {
                 const isActive = e.currentTarget.classList.contains('active');
                 e.currentTarget.style.textShadow = isActive 
-                  ? '0 0 8px rgba(244, 70, 160, 0.8)' 
+                  ? '0 0 8px hsl(320 95% 50% / 0.8)' 
                   : '';
               }}
             >
@@ -51,12 +51,12 @@ const Navigation = () => {
               className={navLinkClass}
               style={({ isActive }) => navLinkStyle(isActive)}
               onMouseEnter={(e) => {
-                e.currentTarget.style.textShadow = '0 0 10px rgba(184, 242, 227, 0.8)';
+                e.currentTarget.style.textShadow = '0 0 10px hsl(180 100% 56% / 0.8)';
               }}
               onMouseLeave={(e) => {
                 const isActive = e.currentTarget.classList.contains('active');
                 e.currentTarget.style.textShadow = isActive 
-                  ? '0 0 8px rgba(244, 70, 160, 0.8)' 
+                  ? '0 0 8px hsl(320 95% 50% / 0.8)' 
                   : '';
               }}
             >
@@ -67,12 +67,12 @@ const Navigation = () => {
               className={navLinkClass}
               style={({ isActive }) => navLinkStyle(isActive)}
               onMouseEnter={(e) => {
-                e.currentTarget.style.textShadow = '0 0 10px rgba(184, 242, 227, 0.8)';
+                e.currentTarget.style.textShadow = '0 0 10px hsl(180 100% 56% / 0.8)';
               }}
               onMouseLeave={(e) => {
                 const isActive = e.currentTarget.classList.contains('active');
                 e.currentTarget.style.textShadow = isActive 
-                  ? '0 0 8px rgba(244, 70, 160, 0.8)' 
+                  ? '0 0 8px hsl(320 95% 50% / 0.8)' 
                   : '';
               }}
             >
@@ -83,12 +83,12 @@ const Navigation = () => {
               className={navLinkClass}
               style={({ isActive }) => navLinkStyle(isActive)}
               onMouseEnter={(e) => {
-                e.currentTarget.style.textShadow = '0 0 10px rgba(184, 242, 227, 0.8)';
+                e.currentTarget.style.textShadow = '0 0 10px hsl(180 100% 56% / 0.8)';
               }}
               onMouseLeave={(e) => {
                 const isActive = e.currentTarget.classList.contains('active');
                 e.currentTarget.style.textShadow = isActive 
-                  ? '0 0 8px rgba(244, 70, 160, 0.8)' 
+                  ? '0 0 8px hsl(320 95% 50% / 0.8)' 
                   : '';
               }}
             >
@@ -109,7 +109,7 @@ const Navigation = () => {
                 }
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.textShadow = '0 0 10px rgba(184, 242, 227, 0.8)';
+                e.currentTarget.style.textShadow = '0 0 10px hsl(180 100% 56% / 0.8)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.textShadow = '';
