@@ -231,7 +231,7 @@ const BlogPost = () => {
       </article>
 
       {/* Footer Signature */}
-      <section className="py-16">
+      <section className="pt-8 pb-16">
         <div className="max-w-[740px] mx-auto px-6">
           {/* Cyan divider line */}
           <div className="blog-divider mb-8" />
@@ -278,16 +278,16 @@ const BlogPost = () => {
               to="/" 
               className="inline-flex items-center gap-2 text-sm font-montserrat transition-all duration-300"
               style={{
-                color: 'hsl(var(--color-pink))',
-                textShadow: '0 0 8px hsl(var(--color-pink) / 0.5)',
+                color: 'hsl(var(--color-yellow))',
+                textShadow: '0 0 15px hsl(var(--color-yellow) / 0.6)',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.textShadow = '0 0 12px hsl(var(--color-pink) / 0.8), 0 0 20px hsl(var(--color-pink) / 0.4)';
-                e.currentTarget.style.textDecoration = 'underline';
+                e.currentTarget.style.color = 'hsl(var(--color-yellow))';
+                e.currentTarget.style.textShadow = '0 0 20px hsl(var(--color-yellow) / 0.7)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.textShadow = '0 0 8px hsl(var(--color-pink) / 0.5)';
-                e.currentTarget.style.textDecoration = 'none';
+                e.currentTarget.style.color = 'hsl(var(--color-yellow))';
+                e.currentTarget.style.textShadow = '0 0 15px hsl(var(--color-yellow) / 0.6)';
               }}
             >
               <ArrowLeft size={16} />
