@@ -24,6 +24,7 @@ import PromptLibraryDashboard from "./pages/admin/PromptLibraryDashboard";
 import PromptEditor from "./pages/admin/PromptEditor";
 import NewsletterDashboard from "./pages/admin/NewsletterDashboard";
 import NewsletterComposer from "./pages/admin/NewsletterComposer";
+import NewsletterLogs from "./pages/admin/NewsletterLogs";
 
 
 const queryClient = new QueryClient();
@@ -60,6 +61,7 @@ const App = () => (
                 <Route path="prompt-editor" element={<PromptEditor />} />
               <Route path="newsletter-dashboard" element={<NewsletterDashboard />} />
               <Route path="newsletter-composer" element={<NewsletterComposer />} />
+              <Route path="newsletter-logs" element={<NewsletterLogs />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

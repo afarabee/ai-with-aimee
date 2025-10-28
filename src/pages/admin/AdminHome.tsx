@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { 
-  FileText, Rocket, Image, Cpu, 
+  FileText, Rocket, Image, Mail, 
   PlusCircle, Upload, BookOpen, Dot,
   type LucideIcon
 } from 'lucide-react';
@@ -176,6 +176,25 @@ export default function AdminHome() {
     }
   });
 
+  // Fetch newsletter stats
+  const { data: newsletterStats } = useQuery({
+    queryKey: ['admin-newsletter-stats'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('newsletter_queue')
+        .select('id, status, updated_at')
+        .order('updated_at', { ascending: false });
+      if (error) throw error;
+      return {
+        total: data.length,
+        drafts: data.filter(n => n.status === 'draft').length,
+        queued: data.filter(n => n.status === 'queued').length,
+        sent: data.filter(n => n.status === 'sent').length,
+        lastUpdated: data.length > 0 ? data[0].updated_at : null,
+      };
+    },
+  });
+
   return (
     <div className="container mx-auto px-4 py-12 max-w-[1800px]">
       {/* Header */}
@@ -222,16 +241,16 @@ export default function AdminHome() {
           subtitle={storageStats?.recentFile 
             ? `Recent: ${storageStats.recentFile.substring(0, 20)}...` 
             : 'No uploads yet'}
-          route="/admin/image-manager"
+          route="/admin/asset-gallery"
           color="yellow"
         />
         <MetricCard
-          icon={Cpu}
-          title="AI Systems"
-          value="3"
-          subtitle="Pipelines active: 3"
-          route="/admin/ai-dashboard"
-          color="cyan"
+          icon={Mail}
+          title="Newsletters"
+          value={newsletterStats?.total || '—'}
+          subtitle={`${newsletterStats?.drafts || 0} drafts, ${newsletterStats?.queued || 0} queued, ${newsletterStats?.sent || 0} sent`}
+          route="/admin/newsletter-logs"
+          color="yellow"
         />
       </div>
 

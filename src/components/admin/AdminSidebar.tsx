@@ -1,4 +1,4 @@
-import { FileText, Image, Brain, Mail, BarChart3, LogOut, ArrowLeft, LayoutDashboard, Rocket } from 'lucide-react';
+import { FileText, Image, Brain, Mail, MailOpen, BarChart3, LogOut, ArrowLeft, LayoutDashboard, Rocket } from 'lucide-react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   Sidebar,
@@ -59,6 +59,13 @@ const adminModules = [
     url: '/admin/newsletter-composer',
     icon: Mail,
     description: 'Craft and schedule newsletters',
+    disabled: false,
+  },
+  {
+    title: 'Newsletter Logs',
+    url: '/admin/newsletter-logs',
+    icon: MailOpen,
+    description: 'View all saved and sent newsletters',
     disabled: false,
   },
   {
