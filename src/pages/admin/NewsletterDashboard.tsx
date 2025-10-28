@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Button } from '@/components/ui/button';
@@ -56,6 +57,7 @@ interface CustomNote {
 }
 
 export default function NewsletterDashboard() {
+  const navigate = useNavigate();
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
   const [activeTab, setActiveTab] = useState('blogs');
   const [searchTerm, setSearchTerm] = useState('');
@@ -211,14 +213,12 @@ export default function NewsletterDashboard() {
   };
 
   const handleCompileNewsletter = () => {
-    console.log('Selected items for newsletter:', selectedItems);
-    toast.info('Compile feature coming in Phase 2!', {
-      style: {
-        background: 'rgba(249, 249, 64, 0.1)',
-        border: '1px solid hsl(var(--color-yellow))',
-        color: 'hsl(var(--color-yellow))',
-      },
-    });
+    if (selectedItems.length === 0) {
+      toast.error('Please select at least one item');
+      return;
+    }
+    console.log('Navigating to composer with items:', selectedItems);
+    navigate('/admin/newsletter-composer');
   };
 
   // Custom note handlers

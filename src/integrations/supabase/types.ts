@@ -68,6 +68,45 @@ export type Database = {
         }
         Relationships: []
       }
+      newsletter_queue: {
+        Row: {
+          blocks: Json
+          body: string
+          created_at: string
+          id: string
+          scheduled_date: string | null
+          send_type: string
+          status: string
+          subject: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          blocks?: Json
+          body?: string
+          created_at?: string
+          id?: string
+          scheduled_date?: string | null
+          send_type?: string
+          status?: string
+          subject: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          blocks?: Json
+          body?: string
+          created_at?: string
+          id?: string
+          scheduled_date?: string | null
+          send_type?: string
+          status?: string
+          subject?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       projects: {
         Row: {
           challenge: string

@@ -55,6 +55,13 @@ const adminModules = [
     disabled: false,
   },
   {
+    title: 'Newsletter Composer',
+    url: '/admin/newsletter-composer',
+    icon: Mail,
+    description: 'Craft and schedule newsletters',
+    disabled: false,
+  },
+  {
     title: 'AI Dashboard',
     url: '/admin/ai-metrics',
     icon: BarChart3,

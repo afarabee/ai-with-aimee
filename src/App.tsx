@@ -23,6 +23,7 @@ import AssetGallery from "./pages/admin/AssetGallery";
 import PromptLibraryDashboard from "./pages/admin/PromptLibraryDashboard";
 import PromptEditor from "./pages/admin/PromptEditor";
 import NewsletterDashboard from "./pages/admin/NewsletterDashboard";
+import NewsletterComposer from "./pages/admin/NewsletterComposer";
 
 
 const queryClient = new QueryClient();
@@ -57,7 +58,8 @@ const App = () => (
                 <Route path="asset-gallery" element={<AssetGallery />} />
                 <Route path="prompt-library" element={<PromptLibraryDashboard />} />
                 <Route path="prompt-editor" element={<PromptEditor />} />
-                <Route path="newsletter-dashboard" element={<NewsletterDashboard />} />
+              <Route path="newsletter-dashboard" element={<NewsletterDashboard />} />
+              <Route path="newsletter-composer" element={<NewsletterComposer />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

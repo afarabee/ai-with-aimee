@@ -769,3 +769,37 @@ All colors MUST be HSL.
   color: hsl(var(--color-pink));
   background: rgba(245, 12, 160, 0.05);
 }
+
+/* Newsletter Composer Styles */
+.newsletter-composer-block {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.newsletter-composer-block:hover {
+  border-color: hsl(var(--color-cyan));
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+.newsletter-preview-panel {
+  background: rgba(26, 11, 46, 0.6);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+}
+
+.newsletter-preview-content h1 {
+  color: hsl(var(--color-pink));
+  text-shadow: 0 0 20px rgba(245, 12, 160, 0.5);
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: bold;
+}
+
+.newsletter-preview-content em {
+  color: hsl(var(--color-cyan));
+  font-style: italic;
+}
+
+.newsletter-preview-content h2 {
+  color: hsl(var(--color-cyan));
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+}
