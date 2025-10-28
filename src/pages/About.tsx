@@ -151,7 +151,7 @@ const About = () => {
                   padding: '1rem 1.5rem'
                 }}
               >
-                Download Resume (PDF)
+                <span>Download Resume (PDF)</span>
               </Button>
               
               <Link to="/projects">
@@ -163,7 +163,7 @@ const About = () => {
                     padding: '1rem 1.5rem'
                   }}
                 >
-                  View My Projects
+                  <span>View My Projects</span>
                 </Button>
               </Link>
               
@@ -176,7 +176,7 @@ const About = () => {
                     padding: '1rem 1.5rem'
                   }}
                 >
-                  Read My Blog
+                  <span>Read My Blog</span>
                 </Button>
               </Link>
             </div>

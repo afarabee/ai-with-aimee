@@ -245,7 +245,7 @@ const Blog = () => {
             onClick={() => setDisplayCount(prev => Math.min(prev + 6, blogPosts.length))}
             className="btn-hero pink px-10 py-4 text-base font-montserrat font-bold transition-all duration-300 focus:ring-2 focus:ring-pink-400/50 focus:outline-none"
           >
-            Load More Posts →
+            <span>Load More Posts →</span>
           </button>
                 </div>
               )}

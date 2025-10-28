@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom
 import ScrollToTop from "@/components/ScrollToTop";
 import PageTransition from "@/components/PageTransition";
 import BackToTop from "@/components/BackToTop";
+import { useSpotlightEffect } from "@/hooks/useSpotlightEffect";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
@@ -29,7 +30,11 @@ import NewsletterLogs from "./pages/admin/NewsletterLogs";
 
 const queryClient = new QueryClient();
 
-const App = () => (
+const App = () => {
+  // Initialize spotlight effect for all .btn-hero buttons
+  useSpotlightEffect();
+
+  return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
@@ -70,6 +75,7 @@ const App = () => (
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;

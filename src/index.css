@@ -235,6 +235,7 @@ All colors MUST be HSL.
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  overflow: hidden; /* Clip spotlight within boundaries */
 
   font-family: 'Rajdhani', sans-serif;
   font-weight: 700;
@@ -270,8 +271,33 @@ All colors MUST be HSL.
     transform .2s ease;
 }
 
-/* Keep text above the glass; harmless if span not present */
-.btn-hero > span { position: relative; z-index: 1; }
+/* Spotlight interactive hover layer */
+.btn-hero::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle 180px at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgba(0, 255, 255, 0.3) 0%,
+    rgba(245, 12, 160, 0.15) 35%,
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Reveal spotlight on hover */
+.btn-hero:hover::after {
+  opacity: 1;
+}
+
+/* Keep text above the glass and spotlight */
+.btn-hero > span { position: relative; z-index: 2; }
 
 /* Hover: brighter glass, pink text, tiny lift (no flash) */
 .btn-hero:hover {
@@ -346,6 +372,17 @@ All colors MUST be HSL.
     0 0 10px rgba(245, 12, 160, 0.14);
 }
 
+/* Pink spotlight variant */
+.btn-hero.pink::after,
+.btn-hero-pink::after {
+  background: radial-gradient(
+    circle 180px at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgba(245, 12, 160, 0.3) 0%,
+    rgba(0, 255, 255, 0.15) 35%,
+    transparent 65%
+  );
+}
+
 /* === Yellow Variant (for special accent CTAs) === */
 .btn-hero.yellow,
 .btn-hero-yellow {
@@ -382,6 +419,25 @@ All colors MUST be HSL.
     inset 0 0 20px rgba(249, 249, 64, 0.30),
     0 4px 16px rgba(0, 0, 0, 0.40),
     0 0 10px rgba(249, 249, 64, 0.14);
+}
+
+/* Yellow spotlight variant */
+.btn-hero.yellow::after,
+.btn-hero-yellow::after {
+  background: radial-gradient(
+    circle 180px at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgba(249, 249, 64, 0.3) 0%,
+    rgba(0, 255, 255, 0.15) 35%,
+    transparent 65%
+  );
+}
+
+/* Disable spotlight for reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .btn-hero::after {
+    transition: none;
+    opacity: 0 !important;
+  }
 }
 
 

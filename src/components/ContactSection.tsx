@@ -83,9 +83,9 @@ const ContactSection = () => {
             ...formData,
             message: e.target.value
           })} className="w-full px-4 py-3 rounded bg-muted/50 text-white/80 placeholder-cyan-500/50 border border-cyan-500/30 focus:shadow-[0_0_20px_rgba(0,255,255,0.6)] focus:outline-none resize-none transition-all"></textarea>
-            <button type="submit" disabled={isSubmitting} className="btn-hero px-8 py-3 disabled:opacity-50">
-              {isSubmitting ? "Sending..." : "Send Message"}
-            </button>
+              <button type="submit" disabled={isSubmitting} className="btn-hero px-8 py-3 disabled:opacity-50">
+                <span>{isSubmitting ? "Sending..." : "Send Message"}</span>
+              </button>
           </form>
         </GlowCard>
       </div>
