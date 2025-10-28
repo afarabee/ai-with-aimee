@@ -34,7 +34,11 @@ const ContactSection = () => {
     }} />
 
       <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-        <h2 className="font-rajdhani text-4xl md:text-5xl font-semibold neon-text-pink mb-8">Let's Connect</h2>
+        <h2 className="font-rajdhani text-4xl md:text-5xl font-semibold neon-text-pink mb-4">Let's Connect</h2>
+        <p className="hero-subtitle">
+          Get in touch to discuss AI strategy, product leadership, or collaboration opportunities.
+        </p>
+        <div className="hero-divider" aria-hidden="true" />
         
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           <GlowCard as="a" href="mailto:genai-aims@gmail.com">

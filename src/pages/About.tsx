@@ -41,15 +41,10 @@ const About = () => {
             >
               Meet Aimee
             </h1>
-            <p 
-              className="text-2xl md:text-3xl font-josefin italic"
-              style={{
-                color: 'hsl(180 100% 56%)',
-                textShadow: '0 0 10px hsl(180 100% 56% / 0.6)',
-              }}
-            >
+            <p className="hero-subtitle">
               Human first, AI always.
             </p>
+            <div className="hero-divider" aria-hidden="true" />
           </div>
 
           {/* Main Content Grid */}
