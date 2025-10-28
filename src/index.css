@@ -227,14 +227,7 @@ All colors MUST be HSL.
     animation: blink 1s infinite;
   }
 
-/* ===========================
-   Hero CTA — Glass + Perimeter Trace
-   =========================== */
-
-/* Slow, smooth rotation: keeps the gradient locked to the border path */
-@keyframes hero-trace-spin {
-  to { transform: rotate(360deg); }
-}
+/* ===== Hero CTA — Glass Neon (static, no outline animation) ===== */
 
 .btn-hero {
   position: relative;
@@ -242,129 +235,81 @@ All colors MUST be HSL.
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.9rem 1.3rem;
-  border-radius: 0.55rem;
+
   font-family: 'Rajdhani', sans-serif;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  line-height: 1;
-  
+  line-height: 1.05;
+  font-size: 1.05rem;
+
+  padding: 0.9rem 1.3rem;
+  border-radius: 0.55rem;
+
   /* Glass panel */
-  background: rgba(0, 255, 255, 0.12);
+  background:
+    linear-gradient(135deg,
+      rgba(0,255,255,0.14) 0%,
+      rgba(0,255,255,0.10) 45%,
+      rgba(0,255,255,0.06) 100%);
+  color: hsl(var(--color-cyan));
+  border: 1px solid rgba(0,255,255,0.35);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  color: hsl(var(--color-cyan));
-  
-  /* Faint static border (fallback if animations disabled) */
-  border: 1px solid rgba(0, 255, 255, 0.35);
-  
+
+  /* Soft inner glow + subtle outer lift */
   box-shadow:
-    inset 0 0 12px rgba(0, 255, 255, 0.18),
-    0 6px 20px rgba(0, 0, 0, 0.25);
-  
-  transition: color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-  overflow: visible; /* Ensure pseudo ring isn't clipped */
+    inset 0 0 14px rgba(0,255,255,0.18),
+    0 6px 20px rgba(0,0,0,0.25),
+    0 0 10px rgba(0,255,255,0.12);
+
+  transition:
+    color .25s ease,
+    background .25s ease,
+    box-shadow .25s ease,
+    transform .2s ease;
 }
 
-.btn-hero > span {
-  position: relative;
-  z-index: 1; /* Always above the animated ring */
-}
+/* Keep text above the glass; harmless if span not present */
+.btn-hero > span { position: relative; z-index: 1; }
 
-/* The animated perimeter ring that rides the exact border */
-.btn-hero::before {
-  content: "";
-  position: absolute;
-  inset: -2px;                 /* Ring sits 2px outside the button edge */
-  border-radius: inherit;
-  
-  /* 2px ring mask: we paint a full layer then subtract the inner rect */
-  padding: 2px;                /* Thickness of the visible ring */
-  background:
-    conic-gradient(
-      from 0deg,
-      hsl(var(--color-cyan)) 0deg 120deg,
-      hsl(var(--color-pink)) 120deg 240deg,
-      hsl(var(--color-yellow)) 240deg 360deg
-    );
-  
-  /* Mask so only the 2px ring shows, center stays transparent */
-  -webkit-mask: 
-    linear-gradient(#000 0 0) content-box, 
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: 
-    linear-gradient(#000 0 0) content-box, 
-    linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  
-  filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.25));
-  animation: hero-trace-spin 8s linear infinite;
-  pointer-events: none;       /* Never intercept clicks */
-  z-index: 0;
-}
-
-/* Subtle inner glow on hover (no flashing) */
+/* Hover: brighter glass, pink text, tiny lift (no flash) */
 .btn-hero:hover {
   color: hsl(var(--color-pink));
+  background:
+    linear-gradient(135deg,
+      rgba(0,255,255,0.18) 0%,
+      rgba(0,255,255,0.12) 45%,
+      rgba(0,255,255,0.08) 100%);
   box-shadow:
-    inset 0 0 18px rgba(0, 255, 255, 0.26),
-    0 8px 24px rgba(0, 0, 0, 0.35);
+    inset 0 0 18px rgba(0,255,255,0.26),
+    0 8px 24px rgba(0,0,0,0.35),
+    0 0 14px rgba(0,255,255,0.18);
+  transform: translateY(-1px);
 }
 
-/* A gentle boost to the ring glow on hover */
-.btn-hero:hover::before {
-  filter: drop-shadow(0 0 14px rgba(0, 255, 255, 0.35));
-}
-
-/* Active/pressed state */
+/* Active: subtle press */
 .btn-hero:active {
+  transform: translateY(0);
   box-shadow:
-    inset 0 0 20px rgba(0, 255, 255, 0.3),
-    0 4px 16px rgba(0, 0, 0, 0.4);
+    inset 0 0 20px rgba(0,255,255,0.30),
+    0 4px 16px rgba(0,0,0,0.40),
+    0 0 10px rgba(0,255,255,0.14);
 }
 
-/* Focus state for accessibility */
+/* Focus for accessibility */
 .btn-hero:focus-visible {
   outline: 2px solid hsl(var(--color-yellow));
   outline-offset: 4px;
 }
 
-/* Responsive: smaller on mobile */
+/* Mobile sizing */
 @media (max-width: 640px) {
-  .btn-hero {
-    font-size: 1rem;
-    padding: 0.625rem 1.5rem;
-  }
+  .btn-hero { font-size: 1rem; padding: 0.7rem 1.1rem; }
 }
 
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .btn-hero::before { 
-    animation: none; 
-  }
-}
 
-  @keyframes neonPulseHover {
-    0% {
-      transform: scale(1);
-      box-shadow: 0 0 8px rgba(0, 255, 255, 0.5), 0 0 16px rgba(0, 255, 255, 0.3);
-    }
-    50% {
-      transform: scale(1.05);
-      box-shadow: 0 0 12px rgba(0, 255, 255, 0.7), 0 0 24px rgba(0, 255, 255, 0.5);
-    }
-    100% {
-      transform: scale(1);
-      box-shadow: 0 0 8px rgba(0, 255, 255, 0.5), 0 0 16px rgba(0, 255, 255, 0.3);
-    }
-  }
 
-  .neon-pulse-hover:hover {
-    animation: neonPulseHover 0.4s ease-in-out;
-  }
-  
   @keyframes fadeIn {
     from {
       opacity: 0;

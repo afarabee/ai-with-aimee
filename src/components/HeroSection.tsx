@@ -69,20 +69,18 @@ const HeroSection = () => {
           }}>My mission is to explore how Artificial Intelligence can amplify — not replace — Human Intelligence by sharing hands-on experiments, frameworks, and stories from the front lines of enterprise AI adoption.</p>
             
             <div className="flex flex-col sm:flex-row gap-4 mb-6">
-              <button onClick={() => scrollToSection("projects")} className="btn-hero transition-transform duration-300" onMouseEnter={e => {
-              e.currentTarget.style.transform = 'scale(1.05)';
-            }} onMouseLeave={e => {
-              e.currentTarget.style.transform = 'scale(1)';
-            }}>
-                <span>View Projects</span>
-              </button>
-              <button onClick={() => scrollToSection("blog")} className="btn-hero transition-transform duration-300" onMouseEnter={e => {
-              e.currentTarget.style.transform = 'scale(1.05)';
-            }} onMouseLeave={e => {
-              e.currentTarget.style.transform = 'scale(1)';
-            }}>
-                <span>Read Blog</span>
-              </button>
+            <button
+              onClick={() => scrollToSection("projects")}
+              className="btn-hero transition-transform duration-300"
+            >
+              <span>View Projects</span>
+            </button>
+            <button
+              onClick={() => scrollToSection("blog")}
+              className="btn-hero transition-transform duration-300"
+            >
+              <span>Read Blog</span>
+            </button>
             </div>
             
             <Link to="/about" className="text-sm neon-text-cyan/80 hover:neon-text-cyan transition-all duration-300 flex items-center gap-2 group">
