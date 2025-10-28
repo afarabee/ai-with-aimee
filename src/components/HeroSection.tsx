@@ -74,14 +74,14 @@ const HeroSection = () => {
             }} onMouseLeave={e => {
               e.currentTarget.style.transform = 'scale(1)';
             }}>
-                View Projects
+                <span>View Projects</span>
               </button>
               <button onClick={() => scrollToSection("blog")} className="btn-hero transition-transform duration-300" onMouseEnter={e => {
               e.currentTarget.style.transform = 'scale(1.05)';
             }} onMouseLeave={e => {
               e.currentTarget.style.transform = 'scale(1)';
             }}>
-                Read Blog
+                <span>Read Blog</span>
               </button>
             </div>
             
