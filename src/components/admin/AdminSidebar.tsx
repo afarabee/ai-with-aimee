@@ -42,10 +42,10 @@ const adminModules = [
   },
   {
     title: 'Prompt Library',
-    url: '/admin/prompts',
+    url: '/admin/prompt-library',
     icon: Brain,
     description: 'Manage AI prompts and templates',
-    disabled: true,
+    disabled: false,
   },
   {
     title: 'Newsletter Logs',

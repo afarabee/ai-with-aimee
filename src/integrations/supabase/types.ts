@@ -119,6 +119,42 @@ export type Database = {
         }
         Relationships: []
       }
+      prompts: {
+        Row: {
+          body: string
+          category: string | null
+          date_created: string
+          id: string
+          last_modified: string
+          role: string | null
+          status: string
+          tags: string[] | null
+          title: string
+        }
+        Insert: {
+          body: string
+          category?: string | null
+          date_created?: string
+          id?: string
+          last_modified?: string
+          role?: string | null
+          status?: string
+          tags?: string[] | null
+          title: string
+        }
+        Update: {
+          body?: string
+          category?: string | null
+          date_created?: string
+          id?: string
+          last_modified?: string
+          role?: string | null
+          status?: string
+          tags?: string[] | null
+          title?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

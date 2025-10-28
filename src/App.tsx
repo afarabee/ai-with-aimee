@@ -20,6 +20,8 @@ import AdminHome from "./pages/admin/AdminHome";
 import ProjectDashboard from "./pages/admin/ProjectDashboard";
 import ProjectEditor from "./pages/admin/ProjectEditor";
 import AssetGallery from "./pages/admin/AssetGallery";
+import PromptLibraryDashboard from "./pages/admin/PromptLibraryDashboard";
+import PromptEditor from "./pages/admin/PromptEditor";
 
 
 const queryClient = new QueryClient();
@@ -51,7 +53,9 @@ const App = () => (
             <Route path="blog-editor/:slug" element={<BlogEditor />} />
               <Route path="project-dashboard" element={<ProjectDashboard />} />
               <Route path="project-editor" element={<ProjectEditor />} />
-              <Route path="asset-gallery" element={<AssetGallery />} />
+                <Route path="asset-gallery" element={<AssetGallery />} />
+                <Route path="prompt-library" element={<PromptLibraryDashboard />} />
+                <Route path="prompt-editor" element={<PromptEditor />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
