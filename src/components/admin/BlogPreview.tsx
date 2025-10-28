@@ -62,7 +62,8 @@ export default function BlogPreview({
       {excerpt && (
         <section className="py-8 px-6">
           <div className="max-w-[740px] mx-auto">
-            <p className="blog-excerpt">{excerpt}</p>
+            <p className="blog-excerpt mb-4">{excerpt}</p>
+            <div className="blog-divider" aria-hidden="true" />
           </div>
         </section>
       )}

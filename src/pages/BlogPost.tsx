@@ -217,10 +217,10 @@ const BlogPost = () => {
           {/* Excerpt (if exists) */}
           {post.excerpt && (
             <>
-              <p className="blog-subtitle text-center mb-8">
+              <p className="blog-excerpt mb-4">
                 {post.excerpt}
               </p>
-              <div className="blog-divider" />
+              <div className="blog-divider" aria-hidden="true" />
             </>
           )}
           

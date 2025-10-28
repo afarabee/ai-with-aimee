@@ -395,6 +395,7 @@ All colors MUST be HSL.
     margin-bottom: 1rem;
   }
 
+  /* Blog subtitle (used in hero section for post subtitle field) */
   .blog-subtitle {
     font-family: var(--font-subtitle);
     font-style: italic;
@@ -402,6 +403,18 @@ All colors MUST be HSL.
     color: hsl(var(--color-cyan));
     text-shadow: 0 0 15px hsl(var(--color-cyan) / 0.5);
     line-height: 1.4;
+  }
+
+  /* Blog excerpt (used in article body for post excerpt) */
+  .blog-excerpt {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    color: hsl(var(--color-cyan));
+    text-shadow: 0 0 12px hsl(var(--color-cyan) / 0.6);
+    letter-spacing: 0.4px;
+    text-align: center;
+    line-height: 1.5;
   }
 
   .blog-author {
@@ -451,8 +464,9 @@ All colors MUST be HSL.
 
   .blog-divider {
     width: 100%;
-    height: 2px;
-    margin: 3rem auto;
+    height: 3px;
+    margin: 1.5rem auto 2rem;
+    border-radius: 2px;
     background: linear-gradient(
       90deg,
       transparent 0%,
@@ -460,7 +474,8 @@ All colors MUST be HSL.
       hsl(var(--color-pink)) 65%,
       transparent 100%
     );
-    box-shadow: 0 0 15px hsl(var(--color-cyan) / 0.4), 0 0 15px hsl(var(--color-pink) / 0.4);
+    box-shadow: 0 0 12px hsl(var(--color-cyan) / 0.4),
+                0 0 18px hsl(var(--color-pink) / 0.3);
   }
 
   /* Neon Pulse Animation for Yellow Links */
