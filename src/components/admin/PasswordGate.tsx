@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Eye, EyeOff } from 'lucide-react';
 import AboutBackground from '@/components/AboutBackground';
@@ -11,6 +12,8 @@ const ADMIN_PASSWORD = 'AIMEEADMIN2025';
 const STORAGE_KEY = 'adminAuthenticated';
 
 export default function PasswordGate({ children }: PasswordGateProps) {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -29,6 +32,11 @@ export default function PasswordGate({ children }: PasswordGateProps) {
       sessionStorage.setItem(STORAGE_KEY, 'true');
       setIsAuthenticated(true);
       setError('');
+      
+      // Redirect to admin home if not already there
+      if (location.pathname !== '/admin') {
+        navigate('/admin', { replace: true });
+      }
     } else {
       setError('Incorrect password');
     }
