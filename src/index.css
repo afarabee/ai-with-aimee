@@ -227,126 +227,122 @@ All colors MUST be HSL.
     animation: blink 1s infinite;
   }
 
-  /* === Animated Glass-Neon Hero Button === */
-  @keyframes trace {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
+/* === Animated Glass-Neon Hero Button === */
+@keyframes btnRingSpin {
+  to { transform: rotate(360deg); }
+}
 
+.btn-hero {
+  /* Base styling */
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.9rem 1.4rem;
+  border-radius: 0.5rem;
+  
+  /* Glass panel effect */
+  background: rgba(0, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  
+  /* Text styling */
+  color: #00ffff;
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+  
+  /* Inner glow */
+  box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.12),
+              0 0 18px rgba(0, 255, 255, 0.12);
+  
+  /* Subtle inner border */
+  border: 1px solid rgba(0, 255, 255, 0.25);
+  
+  /* Smooth transitions */
+  transition: color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+  
+  /* Ensures pseudo sits below text cleanly */
+  isolation: isolate;
+}
+
+/* External orbiting ring */
+.btn-hero::before {
+  content: "";
+  position: absolute;
+  /* negative inset creates an OUTER ring around the button */
+  inset: -3px;
+  border-radius: inherit;
+  z-index: -1;
+  
+  /* The moving gradient that will be masked to a thin ring */
+  background: conic-gradient(
+    from 0deg,
+    #00ffff, #f50ca0, #f9f940, #00ffff
+  );
+  
+  /* Mask so only a thin ring is visible (no fill inside) */
+  mask: linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#000 0 0) content-box,
+                linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  
+  padding: 3px;
+  animation: btnRingSpin 8s linear infinite;
+  
+  /* Soft glow from the ring itself */
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.25),
+              0 0 18px rgba(245, 12, 160, 0.20),
+              0 0 16px rgba(249, 249, 64, 0.18);
+}
+
+/* Hover: brighter glow + pink label, no pulsing */
+.btn-hero:hover {
+  color: #f50ca0;
+  background: rgba(0, 255, 255, 0.16);
+  box-shadow: inset 0 0 14px rgba(0, 255, 255, 0.18),
+              0 0 22px rgba(0, 255, 255, 0.18);
+}
+
+/* Make the ring glow a touch more on hover */
+.btn-hero:hover::before {
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.28),
+              0 0 20px rgba(245, 12, 160, 0.24),
+              0 0 18px rgba(249, 249, 64, 0.22);
+}
+
+/* Active/pressed state */
+.btn-hero:active {
+  box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.25),
+              0 0 15px rgba(245, 12, 160, 0.25);
+}
+
+/* Focus state for accessibility */
+.btn-hero:focus-visible {
+  outline: 2px solid #f9f940;
+  outline-offset: 4px;
+}
+
+/* Responsive: smaller on mobile */
+@media (max-width: 640px) {
   .btn-hero {
-    /* Base styling */
-    position: relative;
-    overflow: hidden;
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 700;
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 0.75rem 2rem;
-    border-radius: 0.5rem;
-    
-    /* Glass panel effect */
-    background: rgba(0, 255, 255, 0.12);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    
-    /* Text styling */
-    color: hsl(var(--color-cyan));
-    text-shadow: 0 0 8px hsl(var(--color-cyan) / 0.6);
-    
-    /* Inner glow */
-    box-shadow: inset 0 0 20px hsl(var(--color-cyan) / 0.15),
-                0 0 15px hsl(var(--color-cyan) / 0.3);
-    
-    /* Border */
-    border: 2px solid transparent;
-    
-    /* Smooth transitions */
-    transition: color 0.4s ease-in-out,
-                text-shadow 0.4s ease-in-out,
-                box-shadow 0.4s ease-in-out;
-    
-    /* Z-index for pseudo-element layering */
-    z-index: 1;
+    font-size: 1rem;
+    padding: 0.625rem 1.5rem;
   }
+}
 
-  /* Animated rotating border trace */
+/* Accessibility: respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
   .btn-hero::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    border-radius: 0.5rem;
-    padding: 2px;
-    
-    /* Conic gradient with three-color cycle */
-    background: conic-gradient(
-      from 0deg,
-      hsl(var(--color-cyan)) 0deg,
-      hsl(var(--color-pink)) 120deg,
-      hsl(var(--color-yellow)) 240deg,
-      hsl(var(--color-cyan)) 360deg
-    );
-    
-    /* Mask to create border effect */
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, 
-                  linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    
-    /* Rotating animation */
-    animation: trace 8s linear infinite;
-    
-    /* Behind button content */
-    z-index: -1;
-    
-    /* Border glow */
-    filter: drop-shadow(0 0 12px hsl(var(--color-cyan) / 0.4));
-    
-    transition: filter 0.4s ease-in-out;
+    animation: none;
   }
-
-  /* Hover state */
-  .btn-hero:hover {
-    /* Text color shifts to pink */
-    color: hsl(var(--color-pink));
-    text-shadow: 0 0 12px hsl(var(--color-pink) / 0.7);
-    
-    /* Enhanced inner glow */
-    box-shadow: inset 0 0 30px hsl(var(--color-cyan) / 0.25),
-                0 0 20px hsl(var(--color-pink) / 0.4);
-  }
-
-  /* Brighten border glow on hover */
-  .btn-hero:hover::before {
-    filter: drop-shadow(0 0 18px hsl(var(--color-pink) / 0.6));
-  }
-
-  /* Active/pressed state */
-  .btn-hero:active {
-    box-shadow: inset 0 0 35px hsl(var(--color-cyan) / 0.3),
-                0 0 10px hsl(var(--color-pink) / 0.3);
-  }
-
-  /* Focus state for accessibility */
-  .btn-hero:focus-visible {
-    outline: 2px solid hsl(var(--color-yellow));
-    outline-offset: 4px;
-  }
-
-  /* Responsive: smaller on mobile */
-  @media (max-width: 640px) {
-    .btn-hero {
-      font-size: 1rem;
-      padding: 0.625rem 1.5rem;
-    }
-  }
+}
 
   @keyframes neonPulseHover {
     0% {
