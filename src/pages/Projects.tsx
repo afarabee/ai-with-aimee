@@ -202,7 +202,7 @@ const Projects = () => {
 
           {/* Footer CTA */}
           <div className="flex flex-col md:flex-row justify-center items-center gap-3 md:gap-4">
-            <Button className="hero-button px-8 py-6 text-base flex items-center gap-2">
+            <Button className="btn-hero px-8 py-6 text-base flex items-center gap-2">
               Explore My Prompt Library →
             </Button>
           </div>

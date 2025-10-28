@@ -308,6 +308,82 @@ All colors MUST be HSL.
   .btn-hero { font-size: 1rem; padding: 0.7rem 1.1rem; }
 }
 
+/* === Pink Variant (for Blog-themed CTAs) === */
+.btn-hero.pink,
+.btn-hero-pink {
+  color: hsl(var(--color-pink));
+  border-color: rgba(245, 12, 160, 0.35);
+  background:
+    linear-gradient(135deg,
+      rgba(245, 12, 160, 0.14) 0%,
+      rgba(245, 12, 160, 0.10) 45%,
+      rgba(245, 12, 160, 0.06) 100%);
+  box-shadow:
+    inset 0 0 14px rgba(245, 12, 160, 0.18),
+    0 6px 20px rgba(0, 0, 0, 0.25),
+    0 0 10px rgba(245, 12, 160, 0.12);
+}
+
+.btn-hero.pink:hover,
+.btn-hero-pink:hover {
+  color: hsl(var(--color-cyan));
+  background:
+    linear-gradient(135deg,
+      rgba(245, 12, 160, 0.18) 0%,
+      rgba(245, 12, 160, 0.12) 45%,
+      rgba(245, 12, 160, 0.08) 100%);
+  box-shadow:
+    inset 0 0 18px rgba(245, 12, 160, 0.26),
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    0 0 14px rgba(245, 12, 160, 0.18);
+}
+
+.btn-hero.pink:active,
+.btn-hero-pink:active {
+  box-shadow:
+    inset 0 0 20px rgba(245, 12, 160, 0.30),
+    0 4px 16px rgba(0, 0, 0, 0.40),
+    0 0 10px rgba(245, 12, 160, 0.14);
+}
+
+/* === Yellow Variant (for special accent CTAs) === */
+.btn-hero.yellow,
+.btn-hero-yellow {
+  color: hsl(var(--color-yellow));
+  border-color: rgba(249, 249, 64, 0.35);
+  background:
+    linear-gradient(135deg,
+      rgba(249, 249, 64, 0.14) 0%,
+      rgba(249, 249, 64, 0.10) 45%,
+      rgba(249, 249, 64, 0.06) 100%);
+  box-shadow:
+    inset 0 0 14px rgba(249, 249, 64, 0.18),
+    0 6px 20px rgba(0, 0, 0, 0.25),
+    0 0 10px rgba(249, 249, 64, 0.12);
+}
+
+.btn-hero.yellow:hover,
+.btn-hero-yellow:hover {
+  color: hsl(var(--color-pink));
+  background:
+    linear-gradient(135deg,
+      rgba(249, 249, 64, 0.18) 0%,
+      rgba(249, 249, 64, 0.12) 45%,
+      rgba(249, 249, 64, 0.08) 100%);
+  box-shadow:
+    inset 0 0 18px rgba(249, 249, 64, 0.26),
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    0 0 14px rgba(249, 249, 64, 0.18);
+}
+
+.btn-hero.yellow:active,
+.btn-hero-yellow:active {
+  box-shadow:
+    inset 0 0 20px rgba(249, 249, 64, 0.30),
+    0 4px 16px rgba(0, 0, 0, 0.40),
+    0 0 10px rgba(249, 249, 64, 0.14);
+}
+
 
 
   @keyframes fadeIn {

@@ -144,19 +144,11 @@ const About = () => {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-5 mt-4">
               <Button
-                className="hero-button text-sm transition-all duration-400"
+                className="btn-hero text-sm transition-all duration-400"
                 style={{ 
                   width: '220px',
                   fontSize: '0.9rem',
                   padding: '1rem 1.5rem'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = '0 0 12px hsl(320 95% 50% / 0.7), 0 0 20px hsl(320 95% 50% / 0.5)';
-                  e.currentTarget.style.transform = 'scale(1.05)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = '0 0 8px hsl(180 100% 56% / 0.6), 0 0 16px hsl(180 100% 56% / 0.4)';
-                  e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
                 Download Resume (PDF)
@@ -164,19 +156,11 @@ const About = () => {
               
               <Link to="/projects">
                 <Button
-                  className="hero-button text-sm transition-all duration-400"
+                  className="btn-hero text-sm transition-all duration-400"
                   style={{ 
                     width: '220px',
                     fontSize: '0.9rem',
                     padding: '1rem 1.5rem'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = '0 0 12px hsl(320 95% 50% / 0.7), 0 0 20px hsl(320 95% 50% / 0.5)';
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = '0 0 8px hsl(180 100% 56% / 0.6), 0 0 16px hsl(180 100% 56% / 0.4)';
-                    e.currentTarget.style.transform = 'scale(1)';
                   }}
                 >
                   View My Projects
@@ -185,19 +169,11 @@ const About = () => {
               
               <Link to="/blog">
                 <Button
-                  className="hero-button text-sm transition-all duration-400"
+                  className="btn-hero text-sm transition-all duration-400"
                   style={{ 
                     width: '220px',
                     fontSize: '0.9rem',
                     padding: '1rem 1.5rem'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = '0 0 12px hsl(320 95% 50% / 0.7), 0 0 20px hsl(320 95% 50% / 0.5)';
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = '0 0 8px hsl(180 100% 56% / 0.6), 0 0 16px hsl(180 100% 56% / 0.4)';
-                    e.currentTarget.style.transform = 'scale(1)';
                   }}
                 >
                   Read My Blog

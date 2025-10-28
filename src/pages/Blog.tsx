@@ -241,19 +241,12 @@ const Blog = () => {
               {/* Load More Button */}
               {displayCount < (blogPosts?.length || 0) && (
                 <div className="text-center">
-                  <button
-                    onClick={() => setDisplayCount(prev => Math.min(prev + 6, blogPosts.length))}
-                    className="hero-button px-10 py-4 text-base font-montserrat font-bold transition-all duration-300 focus:ring-2 focus:ring-pink-400/50 focus:outline-none"
-                    style={{
-                      background: 'linear-gradient(135deg, rgba(245, 12, 160, 0.2), rgba(155, 81, 224, 0.2))',
-                      border: '2px solid #f50ca0',
-                      color: '#f50ca0',
-                      textShadow: '0 0 10px rgba(245, 12, 160, 0.8)',
-                      boxShadow: '0 0 20px rgba(245, 12, 160, 0.4)'
-                    }}
-                  >
-                    Load More Posts →
-                  </button>
+          <button
+            onClick={() => setDisplayCount(prev => Math.min(prev + 6, blogPosts.length))}
+            className="btn-hero pink px-10 py-4 text-base font-montserrat font-bold transition-all duration-300 focus:ring-2 focus:ring-pink-400/50 focus:outline-none"
+          >
+            Load More Posts →
+          </button>
                 </div>
               )}
 
