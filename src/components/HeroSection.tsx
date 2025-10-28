@@ -69,14 +69,14 @@ const HeroSection = () => {
           }}>My mission is to explore how Artificial Intelligence can amplify — not replace — Human Intelligence by sharing hands-on experiments, frameworks, and stories from the front lines of enterprise AI adoption.</p>
             
             <div className="flex flex-col sm:flex-row gap-4 mb-6">
-              <button onClick={() => scrollToSection("projects")} className="hero-button px-8 py-3 rounded transition-all duration-400" onMouseEnter={e => {
+              <button onClick={() => scrollToSection("projects")} className="btn-hero transition-transform duration-300" onMouseEnter={e => {
               e.currentTarget.style.transform = 'scale(1.05)';
             }} onMouseLeave={e => {
               e.currentTarget.style.transform = 'scale(1)';
             }}>
                 View Projects
               </button>
-              <button onClick={() => scrollToSection("blog")} className="hero-button px-8 py-3 rounded transition-all duration-400" onMouseEnter={e => {
+              <button onClick={() => scrollToSection("blog")} className="btn-hero transition-transform duration-300" onMouseEnter={e => {
               e.currentTarget.style.transform = 'scale(1.05)';
             }} onMouseLeave={e => {
               e.currentTarget.style.transform = 'scale(1)';
