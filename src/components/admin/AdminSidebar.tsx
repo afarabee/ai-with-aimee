@@ -48,11 +48,11 @@ const adminModules = [
     disabled: false,
   },
   {
-    title: 'Newsletter Logs',
-    url: '/admin/newsletter',
+    title: 'Newsletter Dashboard',
+    url: '/admin/newsletter-dashboard',
     icon: Mail,
-    description: 'View pipeline activity',
-    disabled: true,
+    description: 'Curate content for newsletter assembly',
+    disabled: false,
   },
   {
     title: 'AI Dashboard',

@@ -714,3 +714,58 @@ All colors MUST be HSL.
 
 /* Wave background wrapper */
 .wave-background { z-index: 0 !important; pointer-events: none; }
+
+/* Newsletter Dashboard Styles */
+.newsletter-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.newsletter-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 0 30px rgba(245, 12, 160, 0.4);
+  border-color: hsl(var(--color-pink));
+}
+
+.newsletter-card.selected {
+  background: rgba(249, 249, 64, 0.05);
+  border-color: hsl(var(--color-yellow));
+  box-shadow: 0 0 20px rgba(249, 249, 64, 0.3);
+}
+
+.newsletter-sidebar {
+  background: rgba(26, 11, 46, 0.6);
+  backdrop-filter: blur(10px);
+  border: 2px solid hsl(var(--color-cyan) / 0.5);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+}
+
+.newsletter-selected-item {
+  transition: all 0.2s ease;
+}
+
+.newsletter-selected-item:hover {
+  background: rgba(245, 12, 160, 0.1);
+  transform: translateX(5px);
+}
+
+.newsletter-selected-item .remove-btn:hover {
+  color: hsl(var(--color-pink));
+  transform: scale(1.2);
+}
+
+/* Neon tabs styling */
+.newsletter-tabs [data-state="active"] {
+  background: rgba(0, 255, 255, 0.15);
+  border-bottom: 2px solid hsl(var(--color-cyan));
+  color: hsl(var(--color-cyan));
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+.newsletter-tabs [data-state="inactive"] {
+  color: hsl(var(--color-light-text));
+}
+
+.newsletter-tabs [data-state="inactive"]:hover {
+  color: hsl(var(--color-pink));
+  background: rgba(245, 12, 160, 0.05);
+}
