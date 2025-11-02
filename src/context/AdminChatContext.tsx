@@ -17,6 +17,8 @@ interface AdminChatContextType {
   sessionId: string;
   hasUnread: boolean;
   setHasUnread: (unread: boolean) => void;
+  pendingIntent: string | null;
+  setPendingIntent: (intent: string | null) => void;
 }
 
 const AdminChatContext = createContext<AdminChatContextType | null>(null);
@@ -26,6 +28,7 @@ export function AdminChatProvider({ children }: { children: ReactNode }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [sessionId, setSessionId] = useState('');
   const [hasUnread, setHasUnread] = useState(false);
+  const [pendingIntent, setPendingIntent] = useState<string | null>(null);
 
   // Initialize or load session ID
   useEffect(() => {
@@ -102,7 +105,9 @@ export function AdminChatProvider({ children }: { children: ReactNode }) {
       saveMessage, 
       sessionId,
       hasUnread,
-      setHasUnread
+      setHasUnread,
+      pendingIntent,
+      setPendingIntent
     }}>
       {children}
     </AdminChatContext.Provider>

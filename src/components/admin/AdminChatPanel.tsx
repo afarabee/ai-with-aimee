@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { useAdminChat, type Message } from '@/context/AdminChatContext';
 
 export default function AdminChatPanel() {
-  const { isOpen, setIsOpen, messages, saveMessage } = useAdminChat();
+  const { isOpen, setIsOpen, messages, saveMessage, sessionId, pendingIntent, setPendingIntent } = useAdminChat();
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -39,7 +39,11 @@ export default function AdminChatPanel() {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat-admin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userText }),
+        body: JSON.stringify({ 
+          message: userText,
+          session_id: sessionId,
+          pending_intent: pendingIntent
+        }),
       });
 
       if (!res.ok) {
@@ -54,6 +58,9 @@ export default function AdminChatPanel() {
 
       const data = await res.json();
       const reply = data.reply || 'Hmm, no response.';
+      
+      // Update pending intent for next turn
+      setPendingIntent(data.new_pending_intent ?? null);
       
       // Save assistant response
       await saveMessage('assistant', reply);
