@@ -150,12 +150,22 @@ export default function AdminHome() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('projects')
-        .select('id, updated_at')
-        .order('updated_at', { ascending: false })
-        .limit(1);
+        .select('id, status, updated_at')
+        .order('updated_at', { ascending: false });
       if (error) throw error;
+      
+      const total = data.length;
+      const active = data.filter(p => p.status === 'Active').length;
+      const draft = data.filter(p => p.status === 'Draft').length;
+      const completed = data.filter(p => p.status === 'Completed').length;
+      const archived = data.filter(p => p.status === 'Archived').length;
+      
       return {
-        total: data.length,
+        total,
+        active,
+        draft,
+        completed,
+        archived,
         lastUpdated: data.length > 0 ? data[0].updated_at : null
       };
     }
@@ -224,16 +234,14 @@ export default function AdminHome() {
           route="/admin/blog-dashboard"
           color="cyan"
         />
-        <MetricCard
-          icon={Rocket}
-          title="Projects"
-          value={projectStats?.total || '—'}
-          subtitle={projectStats?.lastUpdated 
-            ? `Updated: ${format(new Date(projectStats.lastUpdated), 'MMM dd')}` 
-            : 'No projects yet'}
-          route="/admin/project-dashboard"
-          color="pink"
-        />
+          <MetricCard
+            icon={Rocket}
+            title="Projects"
+            value={projectStats?.total || '—'}
+            subtitle={`${projectStats?.active || 0} active, ${projectStats?.draft || 0} drafts, ${projectStats?.archived || 0} archived`}
+            route="/admin/project-dashboard"
+            color="pink"
+          />
         <MetricCard
           icon={Image}
           title="Assets"

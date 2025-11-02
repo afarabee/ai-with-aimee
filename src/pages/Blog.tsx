@@ -27,6 +27,7 @@ const Blog = () => {
         .from('blogs')
         .select('*')
         .is('deleted_at', null)
+        .eq('status', 'published')
         .order('date_published', { ascending: false });
       
       if (error) throw error;
