@@ -4,6 +4,7 @@ import PasswordGate from '@/components/admin/PasswordGate';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AboutBackground from '@/components/AboutBackground';
 import AdminChatPanel from '@/components/admin/AdminChatPanel';
+import { AdminChatProvider } from '@/context/AdminChatContext';
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -12,19 +13,21 @@ interface AdminLayoutProps {
 export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <PasswordGate>
-      <SidebarProvider defaultOpen={true}>
-        <div className="min-h-screen flex w-full relative">
-          <AboutBackground />
-          
-          <AdminSidebar />
-          
-          <main className="flex-1 relative z-10">
-            {children}
-          </main>
-          
-          <AdminChatPanel />
-        </div>
-      </SidebarProvider>
+      <AdminChatProvider>
+        <SidebarProvider defaultOpen={true}>
+          <div className="min-h-screen flex w-full relative">
+            <AboutBackground />
+            
+            <AdminSidebar />
+            
+            <main className="flex-1 relative z-10">
+              {children}
+            </main>
+            
+            <AdminChatPanel />
+          </div>
+        </SidebarProvider>
+      </AdminChatProvider>
     </PasswordGate>
   );
 }
