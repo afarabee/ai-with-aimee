@@ -45,14 +45,19 @@ export default function AdminChatPanel() {
     setIsLoading(true);
 
     try {
-      const res = await fetch('/functions/v1/chat-admin', {
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat-admin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage.content }),
       });
 
       if (!res.ok) {
-        const error = await res.json();
+        let error;
+        try {
+          error = await res.json();
+        } catch {
+          throw new Error(`Server error: ${res.status} ${res.statusText}`);
+        }
         throw new Error(error.error || 'Failed to get response');
       }
 
