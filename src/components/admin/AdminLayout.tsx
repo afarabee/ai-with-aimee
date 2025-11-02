@@ -4,6 +4,7 @@ import PasswordGate from '@/components/admin/PasswordGate';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AboutBackground from '@/components/AboutBackground';
 import AdminChatPanel from '@/components/admin/AdminChatPanel';
+import AdminChatOrb from '@/components/admin/AdminChatOrb';
 import { AdminChatProvider } from '@/context/AdminChatContext';
 
 interface AdminLayoutProps {
@@ -25,6 +26,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             </main>
             
             <AdminChatPanel />
+            <AdminChatOrb />
           </div>
         </SidebarProvider>
       </AdminChatProvider>

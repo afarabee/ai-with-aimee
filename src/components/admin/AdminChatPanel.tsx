@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { useAdminChat, type Message } from '@/context/AdminChatContext';
 
 export default function AdminChatPanel() {
-  const { isOpen, setIsOpen, messages, setMessages } = useAdminChat();
+  const { isOpen, setIsOpen, messages, saveMessage } = useAdminChat();
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -28,21 +28,18 @@ export default function AdminChatPanel() {
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
 
-    const userMessage: Message = {
-      role: 'user',
-      content: input.trim(),
-      timestamp: new Date(),
-    };
-
-    setMessages(prev => [...prev, userMessage]);
+    const userText = input.trim();
     setInput('');
     setIsLoading(true);
+
+    // Save user message
+    await saveMessage('user', userText);
 
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat-admin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage.content }),
+        body: JSON.stringify({ message: userText }),
       });
 
       if (!res.ok) {
@@ -56,13 +53,10 @@ export default function AdminChatPanel() {
       }
 
       const data = await res.json();
-      const assistantMessage: Message = {
-        role: 'assistant',
-        content: data.reply,
-        timestamp: new Date(),
-      };
-
-      setMessages(prev => [...prev, assistantMessage]);
+      const reply = data.reply || 'Hmm, no response.';
+      
+      // Save assistant response
+      await saveMessage('assistant', reply);
     } catch (error) {
       console.error('Chat error:', error);
       toast.error(error instanceof Error ? error.message : 'Failed to send message');
@@ -80,18 +74,6 @@ export default function AdminChatPanel() {
 
   return (
     <>
-      {/* Floating trigger button */}
-      {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-[998] btn-hero flex items-center gap-2 px-4 py-3"
-          aria-label="Open chat assistant"
-        >
-          <MessageCircle className="w-5 h-5" />
-          <span>Chat Assistant</span>
-        </button>
-      )}
-
       {/* Chat panel */}
       {isOpen && (
         <div className="chat-panel">
