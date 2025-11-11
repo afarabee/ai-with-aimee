@@ -3,7 +3,7 @@ import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import MDEditor from '@uiw/react-md-editor';
+import MDEditor, { commands, ICommand } from '@uiw/react-md-editor';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { ArrowLeft, Eye, EyeOff, Image, Save, Trash2 } from 'lucide-react';
@@ -48,6 +48,60 @@ const blogSchema = z.object({
 });
 
 type BlogFormData = z.infer<typeof blogSchema>;
+
+// Custom font size commands
+const fontSizeSmall: ICommand = {
+  name: 'fontSizeSmall',
+  keyCommand: 'fontSizeSmall',
+  buttonProps: { 'aria-label': 'Small text', title: 'Small (14px)' },
+  icon: <span style={{ fontSize: '12px', fontWeight: 'bold' }}>S</span>,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || 'small text';
+    api.replaceSelection(`<span style="font-size: 14px;">${selectedText}</span>`);
+  },
+};
+
+const fontSizeNormal: ICommand = {
+  name: 'fontSizeNormal',
+  keyCommand: 'fontSizeNormal',
+  buttonProps: { 'aria-label': 'Normal text', title: 'Normal (16px)' },
+  icon: <span style={{ fontSize: '14px', fontWeight: 'bold' }}>M</span>,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || 'normal text';
+    api.replaceSelection(`<span style="font-size: 16px;">${selectedText}</span>`);
+  },
+};
+
+const fontSizeLarge: ICommand = {
+  name: 'fontSizeLarge',
+  keyCommand: 'fontSizeLarge',
+  buttonProps: { 'aria-label': 'Large text', title: 'Large (20px)' },
+  icon: <span style={{ fontSize: '16px', fontWeight: 'bold' }}>L</span>,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || 'large text';
+    api.replaceSelection(`<span style="font-size: 20px;">${selectedText}</span>`);
+  },
+};
+
+const fontSizeExtraLarge: ICommand = {
+  name: 'fontSizeXL',
+  keyCommand: 'fontSizeXL',
+  buttonProps: { 'aria-label': 'Extra large text', title: 'Extra Large (24px)' },
+  icon: <span style={{ fontSize: '18px', fontWeight: 'bold' }}>XL</span>,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || 'extra large text';
+    api.replaceSelection(`<span style="font-size: 24px;">${selectedText}</span>`);
+  },
+};
+
+// Group the font size commands
+const fontSizeGroup: ICommand = {
+  name: 'fontSizes',
+  keyCommand: 'fontSizes',
+  buttonProps: { 'aria-label': 'Font sizes' },
+  icon: <span style={{ fontWeight: 'bold' }}>A</span>,
+  children: [fontSizeSmall, fontSizeNormal, fontSizeLarge, fontSizeExtraLarge],
+};
 
 export default function BlogEditor() {
   const { slug } = useParams();
@@ -585,6 +639,46 @@ export default function BlogEditor() {
                           height={600}
                           preview="edit"
                           visibleDragbar={false}
+                          commands={[
+                            commands.group(
+                              [
+                                commands.title1,
+                                commands.title2,
+                                commands.title3,
+                                commands.title4,
+                                commands.title5,
+                                commands.title6,
+                              ],
+                              {
+                                name: 'headings',
+                                groupName: 'headings',
+                                buttonProps: { 'aria-label': 'Insert headings' },
+                                icon: <span style={{ fontWeight: 'bold' }}>H</span>,
+                              }
+                            ),
+                            commands.divider,
+                            fontSizeGroup,
+                            commands.divider,
+                            commands.bold,
+                            commands.italic,
+                            commands.strikethrough,
+                            commands.divider,
+                            commands.link,
+                            commands.quote,
+                            commands.code,
+                            commands.divider,
+                            commands.unorderedListCommand,
+                            commands.orderedListCommand,
+                            commands.checkedListCommand,
+                            commands.divider,
+                          ]}
+                          extraCommands={[
+                            commands.codeEdit,
+                            commands.codeLive,
+                            commands.codePreview,
+                            commands.divider,
+                            commands.fullscreen,
+                          ]}
                         />
                       </div>
                       {errors.body && (
