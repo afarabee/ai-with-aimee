@@ -641,9 +641,32 @@ export default function ProjectEditor() {
                   boxShadow: '0 0 30px hsl(var(--color-cyan) / 0.2)',
                 }}
               >
-                <h2 className="text-2xl font-montserrat font-bold mb-6" style={{ color: 'hsl(var(--color-cyan))' }}>
-                  {projectId ? 'Edit Project' : 'New Project'}
-                </h2>
+                <div className="flex items-center gap-3 mb-6">
+                  <h2 className="text-2xl font-montserrat font-bold" style={{ color: 'hsl(var(--color-cyan))' }}>
+                    {projectId ? 'Edit Project' : 'New Project'}
+                  </h2>
+                  {formData.status && (
+                    <span 
+                      className="px-3 py-1 text-sm font-rajdhani font-bold rounded"
+                      style={{
+                        background: 
+                          formData.status === 'Active' || formData.status === 'Completed'
+                            ? 'rgba(34, 197, 94, 0.2)'
+                            : 'rgba(107, 114, 128, 0.2)',
+                        border: 
+                          formData.status === 'Active' || formData.status === 'Completed'
+                            ? '2px solid #22c55e'
+                            : '2px solid #6b7280',
+                        color: 
+                          formData.status === 'Active' || formData.status === 'Completed'
+                            ? '#22c55e'
+                            : '#9ca3af',
+                      }}
+                    >
+                      {formData.status === 'Active' || formData.status === 'Completed' ? '✓ Published' : '○ Unpublished'}
+                    </span>
+                  )}
+                </div>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   <div>
@@ -702,6 +725,12 @@ export default function ProjectEditor() {
                           <SelectItem value="Archived">Archived</SelectItem>
                         </SelectContent>
                       </Select>
+                      <p className="mt-2 text-xs font-ibm" style={{ color: 'hsl(var(--color-cyan) / 0.7)' }}>
+                        <span style={{ color: '#6b7280' }}>Draft:</span> Unpublished • 
+                        <span style={{ color: '#22c55e' }}> Active:</span> Published & Current • 
+                        <span style={{ color: '#3b82f6' }}> Completed:</span> Published & Finished • 
+                        <span style={{ color: '#ef4444' }}> Archived:</span> Hidden
+                      </p>
                     </div>
                     <div>
                       <Label htmlFor="display_order">Display Order</Label>
@@ -969,6 +998,25 @@ export default function ProjectEditor() {
                       <Save size={16} className="mr-2" />
                       Save Draft
                     </Button>
+                    
+                    {projectId && (formData.status === 'Active' || formData.status === 'Completed') && (
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          setValue('status', 'Draft');
+                          handleSubmit((data) => onSubmit({ ...data, status: 'Draft' }))();
+                        }}
+                        className="flex-1"
+                        style={{
+                          background: 'rgba(107, 114, 128, 0.2)',
+                          border: '2px solid #6b7280',
+                          color: '#9ca3af',
+                        }}
+                      >
+                        Unpublish
+                      </Button>
+                    )}
+                    
                     <Button
                       type="submit"
                       className="flex-1"
@@ -978,7 +1026,7 @@ export default function ProjectEditor() {
                         color: 'hsl(var(--color-yellow))',
                       }}
                     >
-                      Publish
+                      {formData.status === 'Active' || formData.status === 'Completed' ? 'Update Published' : 'Publish'}
                     </Button>
                   </div>
 
