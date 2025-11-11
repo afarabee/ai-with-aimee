@@ -46,7 +46,7 @@ const Footer = () => {
 
         <div className="flex justify-center gap-4 mb-6 text-sm">
           <a 
-            href="https://www.linkedin.com/in/aimeefarabee/" 
+            href="https://www.linkedin.com/in/aimee-farabee/" 
             target="_blank" 
             rel="noopener noreferrer"
             className="neon-text-cyan hover:neon-text-pink transition-colors focus:ring-2 focus:ring-cyan-400/50 focus:outline-none"

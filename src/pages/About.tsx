@@ -97,7 +97,7 @@ const About = () => {
           {/* Social Icons */}
           <div className="flex justify-center gap-6 mt-20 mb-12">
             {[
-              { icon: Linkedin, href: 'https://www.linkedin.com/in/aimeefarabee/', label: 'LinkedIn', external: true },
+              { icon: Linkedin, href: 'https://www.linkedin.com/in/aimee-farabee/', label: 'LinkedIn', external: true },
               { icon: Github, href: 'https://github.com/afarabee', label: 'GitHub', external: true },
               { icon: Mail, href: 'mailto:genai-aims@gmail.com', label: 'Email', external: false },
             ].map((social, index) => (

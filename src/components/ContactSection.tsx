@@ -49,12 +49,12 @@ const ContactSection = () => {
           }}>genai-aims@gmail.com</p>
           </GlowCard>
           
-          <GlowCard as="a" href="https://linkedin.com/in/aimeefarabee" target="_blank" rel="noopener noreferrer">
+          <GlowCard as="a" href="https://www.linkedin.com/in/aimee-farabee/" target="_blank" rel="noopener noreferrer">
             <Linkedin className="w-8 h-8 neon-text-pink mx-auto mb-4" />
             <h3 className="neon-text-pink font-rajdhani font-semibold mb-2">LinkedIn</h3>
             <p className="font-ibm text-sm text-center" style={{
             color: '#e6e6e6'
-          }}>linkedin.com/in/aimeefarabee</p>
+          }}>linkedin.com/in/aimee-farabee</p>
           </GlowCard>
           
           <GlowCard as="a" href="https://github.com/afarabee" target="_blank" rel="noopener noreferrer">
