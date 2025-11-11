@@ -219,7 +219,7 @@ const BlogPost = () => {
       </section>
 
       {/* Article Content */}
-      <article className="relative py-16">
+      <article className="relative pt-8 pb-16">
         <div className="max-w-[740px] mx-auto px-6">
           {/* Body Content with Markdown Support */}
           <div className="blog-body space-y-6">
