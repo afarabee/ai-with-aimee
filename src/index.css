@@ -544,9 +544,9 @@ All colors MUST be HSL.
     font-family: var(--font-title);
     font-size: clamp(2rem, 4vw, 3.5rem);
     font-weight: 700;
-    color: hsl(var(--color-pink));
-    text-shadow: 0 0 20px hsl(var(--color-pink) / 0.8), 
-                 0 0 30px hsl(var(--color-pink) / 0.4);
+    color: hsl(var(--color-cyan));
+    text-shadow: 0 0 20px hsl(var(--color-cyan) / 0.8), 
+                 0 0 30px hsl(var(--color-cyan) / 0.4);
     line-height: 1.2;
   }
 
@@ -574,9 +574,9 @@ All colors MUST be HSL.
   .blog-subtitle {
     font-family: var(--font-subtitle);
     font-style: italic;
-    font-size: clamp(1.25rem, 2.5vw, 2rem);
-    color: hsl(var(--color-cyan));
-    text-shadow: 0 0 15px hsl(var(--color-cyan) / 0.5);
+    font-size: clamp(1.1rem, 2.2vw, 1.75rem);
+    color: hsl(var(--color-pink));
+    text-shadow: 0 0 15px hsl(var(--color-pink) / 0.5);
     line-height: 1.4;
   }
 
