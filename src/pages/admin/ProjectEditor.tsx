@@ -5,7 +5,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ArrowLeft, Eye, EyeOff, Save, Trash2 } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Palette, Smile } from 'lucide-react';
+import MDEditor, { commands, ICommand } from '@uiw/react-md-editor';
+import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -45,6 +47,183 @@ const projectSchema = z.object({
 
 type ProjectFormData = z.infer<typeof projectSchema>;
 
+// Custom command definitions for MDEditor
+const fontSizeSmall: ICommand = {
+  name: 'fontSizeSmall',
+  keyCommand: 'fontSizeSmall',
+  buttonProps: { 'aria-label': 'Small font', title: 'Small font' },
+  icon: <span style={{ fontSize: '10px', fontWeight: 'bold' }}>A</span>,
+  execute: (state, api) => {
+    const modifyText = `<span style="font-size: 0.875rem;">${state.selectedText || 'small text'}</span>`;
+    api.replaceSelection(modifyText);
+  },
+};
+
+const fontSizeNormal: ICommand = {
+  name: 'fontSizeNormal',
+  keyCommand: 'fontSizeNormal',
+  buttonProps: { 'aria-label': 'Normal font', title: 'Normal font' },
+  icon: <span style={{ fontSize: '12px', fontWeight: 'bold' }}>A</span>,
+  execute: (state, api) => {
+    const modifyText = `<span style="font-size: 1rem;">${state.selectedText || 'normal text'}</span>`;
+    api.replaceSelection(modifyText);
+  },
+};
+
+const fontSizeLarge: ICommand = {
+  name: 'fontSizeLarge',
+  keyCommand: 'fontSizeLarge',
+  buttonProps: { 'aria-label': 'Large font', title: 'Large font' },
+  icon: <span style={{ fontSize: '14px', fontWeight: 'bold' }}>A</span>,
+  execute: (state, api) => {
+    const modifyText = `<span style="font-size: 1.25rem;">${state.selectedText || 'large text'}</span>`;
+    api.replaceSelection(modifyText);
+  },
+};
+
+const fontSizeExtraLarge: ICommand = {
+  name: 'fontSizeExtraLarge',
+  keyCommand: 'fontSizeExtraLarge',
+  buttonProps: { 'aria-label': 'Extra large font', title: 'Extra large font' },
+  icon: <span style={{ fontSize: '16px', fontWeight: 'bold' }}>A</span>,
+  execute: (state, api) => {
+    const modifyText = `<span style="font-size: 1.5rem;">${state.selectedText || 'extra large text'}</span>`;
+    api.replaceSelection(modifyText);
+  },
+};
+
+const colorBlack: ICommand = {
+  name: 'colorBlack',
+  keyCommand: 'colorBlack',
+  buttonProps: { 'aria-label': 'Black text', title: 'Black text' },
+  icon: <span style={{ color: '#000000', fontWeight: 'bold' }}>A</span>,
+  execute: (state, api) => {
+    const modifyText = `<span style="color: #000000;">${state.selectedText || 'black text'}</span>`;
+    api.replaceSelection(modifyText);
+  },
+};
+
+const colorCyan: ICommand = {
+  name: 'colorCyan',
+  keyCommand: 'colorCyan',
+  buttonProps: { 'aria-label': 'Cyan text (primary)', title: 'Cyan text (primary)' },
+  icon: <span style={{ color: '#00ffff', fontWeight: 'bold' }}>A</span>,
+  execute: (state, api) => {
+    const modifyText = `<span style="color: #00ffff;">${state.selectedText || 'cyan text'}</span>`;
+    api.replaceSelection(modifyText);
+  },
+};
+
+const colorPink: ICommand = {
+  name: 'colorPink',
+  keyCommand: 'colorPink',
+  buttonProps: { 'aria-label': 'Pink text (secondary)', title: 'Pink text (secondary)' },
+  icon: <span style={{ color: '#f50ca0', fontWeight: 'bold' }}>A</span>,
+  execute: (state, api) => {
+    const modifyText = `<span style="color: #f50ca0;">${state.selectedText || 'pink text'}</span>`;
+    api.replaceSelection(modifyText);
+  },
+};
+
+const colorGray: ICommand = {
+  name: 'colorGray',
+  keyCommand: 'colorGray',
+  buttonProps: { 'aria-label': 'Gray text (muted)', title: 'Gray text (muted)' },
+  icon: <span style={{ color: '#a1a1aa', fontWeight: 'bold' }}>A</span>,
+  execute: (state, api) => {
+    const modifyText = `<span style="color: #a1a1aa;">${state.selectedText || 'gray text'}</span>`;
+    api.replaceSelection(modifyText);
+  },
+};
+
+const colorRed: ICommand = {
+  name: 'colorRed',
+  keyCommand: 'colorRed',
+  buttonProps: { 'aria-label': 'Red text (error)', title: 'Red text (error)' },
+  icon: <span style={{ color: '#ef4444', fontWeight: 'bold' }}>A</span>,
+  execute: (state, api) => {
+    const modifyText = `<span style="color: #ef4444;">${state.selectedText || 'red text'}</span>`;
+    api.replaceSelection(modifyText);
+  },
+};
+
+const colorGreen: ICommand = {
+  name: 'colorGreen',
+  keyCommand: 'colorGreen',
+  buttonProps: { 'aria-label': 'Green text (success)', title: 'Green text (success)' },
+  icon: <span style={{ color: '#22c55e', fontWeight: 'bold' }}>A</span>,
+  execute: (state, api) => {
+    const modifyText = `<span style="color: #22c55e;">${state.selectedText || 'green text'}</span>`;
+    api.replaceSelection(modifyText);
+  },
+};
+
+const colorYellow: ICommand = {
+  name: 'colorYellow',
+  keyCommand: 'colorYellow',
+  buttonProps: { 'aria-label': 'Yellow text (warning)', title: 'Yellow text (warning)' },
+  icon: <span style={{ color: '#f9f940', fontWeight: 'bold' }}>A</span>,
+  execute: (state, api) => {
+    const modifyText = `<span style="color: #f9f940;">${state.selectedText || 'yellow text'}</span>`;
+    api.replaceSelection(modifyText);
+  },
+};
+
+const colorBlue: ICommand = {
+  name: 'colorBlue',
+  keyCommand: 'colorBlue',
+  buttonProps: { 'aria-label': 'Blue text (info)', title: 'Blue text (info)' },
+  icon: <span style={{ color: '#3b82f6', fontWeight: 'bold' }}>A</span>,
+  execute: (state, api) => {
+    const modifyText = `<span style="color: #3b82f6;">${state.selectedText || 'blue text'}</span>`;
+    api.replaceSelection(modifyText);
+  },
+};
+
+const alignLeft: ICommand = {
+  name: 'alignLeft',
+  keyCommand: 'alignLeft',
+  buttonProps: { 'aria-label': 'Align left', title: 'Align left' },
+  icon: <AlignLeft size={14} />,
+  execute: (state, api) => {
+    const modifyText = `<div style="text-align: left;">\n\n${state.selectedText || 'Left aligned text'}\n\n</div>`;
+    api.replaceSelection(modifyText);
+  },
+};
+
+const alignCenter: ICommand = {
+  name: 'alignCenter',
+  keyCommand: 'alignCenter',
+  buttonProps: { 'aria-label': 'Align center', title: 'Align center' },
+  icon: <AlignCenter size={14} />,
+  execute: (state, api) => {
+    const modifyText = `<div style="text-align: center;">\n\n${state.selectedText || 'Center aligned text'}\n\n</div>`;
+    api.replaceSelection(modifyText);
+  },
+};
+
+const alignRight: ICommand = {
+  name: 'alignRight',
+  keyCommand: 'alignRight',
+  buttonProps: { 'aria-label': 'Align right', title: 'Align right' },
+  icon: <AlignRight size={14} />,
+  execute: (state, api) => {
+    const modifyText = `<div style="text-align: right;">\n\n${state.selectedText || 'Right aligned text'}\n\n</div>`;
+    api.replaceSelection(modifyText);
+  },
+};
+
+const alignJustify: ICommand = {
+  name: 'alignJustify',
+  keyCommand: 'alignJustify',
+  buttonProps: { 'aria-label': 'Justify text', title: 'Justify text' },
+  icon: <AlignJustify size={14} />,
+  execute: (state, api) => {
+    const modifyText = `<div style="text-align: justify;">\n\n${state.selectedText || 'Justified text'}\n\n</div>`;
+    api.replaceSelection(modifyText);
+  },
+};
+
 export default function ProjectEditor() {
   const [searchParams] = useSearchParams();
   const projectIdFromUrl = searchParams.get('id');
@@ -54,6 +233,19 @@ export default function ProjectEditor() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [clearDialogOpen, setClearDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  
+  // Emoji picker states for each field
+  const [showChallengeEmoji, setShowChallengeEmoji] = useState(false);
+  const [showSolutionEmoji, setShowSolutionEmoji] = useState(false);
+  const [showImpactEmoji, setShowImpactEmoji] = useState(false);
+  const [challengeTextApi, setChallengeTextApi] = useState<any>(null);
+  const [solutionTextApi, setSolutionTextApi] = useState<any>(null);
+  const [impactTextApi, setImpactTextApi] = useState<any>(null);
+  
+  // Editor content states
+  const [challenge, setChallenge] = useState('');
+  const [solution, setSolution] = useState('');
+  const [impact, setImpact] = useState('');
 
   const {
     register,
@@ -92,6 +284,9 @@ export default function ProjectEditor() {
 
       if (data) {
         setProjectId(data.id);
+        setChallenge(data.challenge);
+        setSolution(data.solution);
+        setImpact(data.impact);
         reset({
           project_title: data.project_title,
           subtitle: data.subtitle,
@@ -243,6 +438,9 @@ export default function ProjectEditor() {
   };
 
   const handleClearForm = () => {
+    setChallenge('');
+    setSolution('');
+    setImpact('');
     reset({
       project_title: '',
       subtitle: '',
@@ -268,6 +466,102 @@ export default function ProjectEditor() {
     (data) => saveDraft(data),
     30000
   );
+
+  // Emoji commands for each field
+  const challengeEmojiCommand: ICommand = {
+    name: 'emoji',
+    keyCommand: 'emoji',
+    buttonProps: { 'aria-label': 'Insert emoji', title: 'Insert emoji' },
+    icon: <Smile size={14} />,
+    execute: () => setShowChallengeEmoji(!showChallengeEmoji),
+  };
+
+  const solutionEmojiCommand: ICommand = {
+    name: 'emoji',
+    keyCommand: 'emoji',
+    buttonProps: { 'aria-label': 'Insert emoji', title: 'Insert emoji' },
+    icon: <Smile size={14} />,
+    execute: () => setShowSolutionEmoji(!showSolutionEmoji),
+  };
+
+  const impactEmojiCommand: ICommand = {
+    name: 'emoji',
+    keyCommand: 'emoji',
+    buttonProps: { 'aria-label': 'Insert emoji', title: 'Insert emoji' },
+    icon: <Smile size={14} />,
+    execute: () => setShowImpactEmoji(!showImpactEmoji),
+  };
+
+  const handleChallengeEmojiClick = (emojiData: EmojiClickData) => {
+    if (challengeTextApi) {
+      challengeTextApi.replaceSelection(emojiData.emoji);
+    }
+    setShowChallengeEmoji(false);
+  };
+
+  const handleSolutionEmojiClick = (emojiData: EmojiClickData) => {
+    if (solutionTextApi) {
+      solutionTextApi.replaceSelection(emojiData.emoji);
+    }
+    setShowSolutionEmoji(false);
+  };
+
+  const handleImpactEmojiClick = (emojiData: EmojiClickData) => {
+    if (impactTextApi) {
+      impactTextApi.replaceSelection(emojiData.emoji);
+    }
+    setShowImpactEmoji(false);
+  };
+
+  // Shared commands array
+  const editorCommands = [
+    commands.group(
+      [
+        { ...commands.title1, buttonProps: { ...commands.title1.buttonProps, title: 'Heading 1' }},
+        { ...commands.title2, buttonProps: { ...commands.title2.buttonProps, title: 'Heading 2' }},
+        { ...commands.title3, buttonProps: { ...commands.title3.buttonProps, title: 'Heading 3' }},
+        { ...commands.title4, buttonProps: { ...commands.title4.buttonProps, title: 'Heading 4' }},
+        { ...commands.title5, buttonProps: { ...commands.title5.buttonProps, title: 'Heading 5' }},
+        { ...commands.title6, buttonProps: { ...commands.title6.buttonProps, title: 'Heading 6' }},
+      ],
+      {
+        name: 'title',
+        groupName: 'title',
+        buttonProps: { 'aria-label': 'Insert heading', title: 'Insert heading' },
+      }
+    ),
+    commands.divider,
+    commands.group(
+      [fontSizeSmall, fontSizeNormal, fontSizeLarge, fontSizeExtraLarge],
+      {
+        name: 'fontSize',
+        groupName: 'fontSize',
+        icon: <span style={{ fontSize: '12px', fontWeight: 'bold' }}>A</span>,
+        buttonProps: { 'aria-label': 'Font size', title: 'Font size' },
+      }
+    ),
+    commands.divider,
+    commands.group(
+      [colorBlack, colorCyan, colorPink, colorGray, colorRed, colorGreen, colorYellow, colorBlue],
+      {
+        name: 'textColor',
+        groupName: 'textColor',
+        icon: <Palette size={14} />,
+        buttonProps: { 'aria-label': 'Text color', title: 'Text color' },
+      }
+    ),
+    commands.divider,
+    commands.group(
+      [alignLeft, alignCenter, alignRight, alignJustify],
+      {
+        name: 'textAlign',
+        groupName: 'textAlign',
+        icon: <AlignLeft size={14} />,
+        buttonProps: { 'aria-label': 'Text alignment', title: 'Text alignment' },
+      }
+    ),
+    commands.divider,
+  ];
 
   const previewData = useMemo(
     () => ({
@@ -423,16 +717,58 @@ export default function ProjectEditor() {
 
                   <div>
                     <Label htmlFor="challenge">Challenge *</Label>
-                    <Textarea
-                      id="challenge"
-                      {...register('challenge')}
-                      rows={3}
-                      className="mt-2"
-                      style={{
-                        background: 'rgba(26, 11, 46, 0.6)',
-                        borderColor: errors.challenge ? 'hsl(var(--color-pink))' : 'hsl(var(--color-cyan) / 0.3)',
-                      }}
-                    />
+                    <div data-color-mode="dark" className="relative mt-2">
+                      <MDEditor
+                        value={challenge}
+                        onChange={(val) => {
+                          setChallenge(val || '');
+                          setValue('challenge', val || '');
+                        }}
+                        height={400}
+                        preview="edit"
+                        visibleDragbar={false}
+                        textareaProps={{
+                          onFocus: (e) => {
+                            const textarea = e.target;
+                            setChallengeTextApi({
+                              replaceSelection: (text: string) => {
+                                const start = textarea.selectionStart;
+                                const end = textarea.selectionEnd;
+                                const newValue = challenge.substring(0, start) + text + challenge.substring(end);
+                                setChallenge(newValue);
+                                setValue('challenge', newValue);
+                                setTimeout(() => {
+                                  textarea.focus();
+                                  textarea.setSelectionRange(start + text.length, start + text.length);
+                                }, 0);
+                              }
+                            });
+                          }
+                        }}
+                        commands={[
+                          ...editorCommands,
+                          challengeEmojiCommand,
+                          commands.divider,
+                          { ...commands.bold, buttonProps: { ...commands.bold.buttonProps, title: 'Bold text (Ctrl+B)' }},
+                          { ...commands.italic, buttonProps: { ...commands.italic.buttonProps, title: 'Italic text (Ctrl+I)' }},
+                          { ...commands.strikethrough, buttonProps: { ...commands.strikethrough.buttonProps, title: 'Strikethrough' }},
+                          commands.divider,
+                          { ...commands.hr, buttonProps: { ...commands.hr.buttonProps, title: 'Horizontal rule' }},
+                          { ...commands.link, buttonProps: { ...commands.link.buttonProps, title: 'Insert link (Ctrl+K)' }},
+                          { ...commands.quote, buttonProps: { ...commands.quote.buttonProps, title: 'Insert quote' }},
+                          { ...commands.code, buttonProps: { ...commands.code.buttonProps, title: 'Insert code (Ctrl+J)' }},
+                          commands.divider,
+                          { ...commands.unorderedListCommand, buttonProps: { ...commands.unorderedListCommand.buttonProps, title: 'Unordered list' }},
+                          { ...commands.orderedListCommand, buttonProps: { ...commands.orderedListCommand.buttonProps, title: 'Ordered list' }},
+                          { ...commands.checkedListCommand, buttonProps: { ...commands.checkedListCommand.buttonProps, title: 'Checked list' }},
+                        ]}
+                      />
+                      {showChallengeEmoji && (
+                        <div className="absolute z-50 mt-2">
+                          <EmojiPicker onEmojiClick={handleChallengeEmojiClick} theme={Theme.DARK} />
+                        </div>
+                      )}
+                    </div>
                     {errors.challenge && (
                       <p className="mt-1 text-sm" style={{ color: 'hsl(var(--color-pink))' }}>
                         {errors.challenge.message}
@@ -442,16 +778,58 @@ export default function ProjectEditor() {
 
                   <div>
                     <Label htmlFor="solution">Solution *</Label>
-                    <Textarea
-                      id="solution"
-                      {...register('solution')}
-                      rows={3}
-                      className="mt-2"
-                      style={{
-                        background: 'rgba(26, 11, 46, 0.6)',
-                        borderColor: errors.solution ? 'hsl(var(--color-pink))' : 'hsl(var(--color-cyan) / 0.3)',
-                      }}
-                    />
+                    <div data-color-mode="dark" className="relative mt-2">
+                      <MDEditor
+                        value={solution}
+                        onChange={(val) => {
+                          setSolution(val || '');
+                          setValue('solution', val || '');
+                        }}
+                        height={400}
+                        preview="edit"
+                        visibleDragbar={false}
+                        textareaProps={{
+                          onFocus: (e) => {
+                            const textarea = e.target;
+                            setSolutionTextApi({
+                              replaceSelection: (text: string) => {
+                                const start = textarea.selectionStart;
+                                const end = textarea.selectionEnd;
+                                const newValue = solution.substring(0, start) + text + solution.substring(end);
+                                setSolution(newValue);
+                                setValue('solution', newValue);
+                                setTimeout(() => {
+                                  textarea.focus();
+                                  textarea.setSelectionRange(start + text.length, start + text.length);
+                                }, 0);
+                              }
+                            });
+                          }
+                        }}
+                        commands={[
+                          ...editorCommands,
+                          solutionEmojiCommand,
+                          commands.divider,
+                          { ...commands.bold, buttonProps: { ...commands.bold.buttonProps, title: 'Bold text (Ctrl+B)' }},
+                          { ...commands.italic, buttonProps: { ...commands.italic.buttonProps, title: 'Italic text (Ctrl+I)' }},
+                          { ...commands.strikethrough, buttonProps: { ...commands.strikethrough.buttonProps, title: 'Strikethrough' }},
+                          commands.divider,
+                          { ...commands.hr, buttonProps: { ...commands.hr.buttonProps, title: 'Horizontal rule' }},
+                          { ...commands.link, buttonProps: { ...commands.link.buttonProps, title: 'Insert link (Ctrl+K)' }},
+                          { ...commands.quote, buttonProps: { ...commands.quote.buttonProps, title: 'Insert quote' }},
+                          { ...commands.code, buttonProps: { ...commands.code.buttonProps, title: 'Insert code (Ctrl+J)' }},
+                          commands.divider,
+                          { ...commands.unorderedListCommand, buttonProps: { ...commands.unorderedListCommand.buttonProps, title: 'Unordered list' }},
+                          { ...commands.orderedListCommand, buttonProps: { ...commands.orderedListCommand.buttonProps, title: 'Ordered list' }},
+                          { ...commands.checkedListCommand, buttonProps: { ...commands.checkedListCommand.buttonProps, title: 'Checked list' }},
+                        ]}
+                      />
+                      {showSolutionEmoji && (
+                        <div className="absolute z-50 mt-2">
+                          <EmojiPicker onEmojiClick={handleSolutionEmojiClick} theme={Theme.DARK} />
+                        </div>
+                      )}
+                    </div>
                     {errors.solution && (
                       <p className="mt-1 text-sm" style={{ color: 'hsl(var(--color-pink))' }}>
                         {errors.solution.message}
@@ -461,16 +839,58 @@ export default function ProjectEditor() {
 
                   <div>
                     <Label htmlFor="impact">Impact *</Label>
-                    <Textarea
-                      id="impact"
-                      {...register('impact')}
-                      rows={3}
-                      className="mt-2"
-                      style={{
-                        background: 'rgba(26, 11, 46, 0.6)',
-                        borderColor: errors.impact ? 'hsl(var(--color-pink))' : 'hsl(var(--color-cyan) / 0.3)',
-                      }}
-                    />
+                    <div data-color-mode="dark" className="relative mt-2">
+                      <MDEditor
+                        value={impact}
+                        onChange={(val) => {
+                          setImpact(val || '');
+                          setValue('impact', val || '');
+                        }}
+                        height={400}
+                        preview="edit"
+                        visibleDragbar={false}
+                        textareaProps={{
+                          onFocus: (e) => {
+                            const textarea = e.target;
+                            setImpactTextApi({
+                              replaceSelection: (text: string) => {
+                                const start = textarea.selectionStart;
+                                const end = textarea.selectionEnd;
+                                const newValue = impact.substring(0, start) + text + impact.substring(end);
+                                setImpact(newValue);
+                                setValue('impact', newValue);
+                                setTimeout(() => {
+                                  textarea.focus();
+                                  textarea.setSelectionRange(start + text.length, start + text.length);
+                                }, 0);
+                              }
+                            });
+                          }
+                        }}
+                        commands={[
+                          ...editorCommands,
+                          impactEmojiCommand,
+                          commands.divider,
+                          { ...commands.bold, buttonProps: { ...commands.bold.buttonProps, title: 'Bold text (Ctrl+B)' }},
+                          { ...commands.italic, buttonProps: { ...commands.italic.buttonProps, title: 'Italic text (Ctrl+I)' }},
+                          { ...commands.strikethrough, buttonProps: { ...commands.strikethrough.buttonProps, title: 'Strikethrough' }},
+                          commands.divider,
+                          { ...commands.hr, buttonProps: { ...commands.hr.buttonProps, title: 'Horizontal rule' }},
+                          { ...commands.link, buttonProps: { ...commands.link.buttonProps, title: 'Insert link (Ctrl+K)' }},
+                          { ...commands.quote, buttonProps: { ...commands.quote.buttonProps, title: 'Insert quote' }},
+                          { ...commands.code, buttonProps: { ...commands.code.buttonProps, title: 'Insert code (Ctrl+J)' }},
+                          commands.divider,
+                          { ...commands.unorderedListCommand, buttonProps: { ...commands.unorderedListCommand.buttonProps, title: 'Unordered list' }},
+                          { ...commands.orderedListCommand, buttonProps: { ...commands.orderedListCommand.buttonProps, title: 'Ordered list' }},
+                          { ...commands.checkedListCommand, buttonProps: { ...commands.checkedListCommand.buttonProps, title: 'Checked list' }},
+                        ]}
+                      />
+                      {showImpactEmoji && (
+                        <div className="absolute z-50 mt-2">
+                          <EmojiPicker onEmojiClick={handleImpactEmojiClick} theme={Theme.DARK} />
+                        </div>
+                      )}
+                    </div>
                     {errors.impact && (
                       <p className="mt-1 text-sm" style={{ color: 'hsl(var(--color-pink))' }}>
                         {errors.impact.message}
@@ -644,9 +1064,11 @@ export default function ProjectEditor() {
                       <h4 className="text-lg font-rajdhani font-bold mb-2" style={{ color: 'hsl(var(--color-yellow))' }}>
                         Challenge
                       </h4>
-                      <p className="font-ibm-plex" style={{ color: 'hsl(var(--color-light-text))' }}>
-                        {previewData.challenge}
-                      </p>
+                      <div 
+                        className="font-ibm-plex prose prose-invert max-w-none"
+                        dangerouslySetInnerHTML={{ __html: previewData.challenge }}
+                        style={{ color: 'hsl(var(--color-light-text))' }}
+                      />
                     </div>
                   )}
 
@@ -655,9 +1077,11 @@ export default function ProjectEditor() {
                       <h4 className="text-lg font-rajdhani font-bold mb-2" style={{ color: 'hsl(var(--color-yellow))' }}>
                         Solution
                       </h4>
-                      <p className="font-ibm-plex" style={{ color: 'hsl(var(--color-light-text))' }}>
-                        {previewData.solution}
-                      </p>
+                      <div 
+                        className="font-ibm-plex prose prose-invert max-w-none"
+                        dangerouslySetInnerHTML={{ __html: previewData.solution }}
+                        style={{ color: 'hsl(var(--color-light-text))' }}
+                      />
                     </div>
                   )}
 
@@ -666,9 +1090,11 @@ export default function ProjectEditor() {
                       <h4 className="text-lg font-rajdhani font-bold mb-2" style={{ color: 'hsl(var(--color-yellow))' }}>
                         Impact
                       </h4>
-                      <p className="font-ibm-plex" style={{ color: 'hsl(var(--color-light-text))' }}>
-                        {previewData.impact}
-                      </p>
+                      <div 
+                        className="font-ibm-plex prose prose-invert max-w-none"
+                        dangerouslySetInnerHTML={{ __html: previewData.impact }}
+                        style={{ color: 'hsl(var(--color-light-text))' }}
+                      />
                     </div>
                   )}
                 </div>
