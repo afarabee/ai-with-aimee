@@ -6,7 +6,7 @@ import { z } from 'zod';
 import MDEditor, { commands, ICommand } from '@uiw/react-md-editor';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ArrowLeft, Eye, EyeOff, Image, Save, Trash2 } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Palette } from 'lucide-react';
 import BlogPreview from '@/components/admin/BlogPreview';
 import ImageUploadModal from '@/components/admin/ImageUploadModal';
 import ImageUploadHelper from '@/components/admin/ImageUploadHelper';
@@ -98,9 +98,148 @@ const fontSizeExtraLarge: ICommand = {
 const fontSizeGroup: ICommand = {
   name: 'fontSizes',
   keyCommand: 'fontSizes',
-  buttonProps: { 'aria-label': 'Font sizes' },
+  buttonProps: { 'aria-label': 'Font sizes', title: 'Font size' },
   icon: <span style={{ fontWeight: 'bold' }}>A</span>,
   children: [fontSizeSmall, fontSizeNormal, fontSizeLarge, fontSizeExtraLarge],
+};
+
+// Text color commands
+const colorBlack: ICommand = {
+  name: 'colorBlack',
+  keyCommand: 'colorBlack',
+  buttonProps: { 'aria-label': 'Black text', title: 'Black text' },
+  icon: <span style={{ display: 'inline-block', width: '14px', height: '14px', backgroundColor: '#000000', border: '1px solid #ccc', borderRadius: '2px' }} />,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || 'text';
+    api.replaceSelection(`<span style="color: #000000;">${selectedText}</span>`);
+  },
+};
+
+const colorCyan: ICommand = {
+  name: 'colorCyan',
+  keyCommand: 'colorCyan',
+  buttonProps: { 'aria-label': 'Cyan text', title: 'Cyan text (brand color)' },
+  icon: <span style={{ display: 'inline-block', width: '14px', height: '14px', backgroundColor: '#00D4FF', borderRadius: '2px' }} />,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || 'text';
+    api.replaceSelection(`<span style="color: #00D4FF;">${selectedText}</span>`);
+  },
+};
+
+const colorPink: ICommand = {
+  name: 'colorPink',
+  keyCommand: 'colorPink',
+  buttonProps: { 'aria-label': 'Pink text', title: 'Pink text (brand color)' },
+  icon: <span style={{ display: 'inline-block', width: '14px', height: '14px', backgroundColor: '#FF0080', borderRadius: '2px' }} />,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || 'text';
+    api.replaceSelection(`<span style="color: #FF0080;">${selectedText}</span>`);
+  },
+};
+
+const colorGray: ICommand = {
+  name: 'colorGray',
+  keyCommand: 'colorGray',
+  buttonProps: { 'aria-label': 'Gray text', title: 'Gray text (muted)' },
+  icon: <span style={{ display: 'inline-block', width: '14px', height: '14px', backgroundColor: '#6B7280', borderRadius: '2px' }} />,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || 'text';
+    api.replaceSelection(`<span style="color: #6B7280;">${selectedText}</span>`);
+  },
+};
+
+const colorRed: ICommand = {
+  name: 'colorRed',
+  keyCommand: 'colorRed',
+  buttonProps: { 'aria-label': 'Red text', title: 'Red text (emphasis)' },
+  icon: <span style={{ display: 'inline-block', width: '14px', height: '14px', backgroundColor: '#EF4444', borderRadius: '2px' }} />,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || 'text';
+    api.replaceSelection(`<span style="color: #EF4444;">${selectedText}</span>`);
+  },
+};
+
+const colorGreen: ICommand = {
+  name: 'colorGreen',
+  keyCommand: 'colorGreen',
+  buttonProps: { 'aria-label': 'Green text', title: 'Green text (success)' },
+  icon: <span style={{ display: 'inline-block', width: '14px', height: '14px', backgroundColor: '#10B981', borderRadius: '2px' }} />,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || 'text';
+    api.replaceSelection(`<span style="color: #10B981;">${selectedText}</span>`);
+  },
+};
+
+const colorBlue: ICommand = {
+  name: 'colorBlue',
+  keyCommand: 'colorBlue',
+  buttonProps: { 'aria-label': 'Blue text', title: 'Blue text (info)' },
+  icon: <span style={{ display: 'inline-block', width: '14px', height: '14px', backgroundColor: '#3B82F6', borderRadius: '2px' }} />,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || 'text';
+    api.replaceSelection(`<span style="color: #3B82F6;">${selectedText}</span>`);
+  },
+};
+
+const textColorGroup: ICommand = {
+  name: 'textColors',
+  keyCommand: 'textColors',
+  buttonProps: { 'aria-label': 'Text color', title: 'Text color' },
+  icon: <Palette size={14} />,
+  children: [colorBlack, colorCyan, colorPink, colorGray, colorRed, colorGreen, colorBlue],
+};
+
+// Text alignment commands
+const alignLeft: ICommand = {
+  name: 'alignLeft',
+  keyCommand: 'alignLeft',
+  buttonProps: { 'aria-label': 'Align left', title: 'Align left' },
+  icon: <AlignLeft size={14} />,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || 'text';
+    api.replaceSelection(`<div style="text-align: left;">${selectedText}</div>`);
+  },
+};
+
+const alignCenter: ICommand = {
+  name: 'alignCenter',
+  keyCommand: 'alignCenter',
+  buttonProps: { 'aria-label': 'Align center', title: 'Align center' },
+  icon: <AlignCenter size={14} />,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || 'text';
+    api.replaceSelection(`<div style="text-align: center;">${selectedText}</div>`);
+  },
+};
+
+const alignRight: ICommand = {
+  name: 'alignRight',
+  keyCommand: 'alignRight',
+  buttonProps: { 'aria-label': 'Align right', title: 'Align right' },
+  icon: <AlignRight size={14} />,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || 'text';
+    api.replaceSelection(`<div style="text-align: right;">${selectedText}</div>`);
+  },
+};
+
+const alignJustify: ICommand = {
+  name: 'alignJustify',
+  keyCommand: 'alignJustify',
+  buttonProps: { 'aria-label': 'Justify', title: 'Justify text' },
+  icon: <AlignJustify size={14} />,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || 'text';
+    api.replaceSelection(`<div style="text-align: justify;">${selectedText}</div>`);
+  },
+};
+
+const textAlignGroup: ICommand = {
+  name: 'textAlign',
+  keyCommand: 'textAlign',
+  buttonProps: { 'aria-label': 'Text alignment', title: 'Text alignment' },
+  icon: <AlignLeft size={14} />,
+  children: [alignLeft, alignCenter, alignRight, alignJustify],
 };
 
 export default function BlogEditor() {
@@ -652,32 +791,75 @@ export default function BlogEditor() {
                               {
                                 name: 'headings',
                                 groupName: 'headings',
-                                buttonProps: { 'aria-label': 'Insert headings' },
+                                buttonProps: { 'aria-label': 'Insert headings', title: 'Insert heading (H1-H6)' },
                                 icon: <span style={{ fontWeight: 'bold' }}>H</span>,
                               }
                             ),
                             commands.divider,
                             fontSizeGroup,
                             commands.divider,
-                            commands.bold,
-                            commands.italic,
-                            commands.strikethrough,
+                            textColorGroup,
                             commands.divider,
-                            commands.link,
-                            commands.quote,
-                            commands.code,
+                            textAlignGroup,
                             commands.divider,
-                            commands.unorderedListCommand,
-                            commands.orderedListCommand,
-                            commands.checkedListCommand,
+                            {
+                              ...commands.bold,
+                              buttonProps: { ...commands.bold.buttonProps, title: 'Bold text (Ctrl+B)' }
+                            },
+                            {
+                              ...commands.italic,
+                              buttonProps: { ...commands.italic.buttonProps, title: 'Italic text (Ctrl+I)' }
+                            },
+                            {
+                              ...commands.strikethrough,
+                              buttonProps: { ...commands.strikethrough.buttonProps, title: 'Strikethrough text' }
+                            },
+                            commands.divider,
+                            {
+                              ...commands.link,
+                              buttonProps: { ...commands.link.buttonProps, title: 'Insert link (Ctrl+K)' }
+                            },
+                            {
+                              ...commands.quote,
+                              buttonProps: { ...commands.quote.buttonProps, title: 'Insert quote' }
+                            },
+                            {
+                              ...commands.code,
+                              buttonProps: { ...commands.code.buttonProps, title: 'Insert code' }
+                            },
+                            commands.divider,
+                            {
+                              ...commands.unorderedListCommand,
+                              buttonProps: { ...commands.unorderedListCommand.buttonProps, title: 'Bulleted list' }
+                            },
+                            {
+                              ...commands.orderedListCommand,
+                              buttonProps: { ...commands.orderedListCommand.buttonProps, title: 'Numbered list' }
+                            },
+                            {
+                              ...commands.checkedListCommand,
+                              buttonProps: { ...commands.checkedListCommand.buttonProps, title: 'Checklist' }
+                            },
                             commands.divider,
                           ]}
                           extraCommands={[
-                            commands.codeEdit,
-                            commands.codeLive,
-                            commands.codePreview,
+                            {
+                              ...commands.codeEdit,
+                              buttonProps: { ...commands.codeEdit.buttonProps, title: 'Edit mode' }
+                            },
+                            {
+                              ...commands.codeLive,
+                              buttonProps: { ...commands.codeLive.buttonProps, title: 'Live preview' }
+                            },
+                            {
+                              ...commands.codePreview,
+                              buttonProps: { ...commands.codePreview.buttonProps, title: 'Preview mode' }
+                            },
                             commands.divider,
-                            commands.fullscreen,
+                            {
+                              ...commands.fullscreen,
+                              buttonProps: { ...commands.fullscreen.buttonProps, title: 'Toggle fullscreen' }
+                            },
                           ]}
                         />
                       </div>
