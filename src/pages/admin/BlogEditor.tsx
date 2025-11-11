@@ -6,7 +6,8 @@ import { z } from 'zod';
 import MDEditor, { commands, ICommand } from '@uiw/react-md-editor';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ArrowLeft, Eye, EyeOff, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Palette } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Palette, Smile } from 'lucide-react';
+import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import BlogPreview from '@/components/admin/BlogPreview';
 import ImageUploadModal from '@/components/admin/ImageUploadModal';
 import ImageUploadHelper from '@/components/admin/ImageUploadHelper';
@@ -230,6 +231,8 @@ const alignJustify: ICommand = {
   },
 };
 
+// Emoji picker command will be created inside the component to access state
+
 
 export default function BlogEditor() {
   const { slug } = useParams();
@@ -241,6 +244,7 @@ export default function BlogEditor() {
   const [viewMode, setViewMode] = useState<'edit' | 'split' | 'preview'>('split');
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const {
@@ -538,6 +542,27 @@ export default function BlogEditor() {
     30000
   );
 
+  // Store the text API for emoji insertion
+  const [textApi, setTextApi] = useState<any>(null);
+
+  // Emoji command
+  const emojiCommand: ICommand = {
+    name: 'emoji',
+    keyCommand: 'emoji',
+    buttonProps: { 'aria-label': 'Insert emoji', title: 'Insert emoji' },
+    icon: <Smile size={14} />,
+    execute: () => {
+      setShowEmojiPicker(!showEmojiPicker);
+    },
+  };
+
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
+    if (textApi) {
+      textApi.replaceSelection(emojiData.emoji);
+    }
+    setShowEmojiPicker(false);
+  };
+
   const previewData = useMemo(
     () => ({
       title: formData.title || 'Untitled Post',
@@ -757,7 +782,7 @@ export default function BlogEditor() {
                           Insert Image
                         </Button>
                       </div>
-                      <div data-color-mode="dark">
+                      <div data-color-mode="dark" className="relative">
                         <MDEditor
                           value={body}
                           onChange={(val) => {
@@ -767,6 +792,24 @@ export default function BlogEditor() {
                           height={600}
                           preview="edit"
                           visibleDragbar={false}
+                          textareaProps={{
+                            onFocus: (e) => {
+                              const textarea = e.target;
+                              setTextApi({
+                                replaceSelection: (text: string) => {
+                                  const start = textarea.selectionStart;
+                                  const end = textarea.selectionEnd;
+                                  const newValue = body.substring(0, start) + text + body.substring(end);
+                                  setBody(newValue);
+                                  setValue('body', newValue);
+                                  setTimeout(() => {
+                                    textarea.focus();
+                                    textarea.setSelectionRange(start + text.length, start + text.length);
+                                  }, 0);
+                                }
+                              });
+                            }
+                          }}
                           commands={[
                             commands.group(
                               [
@@ -814,6 +857,8 @@ export default function BlogEditor() {
                                 icon: <AlignLeft size={14} />,
                               }
                             ),
+                            commands.divider,
+                            emojiCommand,
                             commands.divider,
                             {
                               ...commands.bold,
@@ -875,6 +920,11 @@ export default function BlogEditor() {
                             },
                           ]}
                         />
+                        {showEmojiPicker && (
+                          <div className="absolute z-50 mt-2">
+                            <EmojiPicker onEmojiClick={handleEmojiClick} theme={Theme.DARK} />
+                          </div>
+                        )}
                       </div>
                       {errors.body && (
                         <p className="mt-1 text-sm" style={{ color: 'hsl(var(--color-pink))' }}>
