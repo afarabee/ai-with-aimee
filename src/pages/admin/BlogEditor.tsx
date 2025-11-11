@@ -94,14 +94,6 @@ const fontSizeExtraLarge: ICommand = {
   },
 };
 
-// Group the font size commands
-const fontSizeGroup: ICommand = {
-  name: 'fontSizes',
-  keyCommand: 'fontSizes',
-  buttonProps: { 'aria-label': 'Font sizes', title: 'Font size' },
-  icon: <span style={{ fontWeight: 'bold' }}>A</span>,
-  children: [fontSizeSmall, fontSizeNormal, fontSizeLarge, fontSizeExtraLarge],
-};
 
 // Text color commands
 const colorBlack: ICommand = {
@@ -181,13 +173,6 @@ const colorBlue: ICommand = {
   },
 };
 
-const textColorGroup: ICommand = {
-  name: 'textColors',
-  keyCommand: 'textColors',
-  buttonProps: { 'aria-label': 'Text color', title: 'Text color' },
-  icon: <Palette size={14} />,
-  children: [colorBlack, colorCyan, colorPink, colorGray, colorRed, colorGreen, colorBlue],
-};
 
 // Text alignment commands
 const alignLeft: ICommand = {
@@ -234,13 +219,6 @@ const alignJustify: ICommand = {
   },
 };
 
-const textAlignGroup: ICommand = {
-  name: 'textAlign',
-  keyCommand: 'textAlign',
-  buttonProps: { 'aria-label': 'Text alignment', title: 'Text alignment' },
-  icon: <AlignLeft size={14} />,
-  children: [alignLeft, alignCenter, alignRight, alignJustify],
-};
 
 export default function BlogEditor() {
   const { slug } = useParams();
@@ -796,11 +774,35 @@ export default function BlogEditor() {
                               }
                             ),
                             commands.divider,
-                            fontSizeGroup,
+                            commands.group(
+                              [fontSizeSmall, fontSizeNormal, fontSizeLarge, fontSizeExtraLarge],
+                              {
+                                name: 'fontSizes',
+                                groupName: 'fontSizes',
+                                buttonProps: { 'aria-label': 'Font sizes', title: 'Font size' },
+                                icon: <span style={{ fontWeight: 'bold' }}>A</span>,
+                              }
+                            ),
                             commands.divider,
-                            textColorGroup,
+                            commands.group(
+                              [colorBlack, colorCyan, colorPink, colorGray, colorRed, colorGreen, colorBlue],
+                              {
+                                name: 'textColors',
+                                groupName: 'textColors',
+                                buttonProps: { 'aria-label': 'Text color', title: 'Text color' },
+                                icon: <Palette size={14} />,
+                              }
+                            ),
                             commands.divider,
-                            textAlignGroup,
+                            commands.group(
+                              [alignLeft, alignCenter, alignRight, alignJustify],
+                              {
+                                name: 'textAlign',
+                                groupName: 'textAlign',
+                                buttonProps: { 'aria-label': 'Text alignment', title: 'Text alignment' },
+                                icon: <AlignLeft size={14} />,
+                              }
+                            ),
                             commands.divider,
                             {
                               ...commands.bold,
