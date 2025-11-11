@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import GlowCard from "./ui/glow-card";
 import ScrollIndicator from "./ScrollIndicator";
 import SectionDivider from "./SectionDivider";
+import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 
 const BlogSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -32,13 +34,31 @@ const BlogSection = () => {
     return () => observer.disconnect();
   }, [hasEntered]);
 
+  // Fetch published blogs from database
+  const { data: blogPosts, isLoading } = useQuery({
+    queryKey: ['published-blogs-carousel'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('blogs')
+        .select('*')
+        .is('deleted_at', null)
+        .eq('status', 'published')
+        .order('date_published', { ascending: false });
+      
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  const totalPosts = blogPosts?.length || 1;
+
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible || !blogPosts || blogPosts.length === 0) return;
 
     // Start rotation after 0.5s delay
     const initialDelay = setTimeout(() => {
       rotationTimerRef.current = setInterval(() => {
-        setActiveIndex((prev) => (prev + 1) % 5);
+        setActiveIndex((prev) => (prev + 1) % totalPosts);
       }, 5000);
     }, 500);
 
@@ -48,15 +68,15 @@ const BlogSection = () => {
         clearInterval(rotationTimerRef.current);
       }
     };
-  }, [isVisible]);
+  }, [isVisible, totalPosts, blogPosts]);
 
   const handlePrevious = () => {
     if (rotationTimerRef.current) {
       clearInterval(rotationTimerRef.current);
     }
-    setActiveIndex((prev) => (prev - 1 + 5) % 5);
+    setActiveIndex((prev) => (prev - 1 + totalPosts) % totalPosts);
     rotationTimerRef.current = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % 5);
+      setActiveIndex((prev) => (prev + 1) % totalPosts);
     }, 5000);
   };
 
@@ -64,45 +84,11 @@ const BlogSection = () => {
     if (rotationTimerRef.current) {
       clearInterval(rotationTimerRef.current);
     }
-    setActiveIndex((prev) => (prev + 1) % 5);
+    setActiveIndex((prev) => (prev + 1) % totalPosts);
     rotationTimerRef.current = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % 5);
+      setActiveIndex((prev) => (prev + 1) % totalPosts);
     }, 5000);
   };
-  const blogPosts = [
-    {
-      id: 1,
-      date: "March 15, 2024",
-      title: "My AI Journey",
-      description: "Reflecting on the challenges, breakthroughs, and resources that helped me get started with ML. From linear regression to neural networks - here's what I learned.",
-      readTime: "5 min read",
-      slug: "my-ai-journey",
-    },
-    {
-      id: 2,
-      date: "March 8, 2024",
-      title: "Agents Aren't Always the Answer",
-      description: "Why AI agents aren't always the solution you need. Exploring when to use agents and when simpler approaches work better.",
-      readTime: "6 min read",
-      slug: "agents-arent-always-the-answer",
-    },
-    {
-      id: 3,
-      date: "March 8, 2024",
-      title: "Prompting for PMs",
-      description: "How my background in product strategy actually gave me advantages in understanding AI systems, and what skills transferred over.",
-      readTime: "7 min read",
-      slug: "prompting-for-pms",
-    },
-    {
-      id: 4,
-      date: "February 28, 2024",
-      title: "Case Study: Rolling out AI @ CRL",
-      description: "Step-by-step walkthrough of creating a simple neural network from scratch. The mistakes I made and how I debugged them.",
-      readTime: "10 min read",
-      slug: "rolling-out-ai-at-crl",
-    },
-  ];
 
   return (
     <>
@@ -143,7 +129,23 @@ const BlogSection = () => {
             Latest Blog Posts
           </h2>
 
+          {/* Loading State */}
+          {isLoading && (
+            <div className="text-center py-20">
+              <p className="text-xl neon-text-cyan">Loading blog posts...</p>
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!isLoading && (!blogPosts || blogPosts.length === 0) && (
+            <div className="text-center py-20">
+              <p className="text-xl neon-text-cyan">No blog posts published yet.</p>
+              <p className="text-sm neon-text-pink mt-2">Check back soon for new content!</p>
+            </div>
+          )}
+
           {/* Carousel Section */}
+          {!isLoading && blogPosts && blogPosts.length > 0 && (
           <div className="blog-carousel-section">
             {/* 3D Carousel Container */}
             <div
@@ -163,7 +165,18 @@ const BlogSection = () => {
                 <div className="relative w-full max-w-2xl mx-auto" style={{ transformStyle: 'preserve-3d' }}>
                   {blogPosts.map((post, index) => {
                     const isActive = index === activeIndex;
-                    const offset = (index - activeIndex + 5) % 5;
+                    const offset = (index - activeIndex + totalPosts) % totalPosts;
+
+                    // Calculate read time from word count
+                    const wordCount = post.body?.split(' ').length || 0;
+                    const readTime = Math.ceil(wordCount / 200);
+
+                    // Format date
+                    const formattedDate = new Date(post.date_published).toLocaleDateString('en-US', { 
+                      month: 'long', 
+                      day: 'numeric', 
+                      year: 'numeric' 
+                    });
 
                     // Calculate 3D position
                     let transform = '';
@@ -180,7 +193,7 @@ const BlogSection = () => {
                       transform = 'translateX(60%) translateZ(-50px) scale(0.9) rotateY(-15deg)';
                       opacity = isVisible ? 0.6 : 0;
                       zIndex = 1;
-                    } else if (offset === 3) {
+                    } else if (offset === totalPosts - 1) {
                       // Previous card - slightly left, dimmed
                       transform = 'translateX(-60%) translateZ(-50px) scale(0.9) rotateY(15deg)';
                       opacity = isVisible ? 0.6 : 0;
@@ -208,7 +221,7 @@ const BlogSection = () => {
                             className="neon-text-yellow text-sm mb-2 font-titillium font-semibold"
                             style={{ lineHeight: '1.4' }}
                           >
-                            {post.date}
+                            {formattedDate}
                           </div>
                           <h3
                             className="text-2xl font-rajdhani font-semibold neon-text-cyan mb-4"
@@ -220,10 +233,10 @@ const BlogSection = () => {
                             className="font-ibm text-sm mb-4"
                             style={{ color: '#e6e6e6', lineHeight: '1.4', whiteSpace: 'normal', wordWrap: 'break-word' }}
                           >
-                            {post.description}
+                            {post.excerpt}
                           </p>
                           <div className="flex items-center justify-between">
-                            <span className="neon-text-yellow text-sm font-titillium">{post.readTime}</span>
+                            <span className="neon-text-yellow text-sm font-titillium">{readTime} min read</span>
                             <span className="neon-text-pink hover:neon-text-cyan font-montserrat font-medium flex items-center gap-1 transition-colors">
                               Read More <ArrowRight className="w-4 h-4" />
                             </span>
@@ -307,6 +320,7 @@ const BlogSection = () => {
               </div>
             </div>
           </div>
+          )}
         </div>
 
         {/* Wave Background wrapper to ensure it's under the button */}
