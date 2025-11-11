@@ -206,8 +206,9 @@ const BlogPost = () => {
           }} onMouseLeave={e => {
             e.currentTarget.style.color = 'hsl(var(--color-pink))';
             e.currentTarget.style.textShadow = '0 0 15px hsl(var(--color-pink) / 0.6)';
-          }}>Back to Blogs<ArrowLeft size={18} />
-              Back to Blog
+          }}>
+              <ArrowLeft size={18} />
+              Back to Blogs
             </Link>
           </div>
           
