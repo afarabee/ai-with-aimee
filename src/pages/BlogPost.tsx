@@ -214,16 +214,6 @@ const BlogPost = () => {
       {/* Article Content */}
       <article className="relative py-16">
         <div className="max-w-[740px] mx-auto px-6">
-          {/* Excerpt (if exists) */}
-          {post.excerpt && (
-            <>
-              <p className="blog-excerpt mb-4">
-                {post.excerpt}
-              </p>
-              <div className="blog-divider" aria-hidden="true" />
-            </>
-          )}
-          
           {/* Body Content with Markdown Support */}
           <div className="blog-body space-y-6">
             {parseMarkdownContent(post.body)}
