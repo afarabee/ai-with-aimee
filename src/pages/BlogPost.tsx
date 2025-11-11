@@ -211,6 +211,19 @@ const BlogPost = () => {
         </section>
       )}
 
+      {/* Gradient Color Bar Divider */}
+      <section className="relative py-8">
+        <div className="max-w-[740px] mx-auto px-6">
+          <div 
+            className="w-full h-1.5 rounded-full"
+            style={{
+              background: 'linear-gradient(90deg, hsl(var(--color-cyan)) 0%, hsl(var(--color-pink)) 100%)',
+              boxShadow: '0 0 20px hsl(var(--color-cyan) / 0.6), 0 0 20px hsl(var(--color-pink) / 0.4)',
+            }}
+          />
+        </div>
+      </section>
+
       {/* Article Content */}
       <article className="relative py-16">
         <div className="max-w-[740px] mx-auto px-6">
