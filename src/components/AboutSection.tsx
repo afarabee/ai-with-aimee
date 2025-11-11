@@ -2,6 +2,7 @@ import { Linkedin, Github, Mail } from 'lucide-react';
 import AboutBackground from './AboutBackground';
 import { Button } from './ui/button';
 import SectionDivider from './SectionDivider';
+import aimeeHeadshot from '@/assets/aimee-headshot.jpg';
 
 const AboutSection = () => {
 
@@ -39,11 +40,14 @@ const AboutSection = () => {
                     boxShadow: '0 0 6px #33ffff, 0 0 14px #99ffff, inset 0 0 30px rgba(245, 12, 160, 0.15)',
                   }}
                 >
-                  <div className="w-full h-full bg-gradient-to-br from-purple-900/20 to-pink-900/20 flex items-center justify-center">
-                    <span className="text-6xl font-rajdhani font-semibold" style={{ color: '#f9f940', textShadow: '0 0 8px #fafa70, 0 0 18px #fbfba0' }}>
-                      AF
-                    </span>
-                  </div>
+                  <img 
+                    src={aimeeHeadshot} 
+                    alt="Aimee Farabee - AI Strategist and Product Director"
+                    className="w-full h-full object-cover"
+                    style={{
+                      objectPosition: 'center 20%',
+                    }}
+                  />
                 </div>
                 {/* Reflection effect */}
                 <div 

@@ -3,6 +3,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import aimeeHeadshot from '@/assets/aimee-headshot.jpg';
 
 const About = () => {
   return (
@@ -59,17 +60,14 @@ const About = () => {
                     boxShadow: '0 0 8px hsl(180 100% 56% / 0.6), 0 0 20px hsl(180 100% 56% / 0.4), inset 0 0 40px hsl(320 95% 50% / 0.15)',
                   }}
                 >
-                  <div className="w-full h-full bg-gradient-to-br from-purple-900/20 to-pink-900/20 flex items-center justify-center">
-                    <span 
-                      className="text-8xl font-rajdhani font-semibold" 
-                      style={{ 
-                        color: 'hsl(60 93% 61%)', 
-                        textShadow: '0 0 10px hsl(60 93% 61% / 0.7), 0 0 20px hsl(60 93% 61% / 0.5)' 
-                      }}
-                    >
-                      AF
-                    </span>
-                  </div>
+                  <img 
+                    src={aimeeHeadshot} 
+                    alt="Aimee Farabee - AI Strategist and Product Director"
+                    className="w-full h-full object-cover"
+                    style={{
+                      objectPosition: 'center 20%',
+                    }}
+                  />
                 </div>
                 {/* Reflection effect */}
                 <div 
