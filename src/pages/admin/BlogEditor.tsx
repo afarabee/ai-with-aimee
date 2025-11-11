@@ -162,6 +162,17 @@ const colorGreen: ICommand = {
   },
 };
 
+const colorYellow: ICommand = {
+  name: 'colorYellow',
+  keyCommand: 'colorYellow',
+  buttonProps: { 'aria-label': 'Yellow text', title: 'Yellow text (accent)' },
+  icon: <span style={{ display: 'inline-block', width: '14px', height: '14px', backgroundColor: '#f9f940', borderRadius: '2px' }} />,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || 'text';
+    api.replaceSelection(`<span style="color: #f9f940;">${selectedText}</span>`);
+  },
+};
+
 const colorBlue: ICommand = {
   name: 'colorBlue',
   keyCommand: 'colorBlue',
@@ -785,7 +796,7 @@ export default function BlogEditor() {
                             ),
                             commands.divider,
                             commands.group(
-                              [colorBlack, colorCyan, colorPink, colorGray, colorRed, colorGreen, colorBlue],
+                              [colorBlack, colorCyan, colorPink, colorGray, colorRed, colorGreen, colorYellow, colorBlue],
                               {
                                 name: 'textColors',
                                 groupName: 'textColors',
