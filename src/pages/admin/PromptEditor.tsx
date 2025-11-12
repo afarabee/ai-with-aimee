@@ -383,23 +383,41 @@ export default function PromptEditor() {
                 <div className="flex flex-wrap gap-3">
                   <Button
                     type="button"
+                    variant="outline"
                     onClick={() => saveDraft(formData)}
-                    className="border-2 border-cyan-400 text-cyan-300 hover:bg-cyan-400/10"
+                    style={{
+                      background: 'rgba(0, 255, 255, 0.1)',
+                      border: '2px solid hsl(var(--color-cyan))',
+                      color: 'hsl(var(--color-cyan))',
+                    }}
+                    className="hover:bg-cyan-400/20"
                   >
                     <Save className="mr-2 h-4 w-4" />
                     Save Draft
                   </Button>
                   <Button
                     type="submit"
-                    className="border-2 border-yellow-400 text-yellow-300 hover:bg-yellow-400/10"
+                    variant="outline"
+                    style={{
+                      background: 'rgba(249, 249, 64, 0.1)',
+                      border: '2px solid hsl(var(--color-yellow))',
+                      color: 'hsl(var(--color-yellow))',
+                    }}
+                    className="hover:bg-yellow-400/20"
                   >
                     <Send className="mr-2 h-4 w-4" />
                     {formData.status === 'Published' ? 'Publish' : 'Update'}
                   </Button>
                   <Button
                     type="button"
+                    variant="outline"
                     onClick={() => setShowClearDialog(true)}
-                    className="border-2 border-pink-400 text-pink-400 hover:bg-pink-400/10"
+                    style={{
+                      background: 'rgba(245, 12, 160, 0.1)',
+                      border: '2px solid hsl(var(--color-pink))',
+                      color: 'hsl(var(--color-pink))',
+                    }}
+                    className="hover:bg-pink-400/20"
                   >
                     <X className="mr-2 h-4 w-4" />
                     Clear
@@ -407,8 +425,14 @@ export default function PromptEditor() {
                   {promptId && (
                     <Button
                       type="button"
+                      variant="outline"
                       onClick={() => setShowDeleteDialog(true)}
-                      className="border-2 border-red-400 text-red-400 hover:bg-red-400/10"
+                      style={{
+                        background: 'rgba(239, 68, 68, 0.1)',
+                        border: '2px solid #ef4444',
+                        color: '#ef4444',
+                      }}
+                      className="hover:bg-red-400/20"
                     >
                       <Trash2 className="mr-2 h-4 w-4" />
                       Delete
