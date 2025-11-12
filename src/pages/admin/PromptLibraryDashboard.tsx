@@ -149,8 +149,14 @@ export default function PromptLibraryDashboard() {
             </p>
           </div>
           <Button
+            variant="outline"
             onClick={() => navigate('/admin/prompt-editor')}
-            className="border-2 border-cyan-400 text-cyan-300 hover:bg-cyan-400/10 hover:shadow-[0_0_15px_rgba(0,255,255,0.5)] transition-all"
+            style={{
+              background: 'rgba(0, 255, 255, 0.1)',
+              border: '2px solid hsl(var(--color-cyan))',
+              color: 'hsl(var(--color-cyan))',
+            }}
+            className="hover:bg-cyan-400/20 hover:shadow-[0_0_15px_rgba(0,255,255,0.5)] transition-all"
           >
             <Plus className="mr-2 h-4 w-4" />
             New Prompt
@@ -426,15 +432,28 @@ export default function PromptLibraryDashboard() {
                   {previewPrompt?.body}
                 </pre>
                 <Button
+                  variant="outline"
                   onClick={() => previewPrompt && handleCopyPrompt(previewPrompt.body, previewPrompt.title)}
-                  className="border-2 border-cyan-400 text-cyan-300 hover:bg-cyan-400/10 hover:shadow-[0_0_15px_rgba(0,255,255,0.5)]"
+                  style={{
+                    background: 'rgba(0, 255, 255, 0.1)',
+                    border: '2px solid hsl(var(--color-cyan))',
+                    color: 'hsl(var(--color-cyan))',
+                  }}
+                  className="hover:bg-cyan-400/20 hover:shadow-[0_0_15px_rgba(0,255,255,0.5)]"
                 >
                   Copy Prompt
                 </Button>
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className="border-cyan-400 text-cyan-300 hover:bg-cyan-400/10">
+              <AlertDialogCancel 
+                style={{
+                  background: 'rgba(0, 255, 255, 0.1)',
+                  border: '2px solid hsl(var(--color-cyan))',
+                  color: 'hsl(var(--color-cyan))',
+                }}
+                className="hover:bg-cyan-400/20"
+              >
                 Close
               </AlertDialogCancel>
             </AlertDialogFooter>
