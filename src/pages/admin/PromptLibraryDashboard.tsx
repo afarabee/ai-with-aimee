@@ -428,7 +428,7 @@ export default function PromptLibraryDashboard() {
                   <span className="text-muted-foreground">•</span>
                   <span className="text-yellow-300">{previewPrompt?.category || 'No Category'}</span>
                 </div>
-                <pre className="prompt-preview text-cyan-300">
+                <pre className="prompt-preview text-foreground">
                   {previewPrompt?.body}
                 </pre>
                 <Button
