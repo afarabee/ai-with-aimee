@@ -249,23 +249,38 @@ export default function PromptEditor() {
           </Button>
           <div className="flex gap-2">
             <Button
-              variant={viewMode === 'edit' ? 'default' : 'outline'}
+              variant="outline"
               onClick={() => setViewMode('edit')}
-              className="border-cyan-400 text-cyan-300"
+              style={{
+                background: viewMode === 'edit' ? 'rgba(0, 255, 255, 0.2)' : 'rgba(0, 255, 255, 0.05)',
+                border: '2px solid hsl(var(--color-cyan))',
+                color: 'hsl(var(--color-cyan))',
+              }}
+              className="hover:bg-cyan-400/20"
             >
               Edit
             </Button>
             <Button
-              variant={viewMode === 'split' ? 'default' : 'outline'}
+              variant="outline"
               onClick={() => setViewMode('split')}
-              className="border-cyan-400 text-cyan-300"
+              style={{
+                background: viewMode === 'split' ? 'rgba(0, 255, 255, 0.2)' : 'rgba(0, 255, 255, 0.05)',
+                border: '2px solid hsl(var(--color-cyan))',
+                color: 'hsl(var(--color-cyan))',
+              }}
+              className="hover:bg-cyan-400/20"
             >
               Split
             </Button>
             <Button
-              variant={viewMode === 'preview' ? 'default' : 'outline'}
+              variant="outline"
               onClick={() => setViewMode('preview')}
-              className="border-cyan-400 text-cyan-300"
+              style={{
+                background: viewMode === 'preview' ? 'rgba(0, 255, 255, 0.2)' : 'rgba(0, 255, 255, 0.05)',
+                border: '2px solid hsl(var(--color-cyan))',
+                color: 'hsl(var(--color-cyan))',
+              }}
+              className="hover:bg-cyan-400/20"
             >
               Preview
             </Button>
