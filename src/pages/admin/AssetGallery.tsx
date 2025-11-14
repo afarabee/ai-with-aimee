@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Upload, Copy, Trash2, Image as ImageIcon, FileText, Video, File } from 'lucide-react';
+import { Upload, Copy, Trash2, Image as ImageIcon, FileText, Video, File, Edit2, Expand, Check, X, Download } from 'lucide-react';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,6 +24,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface Asset {
   id: string;
@@ -42,6 +49,11 @@ export default function AssetGallery() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [previewAsset, setPreviewAsset] = useState<Asset | null>(null);
+  const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
+  const [editingAsset, setEditingAsset] = useState<Asset | null>(null);
+  const [newFileName, setNewFileName] = useState('');
+  const [renaming, setRenaming] = useState(false);
 
   const detectFileType = (filename: string): Asset['type'] => {
     const ext = filename.split('.').pop()?.toLowerCase();
@@ -247,6 +259,56 @@ export default function AssetGallery() {
     setIsDragging(false);
     const file = e.dataTransfer.files?.[0];
     if (file) await handleUpload(file);
+  };
+
+  const handleRename = async (asset: Asset, newName: string) => {
+    if (!newName.trim()) {
+      toast.error('Filename cannot be empty');
+      return;
+    }
+
+    // Extract file extension from original name
+    const ext = asset.name.split('.').pop();
+    const finalName = newName.includes('.') ? newName : `${newName}.${ext}`;
+
+    // Check if name is unchanged
+    if (finalName === asset.name) {
+      setEditingAsset(null);
+      return;
+    }
+
+    setRenaming(true);
+    try {
+      // Use move to rename the file
+      const { error } = await supabase.storage
+        .from('blog-images')
+        .move(`blog/${asset.name}`, `blog/${finalName}`);
+
+      if (error) throw error;
+
+      toast.success('File renamed successfully', {
+        style: {
+          background: 'rgba(0, 255, 255, 0.2)',
+          border: '1px solid hsl(var(--color-cyan))',
+          color: 'hsl(var(--color-cyan))',
+        },
+      });
+
+      setEditingAsset(null);
+      setNewFileName('');
+      refetch();
+    } catch (error: any) {
+      console.error('Error renaming file:', error);
+      toast.error(error.message || 'Failed to rename file', {
+        style: {
+          background: 'rgba(245, 12, 160, 0.2)',
+          border: '1px solid hsl(var(--color-pink))',
+          color: 'hsl(var(--color-pink))',
+        },
+      });
+    } finally {
+      setRenaming(false);
+    }
   };
 
   const FileTypeIcon = ({ type, size = 20 }: { type: Asset['type']; size?: number }) => {
@@ -489,18 +551,27 @@ export default function AssetGallery() {
               >
                 {/* Thumbnail */}
                 <div 
-                  className="asset-card-thumbnail mb-3 rounded-lg overflow-hidden"
+                  className="asset-card-thumbnail mb-3 rounded-lg overflow-hidden cursor-pointer group relative transition-all duration-300 hover:scale-105"
                   style={{ 
                     height: '160px',
                     background: 'rgba(0, 0, 0, 0.3)',
                   }}
+                  onClick={() => {
+                    setPreviewAsset(asset);
+                    setPreviewDialogOpen(true);
+                  }}
                 >
                   {asset.type === 'image' ? (
-                    <img 
-                      src={asset.publicUrl} 
-                      alt={asset.name}
-                      className="w-full h-full object-cover"
-                    />
+                    <>
+                      <img 
+                        src={asset.publicUrl} 
+                        alt={asset.name}
+                        className="w-full h-full object-cover transition-all duration-300 group-hover:brightness-75"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <Expand size={32} style={{ color: 'hsl(var(--color-cyan))' }} />
+                      </div>
+                    </>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
                       <FileTypeIcon type={asset.type} size={48} />
@@ -509,13 +580,84 @@ export default function AssetGallery() {
                 </div>
 
                 {/* Filename */}
-                <h3 
-                  className="font-rajdhani font-semibold text-sm truncate mb-2"
-                  style={{ color: 'hsl(var(--color-cyan))' }}
-                  title={asset.name}
-                >
-                  {asset.name}
-                </h3>
+                {editingAsset?.id === asset.id ? (
+                  <div className="flex items-center gap-1 mb-2">
+                    <Input
+                      value={newFileName}
+                      onChange={(e) => setNewFileName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleRename(asset, newFileName);
+                        if (e.key === 'Escape') {
+                          setEditingAsset(null);
+                          setNewFileName('');
+                        }
+                      }}
+                      className="h-7 text-xs font-rajdhani"
+                      style={{
+                        background: 'rgba(0, 0, 0, 0.5)',
+                        border: '1px solid hsl(var(--color-cyan))',
+                        color: 'hsl(var(--color-cyan))',
+                      }}
+                      disabled={renaming}
+                      autoFocus
+                    />
+                    <Button
+                      size="sm"
+                      onClick={() => handleRename(asset, newFileName)}
+                      disabled={renaming}
+                      className="h-7 w-7 p-0"
+                      style={{
+                        background: 'rgba(0, 255, 255, 0.15)',
+                        border: '1px solid hsl(var(--color-cyan))',
+                      }}
+                    >
+                      <Check size={14} style={{ color: 'hsl(var(--color-cyan))' }} />
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        setEditingAsset(null);
+                        setNewFileName('');
+                      }}
+                      disabled={renaming}
+                      className="h-7 w-7 p-0"
+                      style={{
+                        background: 'rgba(245, 12, 160, 0.15)',
+                        border: '1px solid hsl(var(--color-pink))',
+                      }}
+                    >
+                      <X size={14} style={{ color: 'hsl(var(--color-pink))' }} />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 
+                      className="font-rajdhani font-semibold text-sm truncate flex-1"
+                      style={{ color: 'hsl(var(--color-cyan))' }}
+                      title={asset.name}
+                      onDoubleClick={() => {
+                        setEditingAsset(asset);
+                        setNewFileName(asset.name.replace(/\.[^/.]+$/, ''));
+                      }}
+                    >
+                      {asset.name}
+                    </h3>
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        setEditingAsset(asset);
+                        setNewFileName(asset.name.replace(/\.[^/.]+$/, ''));
+                      }}
+                      className="h-6 w-6 p-0"
+                      style={{
+                        background: 'rgba(255, 221, 0, 0.15)',
+                        border: '1px solid hsl(var(--color-yellow))',
+                      }}
+                    >
+                      <Edit2 size={12} style={{ color: 'hsl(var(--color-yellow))' }} />
+                    </Button>
+                  </div>
+                )}
 
                 {/* Metadata */}
                 <div className="text-xs font-ibm-plex mb-3 space-y-1">
@@ -613,6 +755,119 @@ export default function AssetGallery() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Preview Dialog */}
+      <Dialog open={previewDialogOpen} onOpenChange={setPreviewDialogOpen}>
+        <DialogContent 
+          className="max-w-4xl max-h-[90vh] overflow-auto"
+          style={{
+            background: 'rgba(26, 11, 46, 0.95)',
+            border: '2px solid hsl(var(--color-cyan) / 0.5)',
+            boxShadow: '0 0 40px hsl(var(--color-cyan) / 0.3)',
+          }}
+        >
+          <DialogHeader>
+            <DialogTitle 
+              className="font-rajdhani text-2xl"
+              style={{ color: 'hsl(var(--color-cyan))' }}
+            >
+              {previewAsset?.name}
+            </DialogTitle>
+            <DialogDescription 
+              className="font-ibm-plex space-y-1"
+              style={{ color: 'hsl(var(--color-light-text))' }}
+            >
+              <div className="flex items-center gap-2">
+                <FileTypeIcon type={previewAsset?.type || 'other'} size={16} />
+                <span style={{ color: 'hsl(var(--color-yellow))' }}>
+                  {previewAsset && formatFileSize(previewAsset.size)}
+                </span>
+                <span className="mx-2">•</span>
+                <span>
+                  {previewAsset && format(new Date(previewAsset.created_at), 'MMM dd, yyyy • h:mm a')}
+                </span>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="mt-4">
+            {previewAsset?.type === 'image' ? (
+              <img 
+                src={previewAsset.publicUrl} 
+                alt={previewAsset.name}
+                className="w-full h-auto rounded-lg"
+                style={{
+                  maxHeight: '60vh',
+                  objectFit: 'contain',
+                  background: 'rgba(0, 0, 0, 0.3)',
+                }}
+              />
+            ) : (
+              <div 
+                className="flex flex-col items-center justify-center py-20 rounded-lg"
+                style={{ background: 'rgba(0, 0, 0, 0.3)' }}
+              >
+                <FileTypeIcon type={previewAsset?.type || 'other'} size={80} />
+                <p 
+                  className="mt-4 font-ibm-plex"
+                  style={{ color: 'hsl(var(--color-light-text))' }}
+                >
+                  Preview not available for this file type
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="flex gap-2 mt-4">
+            <Button
+              onClick={() => previewAsset && handleCopyUrl(previewAsset.publicUrl, previewAsset.name)}
+              className="flex-1 font-rajdhani"
+              style={{
+                background: 'rgba(0, 255, 255, 0.15)',
+                border: '2px solid hsl(var(--color-cyan))',
+                color: 'hsl(var(--color-cyan))',
+              }}
+            >
+              <Copy size={16} className="mr-2" /> Copy URL
+            </Button>
+            <Button
+              onClick={() => {
+                if (previewAsset) {
+                  const link = document.createElement('a');
+                  link.href = previewAsset.publicUrl;
+                  link.download = previewAsset.name;
+                  link.click();
+                }
+              }}
+              className="flex-1 font-rajdhani"
+              style={{
+                background: 'rgba(255, 221, 0, 0.15)',
+                border: '2px solid hsl(var(--color-yellow))',
+                color: 'hsl(var(--color-yellow))',
+              }}
+            >
+              <Download size={16} className="mr-2" /> Download
+            </Button>
+            <Button
+              onClick={() => {
+                if (previewAsset) {
+                  setDeleteTarget(previewAsset);
+                  setPreviewDialogOpen(false);
+                  setDeleteDialogOpen(true);
+                }
+              }}
+              className="flex-1 font-rajdhani"
+              style={{
+                background: 'rgba(245, 12, 160, 0.15)',
+                border: '2px solid hsl(var(--color-pink))',
+                color: 'hsl(var(--color-pink))',
+              }}
+            >
+              <Trash2 size={16} className="mr-2" /> Delete
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
