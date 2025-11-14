@@ -163,14 +163,14 @@ const BlogPost = () => {
         </section>}
 
       {/* Gradient Color Bar Divider */}
-      <section className="relative py-4">
+      <section className="relative py-2">
         <div className="max-w-[740px] mx-auto px-6">
           <div className="blog-divider" />
         </div>
       </section>
 
       {/* Article Content */}
-      <article className="relative pt-4 pb-16">
+      <article className="relative pt-2 pb-16">
         <div className="max-w-[740px] mx-auto px-6">
           {/* Body Content with Markdown Support */}
           <div className="blog-body space-y-6">
