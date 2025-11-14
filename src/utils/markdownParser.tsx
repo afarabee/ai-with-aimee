@@ -15,11 +15,13 @@ export const parseMarkdownContent = (markdown: string): React.ReactNode => {
     // Paragraphs
     p: ({
       children
-    }) => {},
+    }) => <p className="mb-4 leading-relaxed" style={{
+      color: 'hsl(var(--color-light-text))'
+    }}>
+            {children}
+          </p>,
     // Blockquotes
-    blockquote: ({
-      children
-    }) => {},
+    blockquote: () => null,
     // Unordered Lists
     ul: ({
       children
@@ -106,7 +108,7 @@ export const parseMarkdownContent = (markdown: string): React.ReactNode => {
       children
     }) => <pre className="mb-6">{children}</pre>,
     // Horizontal Rule (becomes divider)
-    hr: () => <div className="blog-divider" />,
+    hr: () => null,
     // Images
     img: ({
       src,
