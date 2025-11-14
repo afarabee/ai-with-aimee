@@ -5,7 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { Upload, Link as LinkIcon } from 'lucide-react';
+import { Upload, Link as LinkIcon, Image as ImageIcon } from 'lucide-react';
+import AssetPicker from './AssetPicker';
 
 interface ImageUploadModalProps {
   open: boolean;
@@ -17,6 +18,8 @@ export default function ImageUploadModal({ open, onClose, onInsert }: ImageUploa
   const [url, setUrl] = useState('');
   const [alt, setAlt] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [isAssetPickerOpen, setIsAssetPickerOpen] = useState(false);
+  const [assetAlt, setAssetAlt] = useState('');
 
   const handleUrlInsert = () => {
     if (!url) {
@@ -69,6 +72,12 @@ export default function ImageUploadModal({ open, onClose, onInsert }: ImageUploa
     }
   };
 
+  const handleAssetSelect = (url: string, filename: string) => {
+    onInsert(url, assetAlt || filename);
+    setAssetAlt('');
+    setIsAssetPickerOpen(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
@@ -88,7 +97,7 @@ export default function ImageUploadModal({ open, onClose, onInsert }: ImageUploa
           </DialogTitle>
         </DialogHeader>
         <Tabs defaultValue="url" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="url">
               <LinkIcon className="w-4 h-4 mr-2" />
               URL
@@ -96,6 +105,10 @@ export default function ImageUploadModal({ open, onClose, onInsert }: ImageUploa
             <TabsTrigger value="upload">
               <Upload className="w-4 h-4 mr-2" />
               Upload
+            </TabsTrigger>
+            <TabsTrigger value="library">
+              <ImageIcon className="w-4 h-4 mr-2" />
+              Library
             </TabsTrigger>
           </TabsList>
           <TabsContent value="url" className="space-y-4">
@@ -152,7 +165,31 @@ export default function ImageUploadModal({ open, onClose, onInsert }: ImageUploa
               </p>
             )}
           </TabsContent>
+          <TabsContent value="library" className="space-y-4">
+            <div>
+              <Label htmlFor="asset-alt-text">Alt Text (optional)</Label>
+              <Input
+                id="asset-alt-text"
+                value={assetAlt}
+                onChange={(e) => setAssetAlt(e.target.value)}
+                placeholder="Describe the image"
+                className="mt-2"
+              />
+            </div>
+            <Button 
+              onClick={() => setIsAssetPickerOpen(true)} 
+              className="w-full"
+            >
+              Choose from Library
+            </Button>
+          </TabsContent>
         </Tabs>
+
+        <AssetPicker
+          open={isAssetPickerOpen}
+          onClose={() => setIsAssetPickerOpen(false)}
+          onSelect={handleAssetSelect}
+        />
       </DialogContent>
     </Dialog>
   );
