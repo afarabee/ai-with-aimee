@@ -11,6 +11,7 @@ import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import BlogPreview from '@/components/admin/BlogPreview';
 import ImageUploadModal from '@/components/admin/ImageUploadModal';
 import ImageUploadHelper from '@/components/admin/ImageUploadHelper';
+import AssetPicker from '@/components/admin/AssetPicker';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -246,6 +247,7 @@ export default function BlogEditor() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isAssetPickerOpen, setIsAssetPickerOpen] = useState(false);
 
   const {
     register,
@@ -535,6 +537,17 @@ export default function BlogEditor() {
     });
   };
 
+  const handleBannerAssetSelect = (url: string, filename: string) => {
+    setValue('banner_image', url);
+    toast.success('Banner image selected from library', {
+      style: {
+        background: 'rgba(0, 255, 255, 0.1)',
+        border: '1px solid hsl(var(--color-cyan))',
+        color: 'hsl(var(--color-cyan))',
+      },
+    });
+  };
+
   // Auto-save every 30 seconds
   useAutosave(
     formData,
@@ -752,14 +765,23 @@ export default function BlogEditor() {
 
                     <div>
                       <Label htmlFor="banner_image">Banner Image URL</Label>
-                      <Input
-                        id="banner_image"
-                        {...register('banner_image')}
-                        type="url"
-                        placeholder="https://example.com/image.jpg"
-                        className="mt-2"
-                        style={{ background: 'rgba(26, 11, 46, 0.6)' }}
-                      />
+                      <div className="flex gap-2 mt-2">
+                        <Input
+                          id="banner_image"
+                          {...register('banner_image')}
+                          type="url"
+                          placeholder="https://example.com/image.jpg"
+                          className="flex-1"
+                          style={{ background: 'rgba(26, 11, 46, 0.6)' }}
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => setIsAssetPickerOpen(true)}
+                        >
+                          Choose from Library
+                        </Button>
+                      </div>
                       {formData.banner_image && (
                         <img
                           src={formData.banner_image}
@@ -1041,6 +1063,13 @@ export default function BlogEditor() {
           open={imageModalOpen}
           onClose={() => setImageModalOpen(false)}
           onInsert={handleImageInsert}
+        />
+
+        {/* Asset Picker for Banner */}
+        <AssetPicker
+          open={isAssetPickerOpen}
+          onClose={() => setIsAssetPickerOpen(false)}
+          onSelect={handleBannerAssetSelect}
         />
 
         {/* Delete Confirmation Dialog */}
