@@ -767,12 +767,86 @@ export default function AssetGallery() {
           }}
         >
           <DialogHeader>
-            <DialogTitle 
-              className="font-rajdhani text-2xl"
-              style={{ color: 'hsl(var(--color-cyan))' }}
-            >
-              {previewAsset?.name}
-            </DialogTitle>
+            {editingAsset?.id === previewAsset?.id ? (
+              <div className="flex items-center gap-2 mb-4">
+                <Input
+                  value={newFileName}
+                  onChange={(e) => setNewFileName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && previewAsset) handleRename(previewAsset, newFileName);
+                    if (e.key === 'Escape') {
+                      setEditingAsset(null);
+                      setNewFileName('');
+                    }
+                  }}
+                  className="flex-1 font-rajdhani text-xl"
+                  style={{
+                    background: 'rgba(0, 0, 0, 0.5)',
+                    border: '1px solid hsl(var(--color-cyan))',
+                    color: 'hsl(var(--color-cyan))',
+                  }}
+                  disabled={renaming}
+                  autoFocus
+                />
+                <Button
+                  size="sm"
+                  onClick={() => previewAsset && handleRename(previewAsset, newFileName)}
+                  disabled={renaming}
+                  style={{
+                    background: 'rgba(0, 255, 255, 0.15)',
+                    border: '1px solid hsl(var(--color-cyan))',
+                  }}
+                >
+                  <Check size={16} style={{ color: 'hsl(var(--color-cyan))' }} />
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    setEditingAsset(null);
+                    setNewFileName('');
+                  }}
+                  disabled={renaming}
+                  style={{
+                    background: 'rgba(245, 12, 160, 0.15)',
+                    border: '1px solid hsl(var(--color-pink))',
+                  }}
+                >
+                  <X size={16} style={{ color: 'hsl(var(--color-pink))' }} />
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 mb-4">
+                <DialogTitle 
+                  className="font-rajdhani text-2xl flex-1 cursor-pointer"
+                  style={{ color: 'hsl(var(--color-cyan))' }}
+                  onDoubleClick={() => {
+                    if (previewAsset) {
+                      setEditingAsset(previewAsset);
+                      setNewFileName(previewAsset.name.replace(/\.[^/.]+$/, ''));
+                    }
+                  }}
+                >
+                  {previewAsset?.name}
+                </DialogTitle>
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    if (previewAsset) {
+                      setEditingAsset(previewAsset);
+                      setNewFileName(previewAsset.name.replace(/\.[^/.]+$/, ''));
+                    }
+                  }}
+                  className="h-8 w-8 p-0"
+                  style={{
+                    background: 'rgba(255, 221, 0, 0.15)',
+                    border: '1px solid hsl(var(--color-yellow))',
+                  }}
+                >
+                  <Edit2 size={16} style={{ color: 'hsl(var(--color-yellow))' }} />
+                </Button>
+              </div>
+            )}
+            
             <DialogDescription 
               className="font-ibm-plex space-y-1"
               style={{ color: 'hsl(var(--color-light-text))' }}
