@@ -56,7 +56,7 @@ export default function AssetGallery() {
     queryFn: async () => {
       const { data, error } = await supabase.storage
         .from('blog-images')
-        .list('', { 
+        .list('blog', { 
           limit: 500, 
           sortBy: { column: 'created_at', order: 'desc' } 
         });
@@ -66,12 +66,12 @@ export default function AssetGallery() {
       return data.map(file => {
         const { data: publicData } = supabase.storage
           .from('blog-images')
-          .getPublicUrl(file.name);
+          .getPublicUrl(`blog/${file.name}`);
         
         const type = detectFileType(file.name);
         
         return {
-          id: file.name,
+          id: `blog/${file.name}`,
           name: file.name,
           created_at: file.created_at,
           size: file.metadata?.size || 0,
