@@ -185,16 +185,6 @@ const BlogPost = () => {
           {/* Cyan divider line */}
           <div className="blog-divider mb-8" />
           
-          {/* Signature */}
-          <div className="text-center mb-6">
-            <p className="text-2xl font-rajdhani font-semibold" style={{
-            color: 'hsl(var(--color-cyan))',
-            textShadow: '0 0 20px hsl(var(--color-cyan) / 0.6)'
-          }}>
-              AI with Aimee · Intelligence with a Twist
-            </p>
-          </div>
-          
           {/* Back to Blog Link */}
           <div className="text-center mb-4">
             <Link to="/blog" className="inline-flex items-center gap-2 text-base font-montserrat font-bold transition-all duration-300" style={{
