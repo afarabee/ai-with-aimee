@@ -501,7 +501,7 @@ export default function PromptEditor() {
                 )}
 
                 {/* Body */}
-                <div className="prompt-preview text-cyan-300">
+                <div className="prompt-preview text-[hsl(var(--color-light-text))]">
                   {formData.body || 'No prompt body yet...'}
                 </div>
 
