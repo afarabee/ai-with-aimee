@@ -31,9 +31,8 @@ interface Project {
   id: string;
   project_title: string;
   subtitle: string;
-  challenge: string;
-  solution: string;
-  impact: string;
+  body: string;
+  date_published: string;
   technologies: string[];
   github_link: string | null;
   project_page_link: string | null;

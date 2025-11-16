@@ -29,16 +29,14 @@ const ProjectsSection = () => {
   const projects = projectsData?.map(project => ({
     title: project.project_title,
     subtitle: project.subtitle,
-    description: [
-      `Challenge: ${project.challenge}`,
-      `Solution: ${project.solution}`,
-      `Impact: ${project.impact}`
-    ],
+    body: project.body || '',
+    thumbnail: project.thumbnail || undefined,
     tags: project.technologies || [],
     links: {
       github: project.github_link || undefined,
       demo: project.project_page_link || undefined
-    }
+    },
+    publishDate: project.date_published
   })) || [];
 
   useEffect(() => {
@@ -154,13 +152,9 @@ const ProjectsSection = () => {
                   {project.subtitle}
                 </p>
 
-                {/* Description bullets */}
-                <div className="space-y-2 mb-6">
-                  {project.description.map((line, idx) => (
-                    <p key={idx} className="font-ibm text-sm" style={{ color: 'hsl(var(--clr-text-light))', lineHeight: '1.5em' }}>
-                      • {line}
-                    </p>
-                  ))}
+                {/* Body excerpt */}
+                <div className="mb-6 font-ibm text-sm" style={{ color: 'hsl(var(--clr-text-light))', lineHeight: '1.6em' }}>
+                  <p>{project.body.slice(0, 200)}...</p>
                 </div>
 
                 {/* Tags */}
