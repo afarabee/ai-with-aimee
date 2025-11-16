@@ -109,15 +109,14 @@ export type Database = {
       }
       projects: {
         Row: {
-          challenge: string
+          body: string
           created_at: string
+          date_published: string
           display_order: number
           github_link: string | null
           id: string
-          impact: string
           project_page_link: string | null
           project_title: string
-          solution: string
           status: string
           subtitle: string
           technologies: string[]
@@ -125,15 +124,14 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          challenge: string
+          body?: string
           created_at?: string
+          date_published?: string
           display_order?: number
           github_link?: string | null
           id?: string
-          impact: string
           project_page_link?: string | null
           project_title: string
-          solution: string
           status?: string
           subtitle: string
           technologies?: string[]
@@ -141,15 +139,14 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          challenge?: string
+          body?: string
           created_at?: string
+          date_published?: string
           display_order?: number
           github_link?: string | null
           id?: string
-          impact?: string
           project_page_link?: string | null
           project_title?: string
-          solution?: string
           status?: string
           subtitle?: string
           technologies?: string[]
