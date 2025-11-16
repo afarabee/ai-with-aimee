@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Github, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import GlowCard from './ui/glow-card';
 import SectionDivider from './SectionDivider';
@@ -32,6 +33,7 @@ const ProjectsSection = () => {
     body: project.body || '',
     thumbnail: project.thumbnail || undefined,
     tags: project.technologies || [],
+    slug: project.slug || undefined,
     links: {
       github: project.github_link || undefined,
       demo: project.project_page_link || undefined

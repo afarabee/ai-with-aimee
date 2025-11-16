@@ -36,6 +36,7 @@ const Projects = () => {
     body: project.body || '',
     thumbnail: project.thumbnail || undefined,
     tags: project.technologies || [],
+    slug: project.slug || undefined,
     links: {
       github: project.github_link || undefined,
       demo: project.project_page_link || undefined
