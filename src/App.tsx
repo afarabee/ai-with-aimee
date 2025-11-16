@@ -12,6 +12,7 @@ import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 import MyAIJourney from "./pages/MyAIJourney";
 import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import BlogEditor from "./pages/admin/BlogEditor";
@@ -48,6 +49,7 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/my-ai-journey" element={<MyAIJourney />} />
             <Route path="/projects" element={<Projects />} />
+            <Route path="/projects/:slug" element={<ProjectDetail />} />
             <Route path="/blog" element={<Blog />} />
             {/* SEO redirect - old slug variation points to canonical URL */}
             <Route path="/blog/agents-arent-the-answer" element={<Navigate to="/blog/agents-arent-always-the-answer" replace />} />

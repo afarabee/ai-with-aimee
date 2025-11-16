@@ -117,6 +117,7 @@ export type Database = {
           id: string
           project_page_link: string | null
           project_title: string
+          slug: string | null
           status: string
           subtitle: string
           technologies: string[]
@@ -132,6 +133,7 @@ export type Database = {
           id?: string
           project_page_link?: string | null
           project_title: string
+          slug?: string | null
           status?: string
           subtitle: string
           technologies?: string[]
@@ -147,6 +149,7 @@ export type Database = {
           id?: string
           project_page_link?: string | null
           project_title?: string
+          slug?: string | null
           status?: string
           subtitle?: string
           technologies?: string[]
