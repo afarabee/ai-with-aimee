@@ -143,63 +143,135 @@ const ProjectsSection = () => {
               }`}
               style={{ transitionDuration: '0.5s' }}
             >
-              <GlowCard>
-                {/* Project Title */}
-                <h3 className="text-2xl font-rajdhani font-semibold mb-2 neon-text-yellow">
-                  {project.title}
-                </h3>
+              {project.slug ? (
+                <Link to={`/projects/${project.slug}`} className="block cursor-pointer">
+                  <GlowCard>
+                    {/* Project Title */}
+                    <h3 className="text-2xl font-rajdhani font-semibold mb-2 neon-text-yellow">
+                      {project.title}
+                    </h3>
 
-                {/* Subtitle */}
-                <p className="text-lg font-josefin italic mb-4 neon-text-pink">
-                  {project.subtitle}
-                </p>
+                    {/* Subtitle */}
+                    <p className="text-lg font-josefin italic mb-4 neon-text-pink">
+                      {project.subtitle}
+                    </p>
 
-                {/* Body excerpt */}
-                <div className="mb-6 font-ibm text-sm" style={{ color: 'hsl(var(--clr-text-light))', lineHeight: '1.6em' }}>
-                  <p>{project.body.slice(0, 200)}...</p>
-                </div>
+                    {/* Body excerpt */}
+                    <div className="mb-6 font-ibm text-sm" style={{ color: 'hsl(var(--clr-text-light))', lineHeight: '1.6em' }}>
+                      <p>{project.body.slice(0, 200)}...</p>
+                    </div>
 
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tags.map((tag, idx) => (
-                    <span
-                      key={idx}
-                      className="px-3 py-1 rounded text-xs font-titillium font-semibold neon-text-cyan hover:neon-text-pink"
-                      style={{ 
-                        background: 'rgba(0, 0, 0, 0.3)',
-                        border: `1px solid hsl(var(--clr-cyan) / 0.3)`,
-                        transition: 'var(--transition-smooth)'
-                      }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.tags.map((tag, idx) => (
+                        <span
+                          key={idx}
+                          className="px-3 py-1 rounded text-xs font-titillium font-semibold neon-text-cyan hover:neon-text-pink"
+                          style={{ 
+                            background: 'rgba(0, 0, 0, 0.3)',
+                            border: `1px solid hsl(var(--clr-cyan) / 0.3)`,
+                            transition: 'var(--transition-smooth)'
+                          }}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
 
-                {/* Links */}
-                <div className="flex gap-4">
-                  {project.links.github && (
-                    <a
-                      href={project.links.github}
-                      aria-label="View on GitHub"
-                      className="neon-text-cyan hover:neon-text-pink"
-                      style={{ transition: 'var(--transition-smooth)' }}
-                    >
-                      <Github size={20} />
-                    </a>
-                  )}
-                  {project.links.demo && (
-                    <a
-                      href={project.links.demo}
-                      aria-label="View Demo"
-                      className="neon-text-cyan hover:neon-text-pink"
-                      style={{ transition: 'var(--transition-smooth)' }}
-                    >
-                      <ExternalLink size={20} />
-                    </a>
-                  )}
-                </div>
-              </GlowCard>
+                    {/* Links */}
+                    <div className="flex gap-4">
+                      {project.links.github && (
+                        <a
+                          href={project.links.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="View on GitHub"
+                          className="neon-text-cyan hover:neon-text-pink"
+                          style={{ transition: 'var(--transition-smooth)' }}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Github size={20} />
+                        </a>
+                      )}
+                      {project.links.demo && (
+                        <a
+                          href={project.links.demo}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="View Demo"
+                          className="neon-text-cyan hover:neon-text-pink"
+                          style={{ transition: 'var(--transition-smooth)' }}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <ExternalLink size={20} />
+                        </a>
+                      )}
+                    </div>
+                  </GlowCard>
+                </Link>
+              ) : (
+                <GlowCard>
+                  {/* Project Title */}
+                  <h3 className="text-2xl font-rajdhani font-semibold mb-2 neon-text-yellow">
+                    {project.title}
+                  </h3>
+
+                  {/* Subtitle */}
+                  <p className="text-lg font-josefin italic mb-4 neon-text-pink">
+                    {project.subtitle}
+                  </p>
+
+                  {/* Body excerpt */}
+                  <div className="mb-6 font-ibm text-sm" style={{ color: 'hsl(var(--clr-text-light))', lineHeight: '1.6em' }}>
+                    <p>{project.body.slice(0, 200)}...</p>
+                  </div>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {project.tags.map((tag, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1 rounded text-xs font-titillium font-semibold neon-text-cyan hover:neon-text-pink"
+                        style={{ 
+                          background: 'rgba(0, 0, 0, 0.3)',
+                          border: `1px solid hsl(var(--clr-cyan) / 0.3)`,
+                          transition: 'var(--transition-smooth)'
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Links */}
+                  <div className="flex gap-4">
+                    {project.links.github && (
+                      <a
+                        href={project.links.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="View on GitHub"
+                        className="neon-text-cyan hover:neon-text-pink"
+                        style={{ transition: 'var(--transition-smooth)' }}
+                      >
+                        <Github size={20} />
+                      </a>
+                    )}
+                    {project.links.demo && (
+                      <a
+                        href={project.links.demo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="View Demo"
+                        className="neon-text-cyan hover:neon-text-pink"
+                        style={{ transition: 'var(--transition-smooth)' }}
+                      >
+                        <ExternalLink size={20} />
+                      </a>
+                    )}
+                  </div>
+                </GlowCard>
+              )}
             </div>
           )) : (
             <div className="col-span-full text-center py-20">
