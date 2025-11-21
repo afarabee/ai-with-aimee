@@ -304,10 +304,13 @@ export default function AssetGallery() {
 
     setRenaming(true);
     try {
+      // Extract folder from asset.id (e.g., "resume/file.pdf" or "blog/file.png")
+      const folder = asset.id.includes('/') ? asset.id.split('/')[0] : 'blog';
+      
       // Use move to rename the file
       const { error } = await supabase.storage
         .from('blog-images')
-        .move(`blog/${asset.name}`, `blog/${finalName}`);
+        .move(`${folder}/${asset.name}`, `${folder}/${finalName}`);
 
       if (error) throw error;
 
