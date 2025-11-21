@@ -144,14 +144,7 @@ const About = () => {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-5 mt-4">
               <Button
-                onClick={() => {
-                  const link = document.createElement('a');
-                  link.href = RESUME_URL;
-                  link.download = 'Aimee-Farabee-Resume.pdf';
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
-                }}
+                asChild
                 className="btn-hero text-sm transition-all duration-400"
                 style={{ 
                   width: '220px',
@@ -159,7 +152,14 @@ const About = () => {
                   padding: '1rem 1.5rem'
                 }}
               >
-                Download Resume (PDF)
+                <a 
+                  href={RESUME_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download="Aimee-Farabee-Resume.pdf"
+                >
+                  Download Resume (PDF)
+                </a>
               </Button>
               
               <Link to="/projects">
