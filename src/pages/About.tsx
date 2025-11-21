@@ -4,6 +4,7 @@ import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import aimeeHeadshot from '@/assets/aimee-headshot.jpg';
+import { RESUME_URL } from '@/constants/urls';
 
 const About = () => {
   return (
@@ -145,7 +146,7 @@ const About = () => {
               <Button
                 onClick={() => {
                   const link = document.createElement('a');
-                  link.href = '/Aimee-Farabee-Resume.pdf';
+                  link.href = RESUME_URL;
                   link.download = 'Aimee-Farabee-Resume.pdf';
                   document.body.appendChild(link);
                   link.click();

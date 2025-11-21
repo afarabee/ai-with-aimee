@@ -3,6 +3,7 @@ import AboutBackground from './AboutBackground';
 import { Button } from './ui/button';
 import SectionDivider from './SectionDivider';
 import aimeeHeadshot from '@/assets/aimee-headshot.jpg';
+import { RESUME_URL } from '@/constants/urls';
 
 const AboutSection = () => {
 
@@ -121,7 +122,7 @@ const AboutSection = () => {
             <Button
               onClick={() => {
                 const link = document.createElement('a');
-                link.href = '/Aimee-Farabee-Resume.pdf';
+                link.href = RESUME_URL;
                 link.download = 'Aimee-Farabee-Resume.pdf';
                 document.body.appendChild(link);
                 link.click();
