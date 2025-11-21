@@ -119,7 +119,14 @@ const AboutSection = () => {
             </div>
 
             <Button
-              asChild
+              onClick={() => {
+                const link = document.createElement('a');
+                link.href = '/Aimee-Farabee-Resume.pdf';
+                link.download = 'Aimee-Farabee-Resume.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }}
               className="hero-button text-sm"
               style={{ 
                 width: '240px',
@@ -127,14 +134,7 @@ const AboutSection = () => {
                 padding: '1.25rem 1.5rem'
               }}
             >
-              <a 
-                href="/Aimee-Farabee-Resume.pdf"
-                download="Aimee-Farabee-Resume.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Download Resume (PDF)
-              </a>
+              Download Resume (PDF)
             </Button>
           </div>
         </div>
