@@ -119,6 +119,7 @@ const AboutSection = () => {
             </div>
 
             <Button
+              asChild
               className="hero-button text-sm"
               style={{ 
                 width: '240px',
@@ -126,7 +127,14 @@ const AboutSection = () => {
                 padding: '1.25rem 1.5rem'
               }}
             >
-              Download Resume (PDF)
+              <a 
+                href="/Aimee-Farabee-Resume.pdf"
+                download="Aimee-Farabee-Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Download Resume (PDF)
+              </a>
             </Button>
           </div>
         </div>

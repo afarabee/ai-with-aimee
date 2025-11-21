@@ -143,6 +143,7 @@ const About = () => {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-5 mt-4">
               <Button
+                asChild
                 className="btn-hero text-sm transition-all duration-400"
                 style={{ 
                   width: '220px',
@@ -150,7 +151,14 @@ const About = () => {
                   padding: '1rem 1.5rem'
                 }}
               >
-                <span>Download Resume (PDF)</span>
+                <a 
+                  href="/Aimee-Farabee-Resume.pdf"
+                  download="Aimee-Farabee-Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Download Resume (PDF)
+                </a>
               </Button>
               
               <Link to="/projects">
