@@ -120,7 +120,23 @@ const AboutSection = () => {
             </div>
 
             <Button
-              asChild
+              onClick={async () => {
+                try {
+                  const response = await fetch(RESUME_URL);
+                  const blob = await response.blob();
+                  const url = window.URL.createObjectURL(blob);
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.download = 'Aimee-Farabee-Resume.pdf';
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  window.URL.revokeObjectURL(url);
+                } catch (error) {
+                  console.error('Download failed:', error);
+                  window.open(RESUME_URL, '_blank');
+                }
+              }}
               className="hero-button text-sm"
               style={{ 
                 width: '240px',
@@ -128,14 +144,7 @@ const AboutSection = () => {
                 padding: '1.25rem 1.5rem'
               }}
             >
-              <a 
-                href={RESUME_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                download="Aimee-Farabee-Resume.pdf"
-              >
-                Download Resume (PDF)
-              </a>
+              Download Resume (PDF)
             </Button>
           </div>
         </div>
