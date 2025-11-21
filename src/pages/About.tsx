@@ -64,7 +64,7 @@ const About = () => {
             lineHeight: '1.6'
           }}>
               <p>
-                With more than 15 years in product management at Express Scripts, Cigna, and American Express, I have built my career at the intersection of technology, business, and human needs. My work is guided by a belief that great products do more than deliver features, they solve meaningful problems in smart, scalable ways.
+                With more than 15 years in product management at large enterprises like Express Scripts, Cigna, and American Express, I have built my career at the intersection of technology, business, and human needs. My work is guided by a belief that great products do more than deliver features, they solve meaningful problems in smart, scalable ways.
               </p>
               
               <p>
@@ -72,7 +72,7 @@ const About = () => {
               </p>
               
               <p>
-                AI with Aimee was born from blending creativity, governance, and hands-on experimentation. This portfolio represents my evolution from traditional product director to AI-focused leader — committed to making AI usable, ethical, and impactful within the enterprise.
+                AI with Aimee was born from blending creativity, governance, and hands-on experimentation. This portfolio represents my evolution from traditional product director to AI-focused leader, committed to making AI usable, ethical, and impactful within the enterprise.
               </p>
             </div>
           </div>
