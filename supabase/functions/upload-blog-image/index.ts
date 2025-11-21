@@ -27,25 +27,26 @@ Deno.serve(async (req) => {
     }
 
     // Validate file type
-    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'application/pdf']
     if (!validTypes.includes(file.type)) {
       return new Response(
-        JSON.stringify({ error: 'Invalid file type. Only images are allowed.' }),
+        JSON.stringify({ error: 'Invalid file type. Only images and PDFs are allowed.' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
-    // Validate file size (5MB limit)
-    if (file.size > 5 * 1024 * 1024) {
+    // Validate file size (10MB limit)
+    if (file.size > 10 * 1024 * 1024) {
       return new Response(
-        JSON.stringify({ error: 'File size exceeds 5MB limit' }),
+        JSON.stringify({ error: 'File size exceeds 10MB limit' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
     const fileExt = file.name.split('.').pop()
+    const isPdf = file.type === 'application/pdf'
     const fileName = `${crypto.randomUUID()}.${fileExt}`
-    const filePath = `blog/${fileName}`
+    const filePath = isPdf ? `resume/${fileName}` : `blog/${fileName}`
 
     const arrayBuffer = await file.arrayBuffer()
     const fileData = new Uint8Array(arrayBuffer)

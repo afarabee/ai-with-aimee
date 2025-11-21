@@ -66,16 +66,22 @@ export default function AssetGallery() {
   const { data: assets, isLoading, refetch } = useQuery({
     queryKey: ['admin-assets'],
     queryFn: async () => {
-      const { data, error } = await supabase.storage
-        .from('blog-images')
-        .list('blog', { 
+      // Fetch both blog images and resume PDFs
+      const [blogResult, resumeResult] = await Promise.all([
+        supabase.storage.from('blog-images').list('blog', { 
           limit: 500, 
           sortBy: { column: 'created_at', order: 'desc' } 
-        });
+        }),
+        supabase.storage.from('blog-images').list('resume', { 
+          limit: 100, 
+          sortBy: { column: 'created_at', order: 'desc' } 
+        })
+      ]);
       
-      if (error) throw error;
+      if (blogResult.error) throw blogResult.error;
+      if (resumeResult.error) throw resumeResult.error;
       
-      return data.map(file => {
+      const blogFiles = (blogResult.data || []).map(file => {
         const { data: publicData } = supabase.storage
           .from('blog-images')
           .getPublicUrl(`blog/${file.name}`);
@@ -91,6 +97,25 @@ export default function AssetGallery() {
           type,
         } as Asset;
       });
+
+      const resumeFiles = (resumeResult.data || []).map(file => {
+        const { data: publicData } = supabase.storage
+          .from('blog-images')
+          .getPublicUrl(`resume/${file.name}`);
+        
+        const type = detectFileType(file.name);
+        
+        return {
+          id: `resume/${file.name}`,
+          name: file.name,
+          created_at: file.created_at,
+          size: file.metadata?.size || 0,
+          publicUrl: publicData.publicUrl,
+          type,
+        } as Asset;
+      });
+
+      return [...blogFiles, ...resumeFiles];
     },
   });
 
@@ -133,9 +158,9 @@ export default function AssetGallery() {
   };
 
   const handleUpload = async (file: File) => {
-    const validTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg+xml'];
+    const validTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg+xml', 'application/pdf'];
     if (!validTypes.includes(file.type)) {
-      toast.error('Please upload an image file (PNG, JPG, GIF, WebP, SVG)', {
+      toast.error('Please upload an image or PDF file (PNG, JPG, GIF, WebP, SVG, PDF)', {
         style: {
           background: 'rgba(245, 12, 160, 0.1)',
           border: '1px solid hsl(var(--color-pink))',
@@ -367,11 +392,11 @@ export default function AssetGallery() {
               className="text-sm mb-2 font-ibm-plex" 
               style={{ color: 'hsl(var(--color-light-text))' }}
             >
-              Drag & drop an image here, or
+              Drag & drop an image or PDF here, or
             </p>
             <input
               type="file"
-              accept="image/*"
+              accept="image/*,.pdf"
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) handleUpload(file);
@@ -402,7 +427,7 @@ export default function AssetGallery() {
               className="text-xs mt-2 font-ibm-plex" 
               style={{ color: 'hsl(var(--color-light-text) / 0.5)' }}
             >
-              Max size: 10MB • PNG, JPG, GIF, WebP, SVG
+              Max size: 10MB • PNG, JPG, GIF, WebP, SVG, PDF
             </p>
           </div>
         </div>
