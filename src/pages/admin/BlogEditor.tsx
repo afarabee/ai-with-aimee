@@ -6,7 +6,7 @@ import { z } from 'zod';
 import MDEditor, { commands, ICommand } from '@uiw/react-md-editor';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ArrowLeft, Eye, EyeOff, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Palette, Smile, Underline } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Palette, Smile, Underline, RotateCcw } from 'lucide-react';
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import BlogPreview from '@/components/admin/BlogPreview';
 import ImageUploadModal from '@/components/admin/ImageUploadModal';
@@ -502,6 +502,33 @@ export default function BlogEditor() {
     }
   };
 
+  const restorePost = async () => {
+    if (!blogId) return;
+    const data = watch();
+    try {
+      const postData = {
+        title: data.title,
+        subtitle: data.subtitle || null,
+        author: data.author,
+        slug: data.slug,
+        excerpt: data.excerpt,
+        category: data.category || null,
+        tags: data.tags || null,
+        banner_image: data.banner_image || null,
+        body,
+        status: 'published',
+        date_published: new Date().toISOString(),
+      };
+      const { error } = await supabase.from('blogs').update(postData).eq('id', blogId);
+      if (error) throw error;
+      toast.success('Post restored to Published');
+      setValue('status', 'published');
+    } catch (error: any) {
+      console.error('Error restoring:', error);
+      toast.error('Failed to restore');
+    }
+  };
+
   const handleImageInsert = (url: string, alt: string) => {
     const markdown = `![${alt}](${url})`;
     setBody((prev) => prev + '\n\n' + markdown + '\n\n');
@@ -972,8 +999,13 @@ export default function BlogEditor() {
                     {/* Action Buttons */}
                     <div className="flex flex-wrap gap-2 pt-4 border-t" style={{ borderColor: 'hsl(var(--color-cyan) / 0.2)' }}>
                       <Button type="button" onClick={saveDraft}><Save size={16} className="mr-2" />Save Draft</Button>
-                      {formData.status !== 'published' && <Button type="button" onClick={publishPost} className="bg-primary/90 hover:bg-primary">Publish Now</Button>}
-                      {formData.status === 'published' && <Button type="button" variant="outline" onClick={unpublishPost}>Unpublish</Button>}
+                      {formData.status === 'archived' ? (
+                        <Button type="button" onClick={restorePost}><RotateCcw size={16} className="mr-2" />Restore to Published</Button>
+                      ) : formData.status === 'published' ? (
+                        <Button type="button" variant="outline" onClick={unpublishPost}>Unpublish</Button>
+                      ) : (
+                        <Button type="button" onClick={publishPost} className="bg-primary/90 hover:bg-primary">Publish Now</Button>
+                      )}
                       <div className="flex-1"></div>
                       {blogId && <Button type="button" variant="outline" onClick={() => setArchiveDialogOpen(true)} className="text-amber-500 border-amber-500 hover:bg-amber-500/10">Archive</Button>}
                       <Button type="button" variant="ghost" onClick={() => { reset(); setBody(''); setBlogId(null); navigate('/admin/blog-editor'); }}>Clear Form</Button>
