@@ -15,10 +15,9 @@ import AssetPicker from '@/components/admin/AssetPicker';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { useAutosave } from '@/hooks/useAutosave';
-
 const projectSchema = z.object({
   project_title: z.string().min(1, 'Title required').max(200),
   subtitle: z.string().min(1, 'Subtitle required').max(200),
@@ -27,7 +26,7 @@ const projectSchema = z.object({
   thumbnail: z.string().url().optional().or(z.literal('')),
   github_link: z.string().url().optional().or(z.literal('')),
   project_page_link: z.string().url().optional().or(z.literal('')),
-  status: z.enum(['Draft', 'Active', 'Completed', 'Archived']).default('Draft'),
+  status: z.enum(['Draft', 'Active', 'Archived']).default('Draft'),
   display_order: z.number().default(0),
   date_published: z.string(),
 });
@@ -60,7 +59,7 @@ export default function ProjectEditor() {
   const [body, setBody] = useState('');
   const [viewMode, setViewMode] = useState<'edit' | 'split' | 'preview'>('split');
   const [imageModalOpen, setImageModalOpen] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
   const [clearDialogOpen, setClearDialogOpen] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -87,23 +86,63 @@ export default function ProjectEditor() {
     }
   }, [projectId]);
 
-  const saveDraft = async (data: ProjectFormData) => {
+  const saveDraft = async () => {
+    const data = watch();
     const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
     const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Draft', display_order: data.display_order, date_published: data.date_published };
-    if (projectId) await supabase.from('projects').update(payload).eq('id', projectId);
-    else { const { data: newProj } = await supabase.from('projects').insert([payload]).select().single(); if (newProj) { setProjectId(newProj.id); navigate(`/admin/project-editor?id=${newProj.id}`, { replace: true }); } }
+    if (projectId) { 
+      await supabase.from('projects').update(payload).eq('id', projectId); 
+      toast.success('Draft saved');
+    }
+    else { 
+      const { data: newProj } = await supabase.from('projects').insert([payload]).select().single(); 
+      if (newProj) { 
+        setProjectId(newProj.id); 
+        navigate(`/admin/project-editor?id=${newProj.id}`, { replace: true }); 
+        toast.success('Draft saved');
+      } 
+    }
   };
 
-  useAutosave(formData, saveDraft, 30000);
-
-  const onSubmit = async (data: ProjectFormData) => {
+  const publishProject = async () => {
+    const data = watch();
     const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
-    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: data.status, display_order: data.display_order, date_published: data.status === 'Active' ? data.date_published : new Date().toISOString() };
-    if (projectId) { await supabase.from('projects').update(payload).eq('id', projectId); toast.success('Updated'); }
-    else { const { data: newProj } = await supabase.from('projects').insert([payload]).select().single(); setProjectId(newProj.id); toast.success('Created'); navigate(`/admin/project-editor?id=${newProj.id}`, { replace: true }); }
+    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Active', display_order: data.display_order, date_published: new Date().toISOString() };
+    if (projectId) { 
+      await supabase.from('projects').update(payload).eq('id', projectId); 
+      toast.success('Project published!');
+    }
+    else { 
+      const { data: newProj } = await supabase.from('projects').insert([payload]).select().single(); 
+      if (newProj) { 
+        setProjectId(newProj.id); 
+        navigate(`/admin/project-editor?id=${newProj.id}`, { replace: true }); 
+        toast.success('Project published!');
+      } 
+    }
+    setValue('status', 'Active');
   };
 
-  const handleDelete = async () => { if (projectId) { await supabase.from('projects').delete().eq('id', projectId); toast.success('Deleted'); navigate('/admin/projects'); } };
+  const unpublishProject = async () => {
+    if (!projectId) return;
+    const data = watch();
+    const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
+    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Draft', display_order: data.display_order, date_published: data.date_published };
+    await supabase.from('projects').update(payload).eq('id', projectId); 
+    toast.success('Project unpublished');
+    setValue('status', 'Draft');
+  };
+
+  const archiveProject = async () => {
+    if (!projectId) return;
+    const data = watch();
+    const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
+    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Archived', display_order: data.display_order, date_published: data.date_published };
+    await supabase.from('projects').update(payload).eq('id', projectId); 
+    toast.success('Project archived');
+    setValue('status', 'Archived');
+    setArchiveDialogOpen(false);
+  };
   const handleClearForm = () => { reset({ project_title: '', subtitle: '', body: '', technologies: '', thumbnail: '', github_link: '', project_page_link: '', status: 'Draft', display_order: 0, date_published: new Date().toISOString().split('T')[0] }); setBody(''); setProjectId(null); navigate('/admin/project-editor', { replace: true }); setClearDialogOpen(false); };
   const emojiCommand: ICommand = { name: 'emoji', keyCommand: 'emoji', buttonProps: { 'aria-label': 'Emoji' }, icon: <Smile size={14} />, execute: () => setShowEmojiPicker(!showEmojiPicker) };
   
@@ -139,22 +178,38 @@ export default function ProjectEditor() {
       <div className="border-b border-border bg-card"><div className="max-w-[1800px] mx-auto px-6 py-4"><div className="flex items-center justify-between"><div className="flex items-center gap-4"><Button variant="ghost" size="sm" onClick={() => navigate('/admin/project-dashboard')}><ArrowLeft className="w-4 h-4 mr-2" />Back</Button><h1 className="text-2xl font-bold">{projectId ? 'Edit Project' : 'New Project'}</h1></div><div className="flex gap-2"><Button variant={viewMode === 'edit' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('edit')}>Edit</Button><Button variant={viewMode === 'split' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('split')}>Split</Button><Button variant={viewMode === 'preview' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('preview')}><Eye className="w-4 h-4 mr-2" />Preview</Button></div></div></div></div>
       <div className="max-w-[1800px] mx-auto p-6"><div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {(viewMode === 'edit' || viewMode === 'split') && (
-          <div className="space-y-6"><form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div className="space-y-6"><div className="space-y-6">
             <div><Label>Title *</Label><Input {...register('project_title')} />{errors.project_title && <p className="text-sm text-destructive mt-1">{errors.project_title.message}</p>}</div>
             <div><Label>Subtitle *</Label><Input {...register('subtitle')} />{errors.subtitle && <p className="text-sm text-destructive mt-1">{errors.subtitle.message}</p>}</div>
             <div><Label>Technologies *</Label><Input {...register('technologies')} placeholder="React, TypeScript" />{errors.technologies && <p className="text-sm text-destructive mt-1">{errors.technologies.message}</p>}</div>
             <div><Label>Thumbnail</Label><div className="flex gap-2"><Input {...register('thumbnail')} /><Button type="button" variant="outline" onClick={() => setIsAssetPickerOpen(true)}>Library</Button></div>{formData.thumbnail && <img src={formData.thumbnail} alt="Preview" className="w-full h-48 object-cover rounded-lg mt-2" />}<ImageUploadHelper onBannerInsert={(url) => setValue('thumbnail', url)} onBodyInsert={(markdown) => setBody(prev => `${prev}\n\n${markdown}\n\n`)} /></div>
             <div><div className="flex justify-between mb-2"><Label>Content *</Label><Button type="button" variant="outline" size="sm" onClick={() => setImageModalOpen(true)}><Image className="w-4 h-4 mr-2" />Insert Image</Button></div><div data-color-mode="dark"><MDEditor value={body} onChange={(val) => setBody(val || '')} commands={editorCommands} height={500} preview="edit" /></div>{showEmojiPicker && <div className="absolute z-50 mt-2"><EmojiPicker onEmojiClick={(e) => { setBody(prev => `${prev}${e.emoji}`); setShowEmojiPicker(false); }} theme={Theme.DARK} /></div>}</div>
             <div className="grid grid-cols-2 gap-4"><div><Label>GitHub</Label><Input {...register('github_link')} /></div><div><Label>Demo</Label><Input {...register('project_page_link')} /></div></div>
-            <div className="grid grid-cols-3 gap-4"><div><Label>Status</Label><Select value={formData.status} onValueChange={(v) => setValue('status', v as any)}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="Draft">Draft</SelectItem><SelectItem value="Active">Active</SelectItem><SelectItem value="Completed">Completed</SelectItem><SelectItem value="Archived">Archived</SelectItem></SelectContent></Select></div><div><Label>Order</Label><Input type="number" {...register('display_order', { valueAsNumber: true })} /></div><div><Label>Date</Label><Input type="date" {...register('date_published')} /></div></div>
-            <div className="flex gap-2"><Button type="submit"><Save className="w-4 h-4 mr-2" />{formData.status === 'Active' ? 'Publish' : 'Save'}</Button>{projectId && formData.status !== 'Active' && <Button type="button" onClick={() => { setValue('status', 'Active'); handleSubmit(onSubmit)(); }}>Publish Now</Button>}{projectId && formData.status === 'Active' && <Button type="button" variant="outline" onClick={() => { setValue('status', 'Draft'); handleSubmit(onSubmit)(); }}>Unpublish</Button>}<Button type="button" variant="outline" onClick={() => setClearDialogOpen(true)}>Clear</Button>{projectId && <Button type="button" variant="destructive" onClick={() => setDeleteDialogOpen(true)}><Trash2 className="w-4 h-4 mr-2" />Delete</Button>}</div>
-          </form></div>
+            <div className="grid grid-cols-2 gap-4"><div><Label>Order</Label><Input type="number" {...register('display_order', { valueAsNumber: true })} /></div><div><Label>Date</Label><Input type="date" {...register('date_published')} /></div></div>
+            <div className="space-y-3">
+              <div>
+                <Label className="text-foreground/70">Status</Label>
+                <div className="mt-2 flex items-center gap-3">
+                  {formData.status === 'Draft' && <Badge variant="outline" className="bg-muted text-muted-foreground">Draft - Not visible to public</Badge>}
+                  {formData.status === 'Active' && <Badge className="bg-primary/20 text-primary border-primary">Published - Live and visible</Badge>}
+                  {formData.status === 'Archived' && <Badge className="bg-amber-500/20 text-amber-500 border-amber-500">Archived - Hidden but preserved</Badge>}
+                </div>
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                <Button type="button" onClick={saveDraft}><Save className="w-4 h-4 mr-2" />Save Draft</Button>
+                {formData.status !== 'Active' && <Button type="button" onClick={publishProject} className="bg-primary/90 hover:bg-primary">Publish Now</Button>}
+                {formData.status === 'Active' && <Button type="button" variant="outline" onClick={unpublishProject}>Unpublish</Button>}
+                <div className="flex-1"></div>
+                {projectId && <Button type="button" variant="outline" onClick={() => setArchiveDialogOpen(true)} className="text-amber-500 border-amber-500 hover:bg-amber-500/10">Archive</Button>}
+                <Button type="button" variant="outline" onClick={() => setClearDialogOpen(true)}>Clear Form</Button>
+              </div>
+            </div></div></div>
         )}
         {(viewMode === 'split' || viewMode === 'preview') && <div className="lg:sticky lg:top-6 h-[calc(100vh-120px)]"><div className="border rounded-lg overflow-hidden h-full"><ProjectPreview {...previewData} /></div></div>}
       </div></div>
       <ImageUploadModal open={imageModalOpen} onClose={() => setImageModalOpen(false)} onInsert={(url, alt) => { setBody(prev => `${prev}\n\n![${alt}](${url})\n\n`); setImageModalOpen(false); }} />
       <AssetPicker open={isAssetPickerOpen} onClose={() => setIsAssetPickerOpen(false)} onSelect={(url) => { setValue('thumbnail', url); setIsAssetPickerOpen(false); }} />
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Project</AlertDialogTitle><AlertDialogDescription>This action cannot be undone.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
+      <AlertDialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Archive Project</AlertDialogTitle><AlertDialogDescription>This will archive the project and hide it from public view. You can restore it later by changing its status back to Active.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={archiveProject} className="bg-amber-500 hover:bg-amber-600">Archive</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
       <AlertDialog open={clearDialogOpen} onOpenChange={setClearDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Clear Form</AlertDialogTitle><AlertDialogDescription>All unsaved changes will be lost.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={handleClearForm}>Clear</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
     </div>
   );
