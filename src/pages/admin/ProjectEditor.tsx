@@ -214,7 +214,6 @@ export default function ProjectEditor() {
                 ) : (
                   <Button type="button" onClick={publishProject} className="bg-primary/90 hover:bg-primary">Publish Now</Button>
                 )}
-                {formData.status === 'Active' && <Button type="button" variant="outline" onClick={unpublishProject}>Unpublish</Button>}
                 <div className="flex-1"></div>
                 {projectId && <Button type="button" variant="outline" onClick={() => setArchiveDialogOpen(true)} className="text-amber-500 border-amber-500 hover:bg-amber-500/10">Archive</Button>}
                 <Button type="button" variant="outline" onClick={() => setClearDialogOpen(true)}>Clear Form</Button>
