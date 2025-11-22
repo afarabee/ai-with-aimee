@@ -49,7 +49,7 @@ export default function BlogDashboard() {
   const navigate = useNavigate();
   
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'draft' | 'published'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'draft' | 'published' | 'archived'>('all');
   const [deleteTarget, setDeleteTarget] = useState<Blog | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
@@ -214,6 +214,7 @@ export default function BlogDashboard() {
                     <SelectItem value="all">All Posts</SelectItem>
                     <SelectItem value="draft">Drafts Only</SelectItem>
                     <SelectItem value="published">Published Only</SelectItem>
+                    <SelectItem value="archived">Archived Only</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

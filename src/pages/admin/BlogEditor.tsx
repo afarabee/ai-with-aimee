@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
@@ -33,8 +34,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useAutosave } from '@/hooks/useAutosave';
-
 const blogSchema = z.object({
   title: z.string().min(1, 'Title required').max(200),
   subtitle: z.string().max(200).optional(),
@@ -45,7 +44,7 @@ const blogSchema = z.object({
   tags: z.string().optional(),
   banner_image: z.string().url().optional().or(z.literal('')),
   body: z.string().min(1, 'Content required'),
-  status: z.enum(['draft', 'published']).default('draft'),
+  status: z.enum(['draft', 'published', 'archived']).default('draft'),
   date_published: z.string(),
 });
 
@@ -255,7 +254,7 @@ export default function BlogEditor() {
   const [body, setBody] = useState('');
   const [viewMode, setViewMode] = useState<'edit' | 'split' | 'preview'>('split');
   const [imageModalOpen, setImageModalOpen] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isAssetPickerOpen, setIsAssetPickerOpen] = useState(false);
@@ -323,7 +322,7 @@ export default function BlogEditor() {
           tags: data.tags || '',
           banner_image: data.banner_image || '',
           body: data.body,
-          status: (data.status || 'draft') as 'draft' | 'published',
+          status: (data.status || 'draft') as 'draft' | 'published' | 'archived',
           date_published: new Date(data.date_published).toISOString().split('T')[0],
         });
         setBody(data.body);
@@ -359,7 +358,7 @@ export default function BlogEditor() {
           tags: data.tags || '',
           banner_image: data.banner_image || '',
           body: data.body,
-          status: (data.status || 'draft') as 'draft' | 'published',
+          status: (data.status || 'draft') as 'draft' | 'published' | 'archived',
           date_published: new Date(data.date_published).toISOString().split('T')[0],
         });
         setBody(data.body);
@@ -372,7 +371,8 @@ export default function BlogEditor() {
     }
   };
 
-  const saveDraft = async (data: BlogFormData) => {
+  const saveDraft = async () => {
+    const data = watch();
     try {
       const postData = {
         title: data.title,
@@ -389,44 +389,28 @@ export default function BlogEditor() {
       };
 
       if (blogId) {
-        const { error } = await supabase
-          .from('blogs')
-          .update(postData)
-          .eq('id', blogId);
-
+        const { error } = await supabase.from('blogs').update(postData).eq('id', blogId);
         if (error) throw error;
+        toast.success('Draft saved');
       } else {
-        const { data: newPost, error } = await supabase
-          .from('blogs')
-          .insert([postData])
-          .select()
-          .single();
-
+        const { data: newPost, error } = await supabase.from('blogs').insert([postData]).select().single();
         if (error) throw error;
         if (newPost) {
           setBlogId(newPost.id);
-          navigate(`/admin/blog-editor/${newPost.slug}`, { replace: true });
+          navigate(`/admin/blog-editor?id=${newPost.id}`, { replace: true });
+          toast.success('Draft saved');
         }
       }
-
-      toast.success('Draft saved', {
-        style: {
-          background: 'rgba(0, 255, 255, 0.1)',
-          border: '1px solid hsl(var(--color-cyan))',
-          color: 'hsl(var(--color-cyan))',
-        },
-      });
+      setValue('status', 'draft');
     } catch (error: any) {
       console.error('Error saving draft:', error);
-      if (error.code === '23505') {
-        toast.error('Slug already exists');
-      } else {
-        toast.error('Failed to save draft');
-      }
+      if (error.code === '23505') toast.error('Slug already exists');
+      else toast.error('Failed to save draft');
     }
   };
 
-  const onSubmit = async (data: BlogFormData, status: 'draft' | 'published') => {
+  const publishPost = async () => {
+    const data = watch();
     try {
       const postData = {
         title: data.title,
@@ -438,84 +422,83 @@ export default function BlogEditor() {
         tags: data.tags || null,
         banner_image: data.banner_image || null,
         body,
-        status,
-        date_published: new Date(data.date_published).toISOString(),
+        status: 'published',
+        date_published: new Date().toISOString(),
       };
 
       if (blogId) {
-        const { error } = await supabase
-          .from('blogs')
-          .update(postData)
-          .eq('id', blogId);
-
+        const { error } = await supabase.from('blogs').update(postData).eq('id', blogId);
         if (error) throw error;
+        toast.success('Post published!');
       } else {
-        const { data: newPost, error } = await supabase
-          .from('blogs')
-          .insert([postData])
-          .select()
-          .single();
-
+        const { data: newPost, error } = await supabase.from('blogs').insert([postData]).select().single();
         if (error) throw error;
         if (newPost) {
           setBlogId(newPost.id);
+          navigate(`/admin/blog-editor?id=${newPost.id}`, { replace: true });
+          toast.success('Post published!');
         }
       }
-
-      toast.success(status === 'published' ? 'Post published!' : 'Draft saved', {
-        style: {
-          background: 'rgba(0, 255, 255, 0.1)',
-          border: '1px solid hsl(var(--color-cyan))',
-          color: 'hsl(var(--color-cyan))',
-        },
-      });
-
-      if (status === 'published') {
-        navigate(`/blog/${data.slug}`);
-      }
+      setValue('status', 'published');
     } catch (error: any) {
-      console.error('Error saving post:', error);
-      
-      if (error.code === '23505') {
-        toast.error('Slug already exists. Please use a different slug.');
-      } else if (error.code === '42501') {
-        toast.error('Permission denied. Please check database policies.');
-        console.error('RLS Policy Error:', {
-          message: error.message,
-          details: error.details,
-          hint: error.hint
-        });
-      } else if (error.message?.includes('row-level security')) {
-        toast.error('Database security policy prevented save.');
-        console.error('RLS Error Details:', error);
-      } else {
-        toast.error(`Failed to save post: ${error.message || 'Unknown error'}`);
-      }
+      console.error('Error publishing:', error);
+      if (error.code === '23505') toast.error('Slug already exists');
+      else toast.error('Failed to publish');
     }
   };
 
-  const handleDelete = async () => {
+  const unpublishPost = async () => {
     if (!blogId) return;
-
+    const data = watch();
     try {
-      const { error } = await supabase
-        .from('blogs')
-        .delete()
-        .eq('id', blogId);
-
+      const postData = {
+        title: data.title,
+        subtitle: data.subtitle || null,
+        author: data.author,
+        slug: data.slug,
+        excerpt: data.excerpt,
+        category: data.category || null,
+        tags: data.tags || null,
+        banner_image: data.banner_image || null,
+        body,
+        status: 'draft',
+        date_published: data.date_published,
+      };
+      const { error } = await supabase.from('blogs').update(postData).eq('id', blogId);
       if (error) throw error;
+      toast.success('Post unpublished');
+      setValue('status', 'draft');
+    } catch (error: any) {
+      console.error('Error unpublishing:', error);
+      toast.error('Failed to unpublish');
+    }
+  };
 
-      toast.success('Post deleted', {
-        style: {
-          background: 'rgba(249, 249, 64, 0.1)',
-          border: '1px solid hsl(var(--color-yellow))',
-          color: 'hsl(var(--color-yellow))',
-        },
-      });
-      navigate('/admin/blog-editor');
-    } catch (error) {
-      console.error('Error deleting post:', error);
-      toast.error('Failed to delete post');
+  const archivePost = async () => {
+    if (!blogId) return;
+    const data = watch();
+    try {
+      const postData = {
+        title: data.title,
+        subtitle: data.subtitle || null,
+        author: data.author,
+        slug: data.slug,
+        excerpt: data.excerpt,
+        category: data.category || null,
+        tags: data.tags || null,
+        banner_image: data.banner_image || null,
+        body,
+        status: 'archived',
+        date_published: data.date_published,
+      };
+      const { error } = await supabase.from('blogs').update(postData).eq('id', blogId);
+      if (error) throw error;
+      toast.success('Post archived');
+      setValue('status', 'archived');
+      setArchiveDialogOpen(false);
+    } catch (error: any) {
+      console.error('Error archiving:', error);
+      toast.error('Failed to archive');
     }
   };
 
@@ -559,12 +542,7 @@ export default function BlogEditor() {
     });
   };
 
-  // Auto-save every 30 seconds
-  useAutosave(
-    formData,
-    (data) => saveDraft(data),
-    30000
-  );
+  // Auto-save removed - explicit save actions only
 
   // Store the text API for emoji insertion
   const [textApi, setTextApi] = useState<any>(null);
@@ -970,21 +948,14 @@ export default function BlogEditor() {
                       )}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-3">
                       <div>
-                        <Label htmlFor="status">Status</Label>
-                        <Select
-                          value={formData.status}
-                          onValueChange={(value) => setValue('status', value as 'draft' | 'published')}
-                        >
-                          <SelectTrigger className="mt-2">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="draft">Draft</SelectItem>
-                            <SelectItem value="published">Published</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <Label className="text-foreground/70">Status</Label>
+                        <div className="mt-2 flex items-center gap-3">
+                          {formData.status === 'draft' && <Badge variant="outline" className="bg-muted text-muted-foreground">Draft - Not visible to public</Badge>}
+                          {formData.status === 'published' && <Badge className="bg-primary/20 text-primary border-primary">Published - Live and visible</Badge>}
+                          {formData.status === 'archived' && <Badge className="bg-amber-500/20 text-amber-500 border-amber-500">Archived - Hidden but preserved</Badge>}
+                        </div>
                       </div>
                       <div>
                         <Label htmlFor="date_published">Publish Date</Label>
@@ -999,58 +970,13 @@ export default function BlogEditor() {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex flex-wrap gap-3 pt-4 border-t" style={{ borderColor: 'hsl(var(--color-cyan) / 0.2)' }}>
-                      <Button
-                        type="button"
-                        onClick={handleSubmit((data) => onSubmit(data, 'draft'))}
-                        className="flex-1"
-                        style={{
-                          background: 'rgba(0, 255, 255, 0.2)',
-                          border: '2px solid hsl(var(--color-cyan))',
-                          color: 'hsl(var(--color-cyan))',
-                        }}
-                      >
-                        <Save size={16} className="mr-2" />
-                        {blogId ? 'Update Draft' : 'Save Draft'}
-                      </Button>
-                      <Button
-                        type="button"
-                        onClick={handleSubmit((data) => onSubmit(data, 'published'))}
-                        className="flex-1"
-                        style={{
-                          background: 'rgba(245, 12, 160, 0.2)',
-                          border: '2px solid hsl(var(--color-pink))',
-                          color: 'hsl(var(--color-pink))',
-                        }}
-                      >
-                        {blogId ? 'Update & Publish' : 'Publish'}
-                      </Button>
-                      {blogId && (
-                        <Button
-                          type="button"
-                          onClick={() => setDeleteDialogOpen(true)}
-                          variant="outline"
-                          style={{
-                            borderColor: 'hsl(var(--color-yellow))',
-                            color: 'hsl(var(--color-yellow))',
-                          }}
-                        >
-                          <Trash2 size={16} className="mr-2" />
-                          Delete
-                        </Button>
-                      )}
-                      <Button
-                        type="button"
-                        onClick={() => {
-                          reset();
-                          setBody('');
-                          setBlogId(null);
-                          navigate('/admin/blog-editor');
-                        }}
-                        variant="ghost"
-                      >
-                        Clear
-                      </Button>
+                    <div className="flex flex-wrap gap-2 pt-4 border-t" style={{ borderColor: 'hsl(var(--color-cyan) / 0.2)' }}>
+                      <Button type="button" onClick={saveDraft}><Save size={16} className="mr-2" />Save Draft</Button>
+                      {formData.status !== 'published' && <Button type="button" onClick={publishPost} className="bg-primary/90 hover:bg-primary">Publish Now</Button>}
+                      {formData.status === 'published' && <Button type="button" variant="outline" onClick={unpublishPost}>Unpublish</Button>}
+                      <div className="flex-1"></div>
+                      {blogId && <Button type="button" variant="outline" onClick={() => setArchiveDialogOpen(true)} className="text-amber-500 border-amber-500 hover:bg-amber-500/10">Archive</Button>}
+                      <Button type="button" variant="ghost" onClick={() => { reset(); setBody(''); setBlogId(null); navigate('/admin/blog-editor'); }}>Clear Form</Button>
                     </div>
                   </form>
                 </div>
@@ -1087,18 +1013,18 @@ export default function BlogEditor() {
           onSelect={handleBannerAssetSelect}
         />
 
-        {/* Delete Confirmation Dialog */}
-        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        {/* Archive Confirmation Dialog */}
+        <AlertDialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete Post</AlertDialogTitle>
+              <AlertDialogTitle>Archive Post</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to delete this post? This action cannot be undone.
+                This will archive the post and hide it from public view. You can restore it later by changing its status back to Published.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+              <AlertDialogAction onClick={archivePost} className="bg-amber-500 hover:bg-amber-600">Archive</AlertDialogAction>
             </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
