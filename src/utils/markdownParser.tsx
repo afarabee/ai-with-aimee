@@ -75,6 +75,16 @@ export const parseMarkdownContent = (markdown: string): React.ReactNode => {
     }}>
             {children}
           </em>,
+    // Underline text
+    u: ({
+      children
+    }) => <u className="underline" style={{
+      textDecorationColor: 'hsl(var(--color-cyan) / 0.7)',
+      textDecorationThickness: '1px',
+      textUnderlineOffset: '2px'
+    }}>
+            {children}
+          </u>,
     // Inline code
     code: ({
       children,
