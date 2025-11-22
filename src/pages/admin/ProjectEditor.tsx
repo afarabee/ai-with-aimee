@@ -6,7 +6,7 @@ import { z } from 'zod';
 import MDEditor, { commands, ICommand } from '@uiw/react-md-editor';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline } from 'lucide-react';
+import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw } from 'lucide-react';
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import ProjectPreview from '@/components/admin/ProjectPreview';
 import ImageUploadModal from '@/components/admin/ImageUploadModal';
@@ -143,6 +143,16 @@ export default function ProjectEditor() {
     setValue('status', 'Archived');
     setArchiveDialogOpen(false);
   };
+
+  const restoreProject = async () => {
+    if (!projectId) return;
+    const data = watch();
+    const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
+    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Active', display_order: data.display_order, date_published: new Date().toISOString() };
+    await supabase.from('projects').update(payload).eq('id', projectId); 
+    toast.success('Project restored to Active');
+    setValue('status', 'Active');
+  };
   const handleClearForm = () => { reset({ project_title: '', subtitle: '', body: '', technologies: '', thumbnail: '', github_link: '', project_page_link: '', status: 'Draft', display_order: 0, date_published: new Date().toISOString().split('T')[0] }); setBody(''); setProjectId(null); navigate('/admin/project-editor', { replace: true }); setClearDialogOpen(false); };
   const emojiCommand: ICommand = { name: 'emoji', keyCommand: 'emoji', buttonProps: { 'aria-label': 'Emoji' }, icon: <Smile size={14} />, execute: () => setShowEmojiPicker(!showEmojiPicker) };
   
@@ -197,7 +207,13 @@ export default function ProjectEditor() {
               </div>
               <div className="flex gap-2 flex-wrap">
                 <Button type="button" onClick={saveDraft}><Save className="w-4 h-4 mr-2" />Save Draft</Button>
-                {formData.status !== 'Active' && <Button type="button" onClick={publishProject} className="bg-primary/90 hover:bg-primary">Publish Now</Button>}
+                {formData.status === 'Archived' ? (
+                  <Button type="button" onClick={restoreProject}><RotateCcw className="w-4 h-4 mr-2" />Restore to Active</Button>
+                ) : formData.status === 'Active' ? (
+                  <Button type="button" variant="outline" onClick={unpublishProject}>Unpublish</Button>
+                ) : (
+                  <Button type="button" onClick={publishProject} className="bg-primary/90 hover:bg-primary">Publish Now</Button>
+                )}
                 {formData.status === 'Active' && <Button type="button" variant="outline" onClick={unpublishProject}>Unpublish</Button>}
                 <div className="flex-1"></div>
                 {projectId && <Button type="button" variant="outline" onClick={() => setArchiveDialogOpen(true)} className="text-amber-500 border-amber-500 hover:bg-amber-500/10">Archive</Button>}
