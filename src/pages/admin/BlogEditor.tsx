@@ -258,6 +258,9 @@ export default function BlogEditor() {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isAssetPickerOpen, setIsAssetPickerOpen] = useState(false);
+  const [showNavigateAwayDialog, setShowNavigateAwayDialog] = useState(false);
+  const [initialFormData, setInitialFormData] = useState<BlogFormData | null>(null);
+  const [initialBody, setInitialBody] = useState('');
 
   const {
     register,
@@ -299,6 +302,22 @@ export default function BlogEditor() {
     }
   }, [blogIdFromUrl, slug]);
 
+  const isDirty = useMemo(() => {
+    if (!initialFormData) return false;
+    return JSON.stringify(formData) !== JSON.stringify(initialFormData) || body !== initialBody;
+  }, [formData, body, initialFormData, initialBody]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isDirty]);
+
   const loadPost = async (postSlug: string) => {
     setLoading(true);
     try {
@@ -312,7 +331,7 @@ export default function BlogEditor() {
 
       if (data) {
         setBlogId(data.id);
-        reset({
+        const formData = {
           title: data.title,
           subtitle: data.subtitle || '',
           author: data.author || 'Aimee Farabee',
@@ -324,8 +343,11 @@ export default function BlogEditor() {
           body: data.body,
           status: (data.status || 'draft') as 'draft' | 'published' | 'archived',
           date_published: new Date(data.date_published).toISOString().split('T')[0],
-        });
+        };
+        reset(formData);
         setBody(data.body);
+        setInitialFormData(formData);
+        setInitialBody(data.body);
       }
     } catch (error) {
       console.error('Error loading post:', error);
@@ -348,7 +370,7 @@ export default function BlogEditor() {
 
       if (data) {
         setBlogId(data.id);
-        reset({
+        const formData = {
           title: data.title,
           subtitle: data.subtitle || '',
           author: data.author || 'Aimee Farabee',
@@ -360,8 +382,11 @@ export default function BlogEditor() {
           body: data.body,
           status: (data.status || 'draft') as 'draft' | 'published' | 'archived',
           date_published: new Date(data.date_published).toISOString().split('T')[0],
-        });
+        };
+        reset(formData);
         setBody(data.body);
+        setInitialFormData(formData);
+        setInitialBody(data.body);
       }
     } catch (error) {
       console.error('Error loading post by ID:', error);
@@ -402,6 +427,8 @@ export default function BlogEditor() {
         }
       }
       setValue('status', 'draft');
+      setInitialFormData(watch());
+      setInitialBody(body);
     } catch (error: any) {
       console.error('Error saving draft:', error);
       if (error.code === '23505') toast.error('Slug already exists');
@@ -440,6 +467,8 @@ export default function BlogEditor() {
         }
       }
       setValue('status', 'published');
+      setInitialFormData(watch());
+      setInitialBody(body);
     } catch (error: any) {
       console.error('Error publishing:', error);
       if (error.code === '23505') toast.error('Slug already exists');
@@ -468,6 +497,8 @@ export default function BlogEditor() {
       if (error) throw error;
       toast.success('Post unpublished');
       setValue('status', 'draft');
+      setInitialFormData(watch());
+      setInitialBody(body);
     } catch (error: any) {
       console.error('Error unpublishing:', error);
       toast.error('Failed to unpublish');
@@ -496,6 +527,8 @@ export default function BlogEditor() {
       toast.success('Post archived');
       setValue('status', 'archived');
       setArchiveDialogOpen(false);
+      setInitialFormData(watch());
+      setInitialBody(body);
     } catch (error: any) {
       console.error('Error archiving:', error);
       toast.error('Failed to archive');
@@ -523,6 +556,8 @@ export default function BlogEditor() {
       if (error) throw error;
       toast.success('Post restored to Published');
       setValue('status', 'published');
+      setInitialFormData(watch());
+      setInitialBody(body);
     } catch (error: any) {
       console.error('Error restoring:', error);
       toast.error('Failed to restore');
@@ -592,6 +627,23 @@ export default function BlogEditor() {
     setShowEmojiPicker(false);
   };
 
+  const handleBackClick = () => {
+    if (isDirty) {
+      setShowNavigateAwayDialog(true);
+    } else {
+      navigate('/admin/blog-dashboard');
+    }
+  };
+
+  const handleClearForm = () => {
+    reset(); 
+    setBody(''); 
+    setBlogId(null);
+    setInitialFormData(null);
+    setInitialBody('');
+    navigate('/admin/blog-editor');
+  };
+
   const previewData = useMemo(
     () => ({
       title: formData.title || 'Untitled Post',
@@ -620,7 +672,7 @@ export default function BlogEditor() {
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <Button
-            onClick={() => navigate('/admin/blog-dashboard')}
+            onClick={handleBackClick}
             className="inline-flex items-center gap-2 font-rajdhani transition-all"
             style={{ 
               background: 'rgba(0, 255, 255, 0.2)',
@@ -1008,7 +1060,7 @@ export default function BlogEditor() {
                       )}
                       <div className="flex-1"></div>
                       {blogId && <Button type="button" variant="outline" onClick={() => setArchiveDialogOpen(true)} className="text-amber-500 border-amber-500 hover:bg-amber-500/10">Archive</Button>}
-                      <Button type="button" variant="ghost" onClick={() => { reset(); setBody(''); setBlogId(null); navigate('/admin/blog-editor'); }}>Clear Form</Button>
+                      <Button type="button" variant="ghost" onClick={handleClearForm}>Clear Form</Button>
                     </div>
                   </form>
                 </div>
@@ -1058,6 +1110,22 @@ export default function BlogEditor() {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction onClick={archivePost} className="bg-amber-500 hover:bg-amber-600">Archive</AlertDialogAction>
             </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Unsaved Changes Dialog */}
+      <AlertDialog open={showNavigateAwayDialog} onOpenChange={setShowNavigateAwayDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes. Are you sure you want to leave? All unsaved changes will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Stay</AlertDialogCancel>
+            <AlertDialogAction onClick={() => navigate('/admin/blog-dashboard')} className="bg-destructive hover:bg-destructive/90">Leave Without Saving</AlertDialogAction>
+          </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </>

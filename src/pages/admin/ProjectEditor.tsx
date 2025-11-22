@@ -64,6 +64,9 @@ export default function ProjectEditor() {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isAssetPickerOpen, setIsAssetPickerOpen] = useState(false);
+  const [showNavigateAwayDialog, setShowNavigateAwayDialog] = useState(false);
+  const [initialFormData, setInitialFormData] = useState<ProjectFormData | null>(null);
+  const [initialBody, setInitialBody] = useState('');
 
   const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -78,13 +81,32 @@ export default function ProjectEditor() {
         setLoading(true);
         const { data, error } = await supabase.from('projects').select('*').eq('id', projectId).single();
         if (!error && data) {
-          reset({ project_title: data.project_title, subtitle: data.subtitle, body: data.body, technologies: data.technologies.join(', '), thumbnail: data.thumbnail || '', github_link: data.github_link || '', project_page_link: data.project_page_link || '', status: data.status as any, display_order: data.display_order, date_published: new Date(data.date_published).toISOString().split('T')[0] });
+          const formData = { project_title: data.project_title, subtitle: data.subtitle, body: data.body, technologies: data.technologies.join(', '), thumbnail: data.thumbnail || '', github_link: data.github_link || '', project_page_link: data.project_page_link || '', status: data.status as any, display_order: data.display_order, date_published: new Date(data.date_published).toISOString().split('T')[0] };
+          reset(formData);
           setBody(data.body);
+          setInitialFormData(formData);
+          setInitialBody(data.body);
         }
         setLoading(false);
       })();
     }
   }, [projectId]);
+
+  const isDirty = useMemo(() => {
+    if (!initialFormData) return false;
+    return JSON.stringify(formData) !== JSON.stringify(initialFormData) || body !== initialBody;
+  }, [formData, body, initialFormData, initialBody]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isDirty]);
 
   const saveDraft = async () => {
     const data = watch();
@@ -102,6 +124,8 @@ export default function ProjectEditor() {
         toast.success('Draft saved');
       } 
     }
+    setInitialFormData(watch());
+    setInitialBody(body);
   };
 
   const publishProject = async () => {
@@ -121,6 +145,8 @@ export default function ProjectEditor() {
       } 
     }
     setValue('status', 'Active');
+    setInitialFormData(watch());
+    setInitialBody(body);
   };
 
   const unpublishProject = async () => {
@@ -131,6 +157,8 @@ export default function ProjectEditor() {
     await supabase.from('projects').update(payload).eq('id', projectId); 
     toast.success('Project unpublished');
     setValue('status', 'Draft');
+    setInitialFormData(watch());
+    setInitialBody(body);
   };
 
   const archiveProject = async () => {
@@ -142,6 +170,8 @@ export default function ProjectEditor() {
     toast.success('Project archived');
     setValue('status', 'Archived');
     setArchiveDialogOpen(false);
+    setInitialFormData(watch());
+    setInitialBody(body);
   };
 
   const restoreProject = async () => {
@@ -152,8 +182,35 @@ export default function ProjectEditor() {
     await supabase.from('projects').update(payload).eq('id', projectId); 
     toast.success('Project restored to Active');
     setValue('status', 'Active');
+    setInitialFormData(watch());
+    setInitialBody(body);
   };
-  const handleClearForm = () => { reset({ project_title: '', subtitle: '', body: '', technologies: '', thumbnail: '', github_link: '', project_page_link: '', status: 'Draft', display_order: 0, date_published: new Date().toISOString().split('T')[0] }); setBody(''); setProjectId(null); navigate('/admin/project-editor', { replace: true }); setClearDialogOpen(false); };
+
+  const handleBackClick = () => {
+    if (isDirty) {
+      setShowNavigateAwayDialog(true);
+    } else {
+      navigate('/admin/project-dashboard');
+    }
+  };
+
+  const handleClearClick = () => {
+    if (isDirty) {
+      setClearDialogOpen(true);
+    } else {
+      handleClearForm();
+    }
+  };
+
+  const handleClearForm = () => { 
+    reset({ project_title: '', subtitle: '', body: '', technologies: '', thumbnail: '', github_link: '', project_page_link: '', status: 'Draft', display_order: 0, date_published: new Date().toISOString().split('T')[0] }); 
+    setBody(''); 
+    setProjectId(null); 
+    setInitialFormData(null);
+    setInitialBody('');
+    navigate('/admin/project-editor', { replace: true }); 
+    setClearDialogOpen(false); 
+  };
   const emojiCommand: ICommand = { name: 'emoji', keyCommand: 'emoji', buttonProps: { 'aria-label': 'Emoji' }, icon: <Smile size={14} />, execute: () => setShowEmojiPicker(!showEmojiPicker) };
   
   const fontSizeGroup = commands.group([fontSizeSmall, fontSizeNormal, fontSizeLarge, fontSizeXL], {
@@ -185,7 +242,7 @@ export default function ProjectEditor() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="border-b border-border bg-card"><div className="max-w-[1800px] mx-auto px-6 py-4"><div className="flex items-center justify-between"><div className="flex items-center gap-4"><Button variant="ghost" size="sm" onClick={() => navigate('/admin/project-dashboard')}><ArrowLeft className="w-4 h-4 mr-2" />Back</Button><h1 className="text-2xl font-bold">{projectId ? 'Edit Project' : 'New Project'}</h1></div><div className="flex gap-2"><Button variant={viewMode === 'edit' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('edit')}>Edit</Button><Button variant={viewMode === 'split' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('split')}>Split</Button><Button variant={viewMode === 'preview' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('preview')}><Eye className="w-4 h-4 mr-2" />Preview</Button></div></div></div></div>
+      <div className="border-b border-border bg-card"><div className="max-w-[1800px] mx-auto px-6 py-4"><div className="flex items-center justify-between"><div className="flex items-center gap-4"><Button variant="ghost" size="sm" onClick={handleBackClick}><ArrowLeft className="w-4 h-4 mr-2" />Back</Button><h1 className="text-2xl font-bold">{projectId ? 'Edit Project' : 'New Project'}</h1></div><div className="flex gap-2"><Button variant={viewMode === 'edit' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('edit')}>Edit</Button><Button variant={viewMode === 'split' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('split')}>Split</Button><Button variant={viewMode === 'preview' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('preview')}><Eye className="w-4 h-4 mr-2" />Preview</Button></div></div></div></div>
       <div className="max-w-[1800px] mx-auto p-6"><div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {(viewMode === 'edit' || viewMode === 'split') && (
           <div className="space-y-6"><div className="space-y-6">
@@ -216,7 +273,7 @@ export default function ProjectEditor() {
                 )}
                 <div className="flex-1"></div>
                 {projectId && <Button type="button" variant="outline" onClick={() => setArchiveDialogOpen(true)} className="text-amber-500 border-amber-500 hover:bg-amber-500/10">Archive</Button>}
-                <Button type="button" variant="outline" onClick={() => setClearDialogOpen(true)}>Clear Form</Button>
+                <Button type="button" variant="outline" onClick={handleClearClick}>Clear Form</Button>
               </div>
             </div></div></div>
         )}
@@ -226,6 +283,7 @@ export default function ProjectEditor() {
       <AssetPicker open={isAssetPickerOpen} onClose={() => setIsAssetPickerOpen(false)} onSelect={(url) => { setValue('thumbnail', url); setIsAssetPickerOpen(false); }} />
       <AlertDialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Archive Project</AlertDialogTitle><AlertDialogDescription>This will archive the project and hide it from public view. You can restore it later by changing its status back to Active.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={archiveProject} className="bg-amber-500 hover:bg-amber-600">Archive</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
       <AlertDialog open={clearDialogOpen} onOpenChange={setClearDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Clear Form</AlertDialogTitle><AlertDialogDescription>All unsaved changes will be lost.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={handleClearForm}>Clear</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
+      <AlertDialog open={showNavigateAwayDialog} onOpenChange={setShowNavigateAwayDialog}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Unsaved Changes</AlertDialogTitle><AlertDialogDescription>You have unsaved changes. Are you sure you want to leave? All unsaved changes will be lost.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Stay</AlertDialogCancel><AlertDialogAction onClick={() => navigate('/admin/project-dashboard')} className="bg-destructive hover:bg-destructive/90">Leave Without Saving</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
     </div>
   );
 }
