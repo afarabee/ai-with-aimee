@@ -6,7 +6,7 @@ import { z } from 'zod';
 import MDEditor, { commands, ICommand } from '@uiw/react-md-editor';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile } from 'lucide-react';
+import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette } from 'lucide-react';
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import ProjectPreview from '@/components/admin/ProjectPreview';
 import ImageUploadModal from '@/components/admin/ImageUploadModal';
@@ -39,6 +39,14 @@ const fontSizeSmall: ICommand = { name: 'fontSizeSmall', keyCommand: 'fontSizeSm
 const fontSizeNormal: ICommand = { name: 'fontSizeNormal', keyCommand: 'fontSizeNormal', buttonProps: { 'aria-label': 'Normal text' }, icon: <span style={{ fontSize: '14px', fontWeight: 'bold' }}>M</span>, execute: (state, api) => api.replaceSelection(`<span style="font-size: 16px;">${state.selectedText || 'text'}</span>`) };
 const fontSizeLarge: ICommand = { name: 'fontSizeLarge', keyCommand: 'fontSizeLarge', buttonProps: { 'aria-label': 'Large text' }, icon: <span style={{ fontSize: '16px', fontWeight: 'bold' }}>L</span>, execute: (state, api) => api.replaceSelection(`<span style="font-size: 20px;">${state.selectedText || 'text'}</span>`) };
 const fontSizeXL: ICommand = { name: 'fontSizeXL', keyCommand: 'fontSizeXL', buttonProps: { 'aria-label': 'XL text' }, icon: <span style={{ fontSize: '18px', fontWeight: 'bold' }}>XL</span>, execute: (state, api) => api.replaceSelection(`<span style="font-size: 24px;">${state.selectedText || 'text'}</span>`) };
+const colorBlack: ICommand = { name: 'colorBlack', keyCommand: 'colorBlack', buttonProps: { 'aria-label': 'Black text' }, icon: <span style={{ color: '#000000', fontWeight: 'bold' }}>A</span>, execute: (state, api) => api.replaceSelection(`<span style="color: #000000;">${state.selectedText || 'text'}</span>`) };
+const colorCyan: ICommand = { name: 'colorCyan', keyCommand: 'colorCyan', buttonProps: { 'aria-label': 'Cyan text (brand)' }, icon: <span style={{ color: '#00D4FF', fontWeight: 'bold' }}>A</span>, execute: (state, api) => api.replaceSelection(`<span style="color: #00D4FF;">${state.selectedText || 'text'}</span>`) };
+const colorPink: ICommand = { name: 'colorPink', keyCommand: 'colorPink', buttonProps: { 'aria-label': 'Pink text (brand)' }, icon: <span style={{ color: '#FF0080', fontWeight: 'bold' }}>A</span>, execute: (state, api) => api.replaceSelection(`<span style="color: #FF0080;">${state.selectedText || 'text'}</span>`) };
+const colorGray: ICommand = { name: 'colorGray', keyCommand: 'colorGray', buttonProps: { 'aria-label': 'Gray text (muted)' }, icon: <span style={{ color: '#6B7280', fontWeight: 'bold' }}>A</span>, execute: (state, api) => api.replaceSelection(`<span style="color: #6B7280;">${state.selectedText || 'text'}</span>`) };
+const colorRed: ICommand = { name: 'colorRed', keyCommand: 'colorRed', buttonProps: { 'aria-label': 'Red text (emphasis)' }, icon: <span style={{ color: '#EF4444', fontWeight: 'bold' }}>A</span>, execute: (state, api) => api.replaceSelection(`<span style="color: #EF4444;">${state.selectedText || 'text'}</span>`) };
+const colorGreen: ICommand = { name: 'colorGreen', keyCommand: 'colorGreen', buttonProps: { 'aria-label': 'Green text (success)' }, icon: <span style={{ color: '#10B981', fontWeight: 'bold' }}>A</span>, execute: (state, api) => api.replaceSelection(`<span style="color: #10B981;">${state.selectedText || 'text'}</span>`) };
+const colorYellow: ICommand = { name: 'colorYellow', keyCommand: 'colorYellow', buttonProps: { 'aria-label': 'Yellow text (accent)' }, icon: <span style={{ color: '#f9f940', fontWeight: 'bold' }}>A</span>, execute: (state, api) => api.replaceSelection(`<span style="color: #f9f940;">${state.selectedText || 'text'}</span>`) };
+const colorBlue: ICommand = { name: 'colorBlue', keyCommand: 'colorBlue', buttonProps: { 'aria-label': 'Blue text (info)' }, icon: <span style={{ color: '#3B82F6', fontWeight: 'bold' }}>A</span>, execute: (state, api) => api.replaceSelection(`<span style="color: #3B82F6;">${state.selectedText || 'text'}</span>`) };
 const alignLeft: ICommand = { name: 'alignLeft', keyCommand: 'alignLeft', buttonProps: { 'aria-label': 'Align left' }, icon: <AlignLeft size={14} />, execute: (state, api) => api.replaceSelection(`<div style="text-align: left;">${state.selectedText || 'text'}</div>`) };
 const alignCenter: ICommand = { name: 'alignCenter', keyCommand: 'alignCenter', buttonProps: { 'aria-label': 'Align center' }, icon: <AlignCenter size={14} />, execute: (state, api) => api.replaceSelection(`<div style="text-align: center;">${state.selectedText || 'text'}</div>`) };
 const alignRight: ICommand = { name: 'alignRight', keyCommand: 'alignRight', buttonProps: { 'aria-label': 'Align right' }, icon: <AlignRight size={14} />, execute: (state, api) => api.replaceSelection(`<div style="text-align: right;">${state.selectedText || 'text'}</div>`) };
@@ -97,7 +105,29 @@ export default function ProjectEditor() {
   const handleDelete = async () => { if (projectId) { await supabase.from('projects').delete().eq('id', projectId); toast.success('Deleted'); navigate('/admin/projects'); } };
   const handleClearForm = () => { reset({ project_title: '', subtitle: '', body: '', technologies: '', thumbnail: '', github_link: '', project_page_link: '', status: 'Draft', display_order: 0, date_published: new Date().toISOString().split('T')[0] }); setBody(''); setProjectId(null); navigate('/admin/project-editor', { replace: true }); setClearDialogOpen(false); };
   const emojiCommand: ICommand = { name: 'emoji', keyCommand: 'emoji', buttonProps: { 'aria-label': 'Emoji' }, icon: <Smile size={14} />, execute: () => setShowEmojiPicker(!showEmojiPicker) };
-  const editorCommands = [commands.bold, commands.italic, commands.strikethrough, commands.divider, commands.title, commands.divider, fontSizeSmall, fontSizeNormal, fontSizeLarge, fontSizeXL, commands.divider, alignLeft, alignCenter, alignRight, alignJustify, commands.divider, commands.link, commands.quote, commands.code, commands.divider, commands.unorderedListCommand, commands.orderedListCommand, commands.divider, emojiCommand];
+  
+  const fontSizeGroup = commands.group([fontSizeSmall, fontSizeNormal, fontSizeLarge, fontSizeXL], {
+    name: 'fontSize',
+    groupName: 'fontSize',
+    buttonProps: { 'aria-label': 'Font size' },
+    icon: <span style={{ fontSize: '14px', fontWeight: 'bold' }}>A</span>,
+  });
+
+  const textColorGroup = commands.group([colorBlack, colorCyan, colorPink, colorGray, colorRed, colorGreen, colorYellow, colorBlue], {
+    name: 'textColor',
+    groupName: 'textColor',
+    buttonProps: { 'aria-label': 'Text color' },
+    icon: <Palette size={14} />,
+  });
+
+  const textAlignGroup = commands.group([alignLeft, alignCenter, alignRight, alignJustify], {
+    name: 'textAlign',
+    groupName: 'textAlign',
+    buttonProps: { 'aria-label': 'Text alignment' },
+    icon: <AlignLeft size={14} />,
+  });
+
+  const editorCommands = [commands.bold, commands.italic, commands.strikethrough, commands.divider, commands.title, commands.divider, fontSizeGroup, textColorGroup, textAlignGroup, commands.divider, commands.link, commands.quote, commands.code, commands.divider, commands.unorderedListCommand, commands.orderedListCommand, commands.divider, emojiCommand];
 
   const previewData = useMemo(() => ({ title: formData.project_title || 'Untitled', subtitle: formData.subtitle || '', body, thumbnail: formData.thumbnail, technologies: formData.technologies ? formData.technologies.split(',').map(t => t.trim()).filter(Boolean) : [], githubLink: formData.github_link, projectPageLink: formData.project_page_link, publishDate: formData.date_published || new Date().toISOString(), status: formData.status }), [formData, body]);
 
