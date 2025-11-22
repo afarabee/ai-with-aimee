@@ -6,7 +6,7 @@ import { z } from 'zod';
 import MDEditor, { commands, ICommand } from '@uiw/react-md-editor';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ArrowLeft, Eye, EyeOff, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Palette, Smile } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Palette, Smile, Underline } from 'lucide-react';
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import BlogPreview from '@/components/admin/BlogPreview';
 import ImageUploadModal from '@/components/admin/ImageUploadModal';
@@ -229,6 +229,17 @@ const alignJustify: ICommand = {
   execute: (state, api) => {
     const selectedText = state.selectedText || 'text';
     api.replaceSelection(`<div style="text-align: justify;">${selectedText}</div>`);
+  },
+};
+
+const underline: ICommand = {
+  name: 'underline',
+  keyCommand: 'underline',
+  buttonProps: { 'aria-label': 'Underline text', title: 'Underline text' },
+  icon: <Underline size={14} />,
+  execute: (state, api) => {
+    const selectedText = state.selectedText || 'text';
+    api.replaceSelection(`<u>${selectedText}</u>`);
   },
 };
 
@@ -889,6 +900,10 @@ export default function BlogEditor() {
                             {
                               ...commands.italic,
                               buttonProps: { ...commands.italic.buttonProps, title: 'Italic text (Ctrl+I)' }
+                            },
+                            {
+                              ...underline,
+                              buttonProps: { ...underline.buttonProps, title: 'Underline text' }
                             },
                             {
                               ...commands.strikethrough,
