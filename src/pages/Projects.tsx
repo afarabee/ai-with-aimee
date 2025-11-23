@@ -273,13 +273,6 @@ const Projects = () => {
             )}
           </div>
 
-          {/* Footer CTA */}
-          <div className="flex flex-col md:flex-row justify-center items-center gap-3 md:gap-4">
-            <Button className="btn-hero px-8 py-6 text-base flex items-center gap-2">
-              <span>Explore My Prompt Library →</span>
-            </Button>
-          </div>
-
           {/* Back to Home Link */}
           <div className="text-center mt-16 mb-8">
             <Link 
