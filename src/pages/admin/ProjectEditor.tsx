@@ -12,6 +12,7 @@ import ProjectPreview from '@/components/admin/ProjectPreview';
 import ImageUploadModal from '@/components/admin/ImageUploadModal';
 import ImageUploadHelper from '@/components/admin/ImageUploadHelper';
 import AssetPicker from '@/components/admin/AssetPicker';
+import { TableBuilder } from '@/components/admin/TableBuilder';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -234,7 +235,20 @@ export default function ProjectEditor() {
     icon: <AlignLeft size={14} />,
   });
 
-  const editorCommands = [commands.bold, commands.italic, underline, commands.strikethrough, commands.divider, commands.title, commands.divider, fontSizeGroup, textColorGroup, textAlignGroup, commands.divider, commands.link, commands.quote, commands.code, commands.divider, commands.unorderedListCommand, commands.orderedListCommand, commands.divider, emojiCommand];
+  const tableCommand: ICommand = {
+    name: 'table',
+    keyCommand: 'table',
+    buttonProps: { 'aria-label': 'Insert table', title: 'Insert table' },
+    icon: (
+      <TableBuilder 
+        onInsert={(markdown) => {
+          setBody((prev) => prev + '\n\n' + markdown + '\n\n');
+        }}
+      />
+    ),
+  };
+
+  const editorCommands = [commands.bold, commands.italic, underline, commands.strikethrough, commands.divider, commands.title, commands.divider, fontSizeGroup, textColorGroup, textAlignGroup, commands.divider, commands.link, commands.quote, commands.code, commands.divider, commands.unorderedListCommand, commands.orderedListCommand, commands.divider, tableCommand, commands.divider, emojiCommand];
 
   const previewData = useMemo(() => ({ title: formData.project_title || 'Untitled', subtitle: formData.subtitle || '', body, thumbnail: formData.thumbnail, technologies: formData.technologies ? formData.technologies.split(',').map(t => t.trim()).filter(Boolean) : [], githubLink: formData.github_link, projectPageLink: formData.project_page_link, publishDate: formData.date_published || new Date().toISOString(), status: formData.status }), [formData, body]);
 

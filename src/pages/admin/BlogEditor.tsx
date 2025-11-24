@@ -12,6 +12,7 @@ import BlogPreview from '@/components/admin/BlogPreview';
 import ImageUploadModal from '@/components/admin/ImageUploadModal';
 import ImageUploadHelper from '@/components/admin/ImageUploadHelper';
 import AssetPicker from '@/components/admin/AssetPicker';
+import { TableBuilder } from '@/components/admin/TableBuilder';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -991,6 +992,19 @@ export default function BlogEditor() {
                             {
                               ...commands.checkedListCommand,
                               buttonProps: { ...commands.checkedListCommand.buttonProps, title: 'Checklist' }
+                            },
+                            commands.divider,
+                            {
+                              name: 'table',
+                              keyCommand: 'table',
+                              buttonProps: { 'aria-label': 'Insert table', title: 'Insert table' },
+                              icon: (
+                                <TableBuilder 
+                                  onInsert={(markdown) => {
+                                    setBody((prev) => prev + '\n\n' + markdown + '\n\n');
+                                  }}
+                                />
+                              ),
                             },
                             commands.divider,
                           ]}
