@@ -249,7 +249,17 @@ export default function ProjectEditor() {
     ),
   };
 
-  const editorCommands = [commands.bold, commands.italic, underline, commands.strikethrough, commands.divider, commands.title, commands.divider, fontSizeGroup, textColorGroup, textAlignGroup, commands.divider, commands.link, commands.quote, commands.code, commands.divider, commands.unorderedListCommand, commands.orderedListCommand, commands.divider, tableCommand, commands.divider, emojiCommand];
+  const headingGroup = commands.group(
+    [commands.title1, commands.title2, commands.title3, commands.title4, commands.title5, commands.title6],
+    {
+      name: 'headings',
+      groupName: 'headings',
+      buttonProps: { 'aria-label': 'Insert headings', title: 'Insert heading (H1-H6)' },
+      icon: <span style={{ fontWeight: 'bold' }}>H</span>,
+    }
+  );
+
+  const editorCommands = [commands.bold, commands.italic, underline, commands.strikethrough, commands.divider, headingGroup, commands.divider, fontSizeGroup, textColorGroup, textAlignGroup, commands.divider, commands.link, commands.quote, commands.code, commands.divider, commands.unorderedListCommand, commands.orderedListCommand, commands.divider, tableCommand, commands.divider, emojiCommand];
 
   const previewData = useMemo(() => ({ title: formData.project_title || 'Untitled', subtitle: formData.subtitle || '', body, thumbnail: formData.thumbnail, technologies: formData.technologies ? formData.technologies.split(',').map(t => t.trim()).filter(Boolean) : [], githubLink: formData.github_link, projectPageLink: formData.project_page_link, publishDate: formData.date_published || new Date().toISOString(), status: formData.status }), [formData, body]);
 
