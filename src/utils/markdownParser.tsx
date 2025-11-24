@@ -126,7 +126,56 @@ export const parseMarkdownContent = (markdown: string): React.ReactNode => {
     }) => <img src={src} alt={alt || ''} loading="lazy" className="w-full rounded-lg mb-6" style={{
       border: '2px solid hsl(var(--color-cyan) / 0.4)',
       boxShadow: '0 0 20px hsl(var(--color-cyan) / 0.3), 0 4px 15px hsl(var(--color-shadow) / 0.5)'
-    }} />
+    }} />,
+    // Tables
+    table: ({
+      children
+    }) => <div className="overflow-x-auto mb-6">
+            <table className="w-full border-collapse rounded-lg overflow-hidden" style={{
+              border: '1px solid hsl(var(--color-cyan) / 0.3)',
+              boxShadow: '0 0 15px hsl(var(--color-cyan) / 0.2)'
+            }}>
+              {children}
+            </table>
+          </div>,
+    thead: ({
+      children
+    }) => <thead style={{
+      backgroundColor: 'hsl(var(--color-violet) / 0.6)',
+      borderBottom: '2px solid hsl(var(--color-cyan) / 0.5)'
+    }}>
+            {children}
+          </thead>,
+    tbody: ({
+      children
+    }) => <tbody>{children}</tbody>,
+    tr: ({
+      children
+    }) => <tr className="transition-all duration-300" style={{
+      borderBottom: '1px solid hsl(var(--color-cyan) / 0.2)'
+    }} onMouseEnter={e => {
+      e.currentTarget.style.backgroundColor = 'hsl(var(--color-cyan) / 0.05)';
+    }} onMouseLeave={e => {
+      e.currentTarget.style.backgroundColor = 'transparent';
+    }}>
+            {children}
+          </tr>,
+    th: ({
+      children
+    }) => <th className="px-4 py-3 text-left font-semibold" style={{
+      color: 'hsl(var(--color-cyan))',
+      textShadow: '0 0 10px hsl(var(--color-cyan) / 0.4)'
+    }}>
+            {children}
+          </th>,
+    td: ({
+      children
+    }) => <td className="px-4 py-3" style={{
+      color: 'hsl(var(--color-light-text))',
+      borderRight: '1px solid hsl(var(--color-cyan) / 0.1)'
+    }}>
+            {children}
+          </td>
   }}>
       {markdown}
     </ReactMarkdown>;
