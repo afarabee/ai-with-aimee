@@ -13,6 +13,7 @@ import ImageUploadModal from '@/components/admin/ImageUploadModal';
 import ImageUploadHelper from '@/components/admin/ImageUploadHelper';
 import AssetPicker from '@/components/admin/AssetPicker';
 import { TableBuilder } from '@/components/admin/TableBuilder';
+import { EditableTableWrapper } from '@/components/admin/EditableTableWrapper';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -291,7 +292,7 @@ export default function ProjectEditor() {
               </div>
             </div></div></div>
         )}
-        {(viewMode === 'split' || viewMode === 'preview') && <div className="lg:sticky lg:top-6 h-[calc(100vh-120px)]"><div className="border rounded-lg overflow-hidden h-full"><ProjectPreview {...previewData} /></div></div>}
+        {(viewMode === 'split' || viewMode === 'preview') && <div className="lg:sticky lg:top-6 h-[calc(100vh-120px)]"><div className="border rounded-lg overflow-hidden h-full"><EditableTableWrapper body={body} onBodyUpdate={setBody}><ProjectPreview {...previewData} /></EditableTableWrapper></div></div>}
       </div></div>
       <ImageUploadModal open={imageModalOpen} onClose={() => setImageModalOpen(false)} onInsert={(url, alt) => { setBody(prev => `${prev}\n\n![${alt}](${url})\n\n`); setImageModalOpen(false); }} />
       <AssetPicker open={isAssetPickerOpen} onClose={() => setIsAssetPickerOpen(false)} onSelect={(url) => { setValue('thumbnail', url); setIsAssetPickerOpen(false); }} />

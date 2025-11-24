@@ -13,6 +13,7 @@ import ImageUploadModal from '@/components/admin/ImageUploadModal';
 import ImageUploadHelper from '@/components/admin/ImageUploadHelper';
 import AssetPicker from '@/components/admin/AssetPicker';
 import { TableBuilder } from '@/components/admin/TableBuilder';
+import { EditableTableWrapper } from '@/components/admin/EditableTableWrapper';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -1090,7 +1091,9 @@ export default function BlogEditor() {
                     boxShadow: '0 0 30px hsl(var(--color-cyan) / 0.2)',
                   }}
                 >
-                  <BlogPreview {...previewData} />
+                  <EditableTableWrapper body={body} onBodyUpdate={setBody}>
+                    <BlogPreview {...previewData} />
+                  </EditableTableWrapper>
                 </div>
               )}
             </div>
