@@ -14,6 +14,7 @@ import ImageUploadHelper from '@/components/admin/ImageUploadHelper';
 import AssetPicker from '@/components/admin/AssetPicker';
 import { TableBuilder } from '@/components/admin/TableBuilder';
 import { EditableTableWrapper } from '@/components/admin/EditableTableWrapper';
+import { MarkdownCheatSheet } from '@/components/admin/MarkdownCheatSheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -864,15 +865,18 @@ export default function BlogEditor() {
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <Label>Content *</Label>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setImageModalOpen(true)}
-                        >
-                          <Image size={16} className="mr-2" />
-                          Insert Image
-                        </Button>
+                        <div className="flex gap-2">
+                          <MarkdownCheatSheet />
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setImageModalOpen(true)}
+                          >
+                            <Image size={16} className="mr-2" />
+                            Insert Image
+                          </Button>
+                        </div>
                       </div>
                       <div data-color-mode="dark" className="relative">
                         <MDEditor
