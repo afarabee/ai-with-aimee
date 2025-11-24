@@ -2,6 +2,7 @@ import { parseMarkdownContent } from '@/utils/markdownParser';
 import { format } from 'date-fns';
 import { Github, ExternalLink, Calendar, Tag } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { forwardRef } from 'react';
 
 interface ProjectPreviewProps {
   title: string;
@@ -15,7 +16,7 @@ interface ProjectPreviewProps {
   status: string;
 }
 
-export default function ProjectPreview({
+const ProjectPreview = forwardRef<HTMLDivElement, ProjectPreviewProps>(({
   title,
   subtitle,
   body,
@@ -25,9 +26,9 @@ export default function ProjectPreview({
   projectPageLink,
   publishDate,
   status,
-}: ProjectPreviewProps) {
+}, ref) => {
   return (
-    <div className="h-full overflow-y-auto bg-background">
+    <div ref={ref} className="h-full overflow-y-auto bg-background">
       <article className="max-w-4xl mx-auto p-8">
         {/* Banner Image */}
         {thumbnail && (
@@ -138,4 +139,8 @@ export default function ProjectPreview({
       </article>
     </div>
   );
-}
+});
+
+ProjectPreview.displayName = 'ProjectPreview';
+
+export default ProjectPreview;

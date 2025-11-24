@@ -1,6 +1,7 @@
 import AboutBackground from '@/components/AboutBackground';
 import { parseMarkdownContent } from '@/utils/markdownParser';
 import { Calendar } from 'lucide-react';
+import { forwardRef } from 'react';
 interface BlogPreviewProps {
   title: string;
   subtitle?: string;
@@ -10,7 +11,7 @@ interface BlogPreviewProps {
   excerpt: string;
   body: string;
 }
-export default function BlogPreview({
+const BlogPreview = forwardRef<HTMLDivElement, BlogPreviewProps>(({
   title,
   subtitle,
   author,
@@ -18,8 +19,8 @@ export default function BlogPreview({
   banner_image,
   excerpt,
   body
-}: BlogPreviewProps) {
-  return <div className="blog-preview min-h-screen">
+}, ref) => {
+  return <div ref={ref} className="blog-preview min-h-screen">
       {/* Hero Section */}
       <section className="relative pt-24 md:pt-32 pb-16">
         <AboutBackground />
@@ -73,4 +74,8 @@ export default function BlogPreview({
         </div>
       </section>
     </div>;
-}
+});
+
+BlogPreview.displayName = 'BlogPreview';
+
+export default BlogPreview;
