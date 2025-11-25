@@ -144,19 +144,28 @@ export default function ProjectEditor() {
   useEffect(() => {
     if (viewMode !== 'split') return;
     
-    const editorTextarea = editorContainerRef.current?.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement;
-    const previewScrollable = previewContainerRef.current;
-    
-    if (!editorTextarea || !previewScrollable) return;
-    
-    editorTextarea.addEventListener('scroll', handleEditorScroll);
-    previewScrollable.addEventListener('scroll', handlePreviewScroll);
+    // Small delay to ensure MDEditor has rendered its textarea
+    const timeoutId = setTimeout(() => {
+      const editorTextarea = editorContainerRef.current?.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement;
+      const previewScrollable = previewContainerRef.current;
+      
+      if (!editorTextarea || !previewScrollable) return;
+      
+      editorTextarea.addEventListener('scroll', handleEditorScroll);
+      previewScrollable.addEventListener('scroll', handlePreviewScroll);
+    }, 100);
     
     return () => {
-      editorTextarea.removeEventListener('scroll', handleEditorScroll);
-      previewScrollable.removeEventListener('scroll', handlePreviewScroll);
+      clearTimeout(timeoutId);
+      const editorTextarea = editorContainerRef.current?.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement;
+      const previewScrollable = previewContainerRef.current;
+      
+      if (editorTextarea && previewScrollable) {
+        editorTextarea.removeEventListener('scroll', handleEditorScroll);
+        previewScrollable.removeEventListener('scroll', handlePreviewScroll);
+      }
     };
-  }, [viewMode, handleEditorScroll, handlePreviewScroll]);
+  }, [viewMode, body, handleEditorScroll, handlePreviewScroll]);
 
   const saveDraft = async () => {
     const data = watch();
