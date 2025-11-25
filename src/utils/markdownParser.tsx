@@ -1,54 +1,9 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
-
-// Helper to parse inline styles safely
-const parseInlineStyles = (styleString: string): React.CSSProperties => {
-  const styles: React.CSSProperties = {};
-  const declarations = styleString.split(';').filter(d => d.trim());
-  
-  declarations.forEach(decl => {
-    const [property, value] = decl.split(':').map(s => s.trim());
-    if (!property || !value) return;
-    
-    // Only allow specific safe properties
-    if (property === 'font-size') {
-      styles.fontSize = value;
-    } else if (property === 'color') {
-      styles.color = value;
-    } else if (property === 'text-align') {
-      styles.textAlign = value as any;
-    }
-  });
-  
-  return styles;
-};
-
-// Configure sanitize to allow safe inline styles
-const sanitizeSchema = {
-  ...defaultSchema,
-  attributes: {
-    ...defaultSchema.attributes,
-    span: [
-      ...(defaultSchema.attributes?.span || []),
-      ['style'], // Allow style attribute on span
-    ],
-    div: [
-      ...(defaultSchema.attributes?.div || []),
-      ['style'], // Allow style attribute on div
-    ],
-  },
-};
-
+import rehypeSanitize from 'rehype-sanitize';
 export const parseMarkdownContent = (markdown: string): React.ReactNode => {
-  return <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[[rehypeSanitize, sanitizeSchema]]} components={{
-    // Heading 1
-    h1: ({ children }) => (
-      <h1 className="blog-h2" style={{ fontSize: '2.5rem', marginBottom: '1.5rem' }}>
-        {children}
-      </h1>
-    ),
+  return <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSanitize]} components={{
     // Heading 2
     h2: ({
       children
@@ -130,22 +85,6 @@ export const parseMarkdownContent = (markdown: string): React.ReactNode => {
     }}>
             {children}
           </u>,
-    // Span (for inline styles like font-size and color)
-    span: ({ node, children, ...props }) => {
-      const style = (node as any)?.properties?.style as string;
-      if (style) {
-        return <span style={parseInlineStyles(style)}>{children}</span>;
-      }
-      return <span {...props}>{children}</span>;
-    },
-    // Div (for text alignment)
-    div: ({ node, children, ...props }) => {
-      const style = (node as any)?.properties?.style as string;
-      if (style) {
-        return <div style={parseInlineStyles(style)}>{children}</div>;
-      }
-      return <div {...props}>{children}</div>;
-    },
     // Inline code
     code: ({
       children,

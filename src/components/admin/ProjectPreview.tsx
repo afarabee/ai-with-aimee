@@ -15,7 +15,7 @@ interface ProjectPreviewProps {
   status: string;
 }
 
-const ProjectPreview: React.FC<ProjectPreviewProps> = ({
+export default function ProjectPreview({
   title,
   subtitle,
   body,
@@ -25,7 +25,7 @@ const ProjectPreview: React.FC<ProjectPreviewProps> = ({
   projectPageLink,
   publishDate,
   status,
-}) => {
+}: ProjectPreviewProps) {
   return (
     <div className="h-full overflow-y-auto bg-background">
       <article className="max-w-4xl mx-auto p-8">
@@ -138,6 +138,4 @@ const ProjectPreview: React.FC<ProjectPreviewProps> = ({
       </article>
     </div>
   );
-};
-
-export default ProjectPreview;
+}

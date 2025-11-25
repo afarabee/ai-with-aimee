@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,7 +14,6 @@ import ImageUploadHelper from '@/components/admin/ImageUploadHelper';
 import AssetPicker from '@/components/admin/AssetPicker';
 import { TableBuilder } from '@/components/admin/TableBuilder';
 import { EditableTableWrapper } from '@/components/admin/EditableTableWrapper';
-import { MarkdownCheatSheet } from '@/components/admin/MarkdownCheatSheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -662,60 +661,69 @@ export default function BlogEditor() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+      <div className="min-h-screen flex items-center justify-center">
+        <p style={{ color: 'hsl(var(--color-cyan))' }}>Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header Bar */}
-      <div className="border-b border-border bg-card">
-        <div className="max-w-[1800px] mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="sm" onClick={handleBackClick}>
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back
-              </Button>
-              <h1 className="text-2xl font-bold">{blogId ? 'Edit Blog Post' : 'New Blog Post'}</h1>
+    <>
+      <div className="pt-24 pb-16 px-6">
+        <div className="max-w-[1800px] mx-auto">
+        {/* Header */}
+        <div className="mb-8 flex items-center justify-between">
+          <Button
+            onClick={handleBackClick}
+            className="inline-flex items-center gap-2 font-rajdhani transition-all"
+            style={{ 
+              background: 'rgba(0, 255, 255, 0.2)',
+              border: '2px solid hsl(var(--color-cyan))',
+              color: 'hsl(var(--color-cyan))',
+            }}
+          >
+            <ArrowLeft size={18} />
+            Back to Dashboard
+          </Button>
+          <div className="flex gap-2">
+                <Button
+                  onClick={() => setViewMode('edit')}
+                  variant={viewMode === 'edit' ? 'default' : 'outline'}
+                  size="sm"
+                >
+                  <EyeOff size={16} className="mr-2" />
+                  Edit
+                </Button>
+                <Button
+                  onClick={() => setViewMode('split')}
+                  variant={viewMode === 'split' ? 'default' : 'outline'}
+                  size="sm"
+                >
+                  Split View
+                </Button>
+                <Button
+                  onClick={() => setViewMode('preview')}
+                  variant={viewMode === 'preview' ? 'default' : 'outline'}
+                  size="sm"
+                >
+                  <Eye size={16} className="mr-2" />
+                  Preview
+                </Button>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <Button
-                variant={viewMode === 'edit' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('edit')}
-              >
-                Edit
-              </Button>
-              <Button
-                variant={viewMode === 'split' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('split')}
-              >
-                Split
-              </Button>
-              <Button
-                variant={viewMode === 'preview' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('preview')}
-              >
-                <Eye className="w-4 h-4 mr-2" />
-                Preview
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="max-w-[1800px] mx-auto p-6">
-        {/* Main Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Main Layout */}
+            <div className={`grid gap-8 ${viewMode === 'split' ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
               {/* Editor Panel */}
-              {(viewMode === 'edit' || viewMode === 'split') && (
-                <div className="space-y-6">
+              {viewMode !== 'preview' && (
+                <div
+                  className="p-8 rounded-xl backdrop-blur-md"
+                  style={{
+                    background: 'rgba(26, 11, 46, 0.6)',
+                    border: '2px solid hsl(var(--color-cyan) / 0.3)',
+                    boxShadow: '0 0 30px hsl(var(--color-cyan) / 0.2)',
+                  }}
+                >
                   <h2 className="text-2xl font-montserrat font-bold mb-6" style={{ color: 'hsl(var(--color-cyan))' }}>
                     {blogId ? 'Edit Post' : 'New Post'}
                   </h2>
@@ -856,18 +864,15 @@ export default function BlogEditor() {
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <Label>Content *</Label>
-                        <div className="flex gap-2">
-                          <MarkdownCheatSheet />
-                          <Button
-                            type="button"
-                            size="sm"
-                            variant="outline"
-                            onClick={() => setImageModalOpen(true)}
-                          >
-                            <Image size={16} className="mr-2" />
-                            Insert Image
-                          </Button>
-                        </div>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setImageModalOpen(true)}
+                        >
+                          <Image size={16} className="mr-2" />
+                          Insert Image
+                        </Button>
                       </div>
                       <div data-color-mode="dark" className="relative">
                         <MDEditor
@@ -1077,16 +1082,23 @@ export default function BlogEditor() {
               )}
 
               {/* Preview Panel */}
-              {(viewMode === 'split' || viewMode === 'preview') && (
-                <div className="lg:sticky lg:top-6 h-[calc(100vh-120px)]">
-                  <div className="border rounded-lg overflow-hidden h-full">
-                    <EditableTableWrapper body={body} onBodyUpdate={setBody}>
-                      <BlogPreview {...previewData} />
-                    </EditableTableWrapper>
-                  </div>
+              {viewMode !== 'edit' && (
+                <div
+                  className="rounded-xl overflow-hidden"
+                  style={{
+                    background: 'rgba(26, 11, 46, 0.4)',
+                    border: '2px solid hsl(var(--color-cyan) / 0.3)',
+                    boxShadow: '0 0 30px hsl(var(--color-cyan) / 0.2)',
+                  }}
+                >
+                  <EditableTableWrapper body={body} onBodyUpdate={setBody}>
+                    <BlogPreview {...previewData} />
+                  </EditableTableWrapper>
                 </div>
               )}
             </div>
+          </div>
+        </div>
 
         {/* Image Upload Modal */}
         <ImageUploadModal
@@ -1133,7 +1145,6 @@ export default function BlogEditor() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      </div>
-    </div>
+    </>
   );
 }

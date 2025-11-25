@@ -10,7 +10,7 @@ interface BlogPreviewProps {
   excerpt: string;
   body: string;
 }
-const BlogPreview: React.FC<BlogPreviewProps> = ({
+export default function BlogPreview({
   title,
   subtitle,
   author,
@@ -18,8 +18,8 @@ const BlogPreview: React.FC<BlogPreviewProps> = ({
   banner_image,
   excerpt,
   body
-}) => {
-  return <div className="blog-preview h-full overflow-y-auto bg-background">
+}: BlogPreviewProps) {
+  return <div className="blog-preview min-h-screen">
       {/* Hero Section */}
       <section className="relative pt-24 md:pt-32 pb-16">
         <AboutBackground />
@@ -73,6 +73,4 @@ const BlogPreview: React.FC<BlogPreviewProps> = ({
         </div>
       </section>
     </div>;
-};
-
-export default BlogPreview;
+}
