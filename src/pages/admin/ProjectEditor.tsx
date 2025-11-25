@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -70,9 +70,6 @@ export default function ProjectEditor() {
   const [showNavigateAwayDialog, setShowNavigateAwayDialog] = useState(false);
   const [initialFormData, setInitialFormData] = useState<ProjectFormData | null>(null);
   const [initialBody, setInitialBody] = useState('');
-  const editorContainerRef = useRef<HTMLDivElement>(null);
-  const previewContainerRef = useRef<HTMLDivElement>(null);
-  const isScrollingSynced = useRef(false);
 
   const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -113,59 +110,6 @@ export default function ProjectEditor() {
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [isDirty]);
-
-  const handleEditorScroll = useCallback(() => {
-    if (isScrollingSynced.current || !editorContainerRef.current || !previewContainerRef.current) return;
-    
-    const editorTextarea = editorContainerRef.current.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement;
-    if (!editorTextarea) return;
-    
-    const scrollPercentage = editorTextarea.scrollTop / (editorTextarea.scrollHeight - editorTextarea.clientHeight);
-    
-    isScrollingSynced.current = true;
-    const previewScrollable = previewContainerRef.current;
-    previewScrollable.scrollTop = scrollPercentage * (previewScrollable.scrollHeight - previewScrollable.clientHeight);
-    setTimeout(() => isScrollingSynced.current = false, 50);
-  }, []);
-
-  const handlePreviewScroll = useCallback(() => {
-    if (isScrollingSynced.current || !editorContainerRef.current || !previewContainerRef.current) return;
-    
-    const editorTextarea = editorContainerRef.current.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement;
-    if (!editorTextarea) return;
-    
-    const scrollPercentage = previewContainerRef.current.scrollTop / (previewContainerRef.current.scrollHeight - previewContainerRef.current.clientHeight);
-    
-    isScrollingSynced.current = true;
-    editorTextarea.scrollTop = scrollPercentage * (editorTextarea.scrollHeight - editorTextarea.clientHeight);
-    setTimeout(() => isScrollingSynced.current = false, 50);
-  }, []);
-
-  useEffect(() => {
-    if (viewMode !== 'split') return;
-    
-    // Small delay to ensure MDEditor has rendered its textarea
-    const timeoutId = setTimeout(() => {
-      const editorTextarea = editorContainerRef.current?.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement;
-      const previewScrollable = previewContainerRef.current;
-      
-      if (!editorTextarea || !previewScrollable) return;
-      
-      editorTextarea.addEventListener('scroll', handleEditorScroll);
-      previewScrollable.addEventListener('scroll', handlePreviewScroll);
-    }, 100);
-    
-    return () => {
-      clearTimeout(timeoutId);
-      const editorTextarea = editorContainerRef.current?.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement;
-      const previewScrollable = previewContainerRef.current;
-      
-      if (editorTextarea && previewScrollable) {
-        editorTextarea.removeEventListener('scroll', handleEditorScroll);
-        previewScrollable.removeEventListener('scroll', handlePreviewScroll);
-      }
-    };
-  }, [viewMode, body, handleEditorScroll, handlePreviewScroll]);
 
   const saveDraft = async () => {
     const data = watch();
@@ -332,7 +276,7 @@ export default function ProjectEditor() {
             <div><Label>Subtitle *</Label><Input {...register('subtitle')} />{errors.subtitle && <p className="text-sm text-destructive mt-1">{errors.subtitle.message}</p>}</div>
             <div><Label>Technologies *</Label><Input {...register('technologies')} placeholder="React, TypeScript" />{errors.technologies && <p className="text-sm text-destructive mt-1">{errors.technologies.message}</p>}</div>
             <div><Label>Thumbnail</Label><div className="flex gap-2"><Input {...register('thumbnail')} /><Button type="button" variant="outline" onClick={() => setIsAssetPickerOpen(true)}>Library</Button></div>{formData.thumbnail && <img src={formData.thumbnail} alt="Preview" className="w-full h-48 object-cover rounded-lg mt-2" />}<ImageUploadHelper onBannerInsert={(url) => setValue('thumbnail', url)} onBodyInsert={(markdown) => setBody(prev => `${prev}\n\n${markdown}\n\n`)} /></div>
-            <div><div className="flex justify-between mb-2"><Label>Content *</Label><div className="flex gap-2"><MarkdownCheatSheet /><Button type="button" variant="outline" size="sm" onClick={() => setImageModalOpen(true)}><Image className="w-4 h-4 mr-2" />Insert Image</Button></div></div><div data-color-mode="dark" ref={editorContainerRef}><MDEditor value={body} onChange={(val) => setBody(val || '')} commands={editorCommands} height={500} preview="edit" /></div>{showEmojiPicker && <div className="absolute z-50 mt-2"><EmojiPicker onEmojiClick={(e) => { setBody(prev => `${prev}${e.emoji}`); setShowEmojiPicker(false); }} theme={Theme.DARK} /></div>}</div>
+            <div><div className="flex justify-between mb-2"><Label>Content *</Label><div className="flex gap-2"><MarkdownCheatSheet /><Button type="button" variant="outline" size="sm" onClick={() => setImageModalOpen(true)}><Image className="w-4 h-4 mr-2" />Insert Image</Button></div></div><div data-color-mode="dark"><MDEditor value={body} onChange={(val) => setBody(val || '')} commands={editorCommands} height={500} preview="edit" /></div>{showEmojiPicker && <div className="absolute z-50 mt-2"><EmojiPicker onEmojiClick={(e) => { setBody(prev => `${prev}${e.emoji}`); setShowEmojiPicker(false); }} theme={Theme.DARK} /></div>}</div>
             <div className="grid grid-cols-2 gap-4"><div><Label>GitHub</Label><Input {...register('github_link')} /></div><div><Label>Demo</Label><Input {...register('project_page_link')} /></div></div>
             <div className="grid grid-cols-2 gap-4"><div><Label>Order</Label><Input type="number" {...register('display_order', { valueAsNumber: true })} /></div><div><Label>Date</Label><Input type="date" {...register('date_published')} /></div></div>
             <div className="space-y-3">
@@ -359,7 +303,7 @@ export default function ProjectEditor() {
               </div>
             </div></div></div>
         )}
-        {(viewMode === 'split' || viewMode === 'preview') && <div className="lg:sticky lg:top-6 h-[calc(100vh-120px)]"><div className="border rounded-lg overflow-hidden h-full"><EditableTableWrapper body={body} onBodyUpdate={setBody}><ProjectPreview {...previewData} ref={previewContainerRef} /></EditableTableWrapper></div></div>}
+        {(viewMode === 'split' || viewMode === 'preview') && <div className="lg:sticky lg:top-6 h-[calc(100vh-120px)]"><div className="border rounded-lg overflow-hidden h-full"><EditableTableWrapper body={body} onBodyUpdate={setBody}><ProjectPreview {...previewData} /></EditableTableWrapper></div></div>}
       </div></div>
       <ImageUploadModal open={imageModalOpen} onClose={() => setImageModalOpen(false)} onInsert={(url, alt) => { setBody(prev => `${prev}\n\n![${alt}](${url})\n\n`); setImageModalOpen(false); }} />
       <AssetPicker open={isAssetPickerOpen} onClose={() => setIsAssetPickerOpen(false)} onSelect={(url) => { setValue('thumbnail', url); setIsAssetPickerOpen(false); }} />
