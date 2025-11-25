@@ -111,7 +111,7 @@ export const EditableTableWrapper: React.FC<EditableTableWrapperProps> = ({
 
   return (
     <>
-      <div ref={containerRef} className="relative">
+      <div ref={containerRef} className="relative h-full">
         {children}
       </div>
       
