@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -264,9 +264,6 @@ export default function BlogEditor() {
   const [showNavigateAwayDialog, setShowNavigateAwayDialog] = useState(false);
   const [initialFormData, setInitialFormData] = useState<BlogFormData | null>(null);
   const [initialBody, setInitialBody] = useState('');
-  const editorContainerRef = useRef<HTMLDivElement>(null);
-  const previewContainerRef = useRef<HTMLDivElement>(null);
-  const isScrollingSynced = useRef(false);
 
   const {
     register,
@@ -323,59 +320,6 @@ export default function BlogEditor() {
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [isDirty]);
-
-  const handleEditorScroll = useCallback(() => {
-    if (isScrollingSynced.current || !editorContainerRef.current || !previewContainerRef.current) return;
-    
-    const editorTextarea = editorContainerRef.current.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement;
-    if (!editorTextarea) return;
-    
-    const scrollPercentage = editorTextarea.scrollTop / (editorTextarea.scrollHeight - editorTextarea.clientHeight);
-    
-    isScrollingSynced.current = true;
-    const previewScrollable = previewContainerRef.current;
-    previewScrollable.scrollTop = scrollPercentage * (previewScrollable.scrollHeight - previewScrollable.clientHeight);
-    setTimeout(() => isScrollingSynced.current = false, 50);
-  }, []);
-
-  const handlePreviewScroll = useCallback(() => {
-    if (isScrollingSynced.current || !editorContainerRef.current || !previewContainerRef.current) return;
-    
-    const editorTextarea = editorContainerRef.current.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement;
-    if (!editorTextarea) return;
-    
-    const scrollPercentage = previewContainerRef.current.scrollTop / (previewContainerRef.current.scrollHeight - previewContainerRef.current.clientHeight);
-    
-    isScrollingSynced.current = true;
-    editorTextarea.scrollTop = scrollPercentage * (editorTextarea.scrollHeight - editorTextarea.clientHeight);
-    setTimeout(() => isScrollingSynced.current = false, 50);
-  }, []);
-
-  useEffect(() => {
-    if (viewMode !== 'split') return;
-    
-    // Small delay to ensure MDEditor has rendered its textarea
-    const timeoutId = setTimeout(() => {
-      const editorTextarea = editorContainerRef.current?.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement;
-      const previewScrollable = previewContainerRef.current;
-      
-      if (!editorTextarea || !previewScrollable) return;
-      
-      editorTextarea.addEventListener('scroll', handleEditorScroll);
-      previewScrollable.addEventListener('scroll', handlePreviewScroll);
-    }, 100);
-    
-    return () => {
-      clearTimeout(timeoutId);
-      const editorTextarea = editorContainerRef.current?.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement;
-      const previewScrollable = previewContainerRef.current;
-      
-      if (editorTextarea && previewScrollable) {
-        editorTextarea.removeEventListener('scroll', handleEditorScroll);
-        previewScrollable.removeEventListener('scroll', handlePreviewScroll);
-      }
-    };
-  }, [viewMode, body, handleEditorScroll, handlePreviewScroll]);
 
   const loadPost = async (postSlug: string) => {
     setLoading(true);
@@ -934,7 +878,7 @@ export default function BlogEditor() {
                           </Button>
                         </div>
                       </div>
-                      <div data-color-mode="dark" className="relative" ref={editorContainerRef}>
+                      <div data-color-mode="dark" className="relative">
                         <MDEditor
                           value={body}
                           onChange={(val) => {
@@ -1143,17 +1087,19 @@ export default function BlogEditor() {
 
               {/* Preview Panel */}
               {viewMode !== 'edit' && (
-                <div
-                  className="rounded-xl overflow-hidden"
-                  style={{
-                    background: 'rgba(26, 11, 46, 0.4)',
-                    border: '2px solid hsl(var(--color-cyan) / 0.3)',
-                    boxShadow: '0 0 30px hsl(var(--color-cyan) / 0.2)',
-                  }}
-                >
-                  <EditableTableWrapper body={body} onBodyUpdate={setBody}>
-                    <BlogPreview {...previewData} ref={previewContainerRef} />
-                  </EditableTableWrapper>
+                <div className="lg:sticky lg:top-6 h-[calc(100vh-120px)]">
+                  <div
+                    className="rounded-xl overflow-hidden h-full"
+                    style={{
+                      background: 'rgba(26, 11, 46, 0.4)',
+                      border: '2px solid hsl(var(--color-cyan) / 0.3)',
+                      boxShadow: '0 0 30px hsl(var(--color-cyan) / 0.2)',
+                    }}
+                  >
+                    <EditableTableWrapper body={body} onBodyUpdate={setBody}>
+                      <BlogPreview {...previewData} />
+                    </EditableTableWrapper>
+                  </div>
                 </div>
               )}
             </div>
