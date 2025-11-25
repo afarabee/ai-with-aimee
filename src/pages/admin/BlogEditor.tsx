@@ -662,8 +662,8 @@ export default function BlogEditor() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p style={{ color: 'hsl(var(--color-cyan))' }}>Loading...</p>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
       </div>
     );
   }
@@ -715,14 +715,7 @@ export default function BlogEditor() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Editor Panel */}
               {(viewMode === 'edit' || viewMode === 'split') && (
-                <div
-                  className="p-8 rounded-xl backdrop-blur-md"
-                  style={{
-                    background: 'rgba(26, 11, 46, 0.6)',
-                    border: '2px solid hsl(var(--color-cyan) / 0.3)',
-                    boxShadow: '0 0 30px hsl(var(--color-cyan) / 0.2)',
-                  }}
-                >
+                <div className="space-y-6">
                   <h2 className="text-2xl font-montserrat font-bold mb-6" style={{ color: 'hsl(var(--color-cyan))' }}>
                     {blogId ? 'Edit Post' : 'New Post'}
                   </h2>
