@@ -668,52 +668,50 @@ export default function BlogEditor() {
   }
 
   return (
-    <>
-      <div className="pt-24 pb-16 px-6">
-        <div className="max-w-[1800px] mx-auto">
-        {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
-          <Button
-            onClick={handleBackClick}
-            className="inline-flex items-center gap-2 font-rajdhani transition-all"
-            style={{ 
-              background: 'rgba(0, 255, 255, 0.2)',
-              border: '2px solid hsl(var(--color-cyan))',
-              color: 'hsl(var(--color-cyan))',
-            }}
-          >
-            <ArrowLeft size={18} />
-            Back to Dashboard
-          </Button>
-          <div className="flex gap-2">
-                <Button
-                  onClick={() => setViewMode('edit')}
-                  variant={viewMode === 'edit' ? 'default' : 'outline'}
-                  size="sm"
-                >
-                  <EyeOff size={16} className="mr-2" />
-                  Edit
-                </Button>
-                <Button
-                  onClick={() => setViewMode('split')}
-                  variant={viewMode === 'split' ? 'default' : 'outline'}
-                  size="sm"
-                >
-                  Split View
-                </Button>
-                <Button
-                  onClick={() => setViewMode('preview')}
-                  variant={viewMode === 'preview' ? 'default' : 'outline'}
-                  size="sm"
-                >
-                  <Eye size={16} className="mr-2" />
-                  Preview
-                </Button>
-              </div>
+    <div className="min-h-screen bg-background">
+      {/* Header bar matching ProjectEditor */}
+      <div className="border-b border-border bg-card">
+        <div className="max-w-[1800px] mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="sm" onClick={handleBackClick}>
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back
+              </Button>
+              <h1 className="text-2xl font-bold">{blogId ? 'Edit Post' : 'New Post'}</h1>
             </div>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => setViewMode('edit')}
+                variant={viewMode === 'edit' ? 'default' : 'outline'}
+                size="sm"
+              >
+                <EyeOff size={16} className="mr-2" />
+                Edit
+              </Button>
+              <Button
+                onClick={() => setViewMode('split')}
+                variant={viewMode === 'split' ? 'default' : 'outline'}
+                size="sm"
+              >
+                Split View
+              </Button>
+              <Button
+                onClick={() => setViewMode('preview')}
+                variant={viewMode === 'preview' ? 'default' : 'outline'}
+                size="sm"
+              >
+                <Eye size={16} className="mr-2" />
+                Preview
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-            {/* Main Layout */}
-            <div className={`grid gap-8 ${viewMode === 'split' ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
+      {/* Main content area */}
+      <div className="max-w-[1800px] mx-auto p-6">
+        <div className={`grid gap-6 ${viewMode === 'split' ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'}`}>
               {/* Editor Panel */}
               {viewMode !== 'preview' && (
                 <div
@@ -1100,53 +1098,52 @@ export default function BlogEditor() {
               )}
             </div>
           </div>
+
+          {/* Image Upload Modal */}
+          <ImageUploadModal
+            open={imageModalOpen}
+            onClose={() => setImageModalOpen(false)}
+            onInsert={handleImageInsert}
+          />
+
+          {/* Asset Picker for Banner */}
+          <AssetPicker
+            open={isAssetPickerOpen}
+            onClose={() => setIsAssetPickerOpen(false)}
+            onSelect={handleBannerAssetSelect}
+          />
+
+          {/* Archive Confirmation Dialog */}
+          <AlertDialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Archive Post</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will archive the post and hide it from public view. You can restore it later by changing its status back to Published.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={archivePost} className="bg-amber-500 hover:bg-amber-600">Archive</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          {/* Unsaved Changes Dialog */}
+          <AlertDialog open={showNavigateAwayDialog} onOpenChange={setShowNavigateAwayDialog}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
+                <AlertDialogDescription>
+                  You have unsaved changes. Are you sure you want to leave? All unsaved changes will be lost.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Stay</AlertDialogCancel>
+                <AlertDialogAction onClick={() => navigate('/admin/blog-dashboard')} className="bg-destructive hover:bg-destructive/90">Leave Without Saving</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
-
-        {/* Image Upload Modal */}
-        <ImageUploadModal
-          open={imageModalOpen}
-          onClose={() => setImageModalOpen(false)}
-          onInsert={handleImageInsert}
-        />
-
-        {/* Asset Picker for Banner */}
-        <AssetPicker
-          open={isAssetPickerOpen}
-          onClose={() => setIsAssetPickerOpen(false)}
-          onSelect={handleBannerAssetSelect}
-        />
-
-        {/* Archive Confirmation Dialog */}
-        <AlertDialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Archive Post</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will archive the post and hide it from public view. You can restore it later by changing its status back to Published.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={archivePost} className="bg-amber-500 hover:bg-amber-600">Archive</AlertDialogAction>
-            </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {/* Unsaved Changes Dialog */}
-      <AlertDialog open={showNavigateAwayDialog} onOpenChange={setShowNavigateAwayDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
-            <AlertDialogDescription>
-              You have unsaved changes. Are you sure you want to leave? All unsaved changes will be lost.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Stay</AlertDialogCancel>
-            <AlertDialogAction onClick={() => navigate('/admin/blog-dashboard')} className="bg-destructive hover:bg-destructive/90">Leave Without Saving</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
-  );
-}
+      );
+    }
