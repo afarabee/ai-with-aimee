@@ -1083,17 +1083,19 @@ export default function BlogEditor() {
 
               {/* Preview Panel */}
               {viewMode !== 'edit' && (
-                <div
-                  className="rounded-xl overflow-hidden"
-                  style={{
-                    background: 'rgba(26, 11, 46, 0.4)',
-                    border: '2px solid hsl(var(--color-cyan) / 0.3)',
-                    boxShadow: '0 0 30px hsl(var(--color-cyan) / 0.2)',
-                  }}
-                >
-                  <EditableTableWrapper body={body} onBodyUpdate={setBody}>
-                    <BlogPreview {...previewData} />
-                  </EditableTableWrapper>
+                <div className="lg:sticky lg:top-6 h-[calc(100vh-180px)]">
+                  <div
+                    className="rounded-xl overflow-y-auto preview-scrollbar h-full"
+                    style={{
+                      background: 'rgba(26, 11, 46, 0.4)',
+                      border: '2px solid hsl(var(--color-cyan) / 0.3)',
+                      boxShadow: '0 0 30px hsl(var(--color-cyan) / 0.2)',
+                    }}
+                  >
+                    <EditableTableWrapper body={body} onBodyUpdate={setBody}>
+                      <BlogPreview {...previewData} />
+                    </EditableTableWrapper>
+                  </div>
                 </div>
               )}
             </div>

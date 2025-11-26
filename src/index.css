@@ -1084,3 +1084,27 @@ All colors MUST be HSL.
   border: 1px solid #ef4444;
   box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
 }
+
+/* Custom scrollbar for preview panes */
+.preview-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.preview-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.preview-scrollbar::-webkit-scrollbar-thumb {
+  background: hsl(var(--color-cyan) / 0.4);
+  border-radius: 4px;
+}
+
+.preview-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--color-cyan) / 0.6);
+}
+
+/* Firefox scrollbar styling */
+.preview-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--color-cyan) / 0.4) transparent;
+}
