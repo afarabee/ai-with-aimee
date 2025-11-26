@@ -22,6 +22,12 @@ const adminModules = [
     description: 'Overview & quick actions',
   },
   {
+    title: 'Blogs',
+    url: '/admin/blogs',
+    icon: FileText,
+    description: 'Create and manage blog posts (new)',
+  },
+  {
     title: 'Blog Management',
     url: '/admin/blog-dashboard',
     icon: FileText,

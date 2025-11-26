@@ -17,6 +17,8 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import BlogEditor from "./pages/admin/BlogEditor";
 import BlogDashboard from "./pages/admin/BlogDashboard";
+import BlogsHub from "./pages/admin/BlogsHub";
+import BlogsWriter from "./pages/admin/BlogsWriter";
 import AdminLayout from "./components/admin/AdminLayout";
 import AdminHome from "./pages/admin/AdminHome";
 import ProjectDashboard from "./pages/admin/ProjectDashboard";
@@ -61,6 +63,9 @@ const App = () => {
             <Route path="blog-dashboard" element={<BlogDashboard />} />
             <Route path="blog-editor" element={<BlogEditor />} />
             <Route path="blog-editor/:slug" element={<BlogEditor />} />
+              <Route path="blogs" element={<BlogsHub />} />
+              <Route path="blogs/new" element={<BlogsWriter />} />
+              <Route path="blogs/edit" element={<BlogsWriter />} />
               <Route path="project-dashboard" element={<ProjectDashboard />} />
               <Route path="project-editor" element={<ProjectEditor />} />
                 <Route path="asset-gallery" element={<AssetGallery />} />
