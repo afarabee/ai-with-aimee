@@ -12,15 +12,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <PasswordGate>
       <SidebarProvider defaultOpen={true}>
-        <div className="min-h-screen flex w-full relative">
-          <AboutBackground />
-          
-          <AdminSidebar />
-          
-          <main className="flex-1 relative z-10">
-            {children}
-          </main>
-        </div>
+        <AboutBackground />
+        
+        <AdminSidebar />
+        
+        <main className="flex-1 relative z-10 min-h-screen">
+          {children}
+        </main>
       </SidebarProvider>
     </PasswordGate>
   );
