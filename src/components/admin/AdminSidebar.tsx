@@ -113,7 +113,6 @@ export default function AdminSidebar() {
     <Sidebar
       className="transition-all duration-300"
       style={{
-        width: open ? '240px' : '56px',
         background: 'rgba(26, 11, 46, 0.8)',
         borderRight: '2px solid hsl(var(--color-cyan) / 0.3)',
       }}
