@@ -711,22 +711,12 @@ export default function BlogEditor() {
 
       {/* Main content area */}
       <div className="max-w-[1800px] mx-auto p-6">
-        <div className={`grid gap-6 ${viewMode === 'split' ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'}`}>
-              {/* Editor Panel */}
-              {viewMode !== 'preview' && (
-                <div
-                  className="p-8 rounded-xl backdrop-blur-md"
-                  style={{
-                    background: 'rgba(26, 11, 46, 0.6)',
-                    border: '2px solid hsl(var(--color-cyan) / 0.3)',
-                    boxShadow: '0 0 30px hsl(var(--color-cyan) / 0.2)',
-                  }}
-                >
-                  <h2 className="text-2xl font-montserrat font-bold mb-6" style={{ color: 'hsl(var(--color-cyan))' }}>
-                    {blogId ? 'Edit Post' : 'New Post'}
-                  </h2>
-
-                  <form className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Editor Panel */}
+          {(viewMode === 'edit' || viewMode === 'split') && (
+            <div className="space-y-6">
+              <div className="space-y-6">
+                <form className="space-y-6">
                     <div>
                       <Label htmlFor="title">Title *</Label>
                       <Input
@@ -1074,76 +1064,70 @@ export default function BlogEditor() {
                       <div className="flex-1"></div>
                       {blogId && <Button type="button" variant="outline" onClick={() => setArchiveDialogOpen(true)} className="text-amber-500 border-amber-500 hover:bg-amber-500/10">Archive</Button>}
                       <Button type="button" variant="ghost" onClick={handleClearForm}>Clear Form</Button>
-                    </div>
-                  </form>
-                </div>
-              )}
-
-              {/* Preview Panel */}
-              {viewMode !== 'edit' && (
-                <div className="lg:sticky lg:top-6 h-[calc(100vh-180px)]">
-                  <div
-                    className="rounded-xl overflow-y-auto preview-scrollbar h-full"
-                    style={{
-                      background: 'rgba(26, 11, 46, 0.4)',
-                      border: '2px solid hsl(var(--color-cyan) / 0.3)',
-                      boxShadow: '0 0 30px hsl(var(--color-cyan) / 0.2)',
-                    }}
-                  >
-                    <EditableTableWrapper body={body} onBodyUpdate={setBody}>
-                      <BlogPreview {...previewData} />
-                    </EditableTableWrapper>
                   </div>
-                </div>
-              )}
+                </form>
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* Image Upload Modal */}
-          <ImageUploadModal
-            open={imageModalOpen}
-            onClose={() => setImageModalOpen(false)}
-            onInsert={handleImageInsert}
-          />
-
-          {/* Asset Picker for Banner */}
-          <AssetPicker
-            open={isAssetPickerOpen}
-            onClose={() => setIsAssetPickerOpen(false)}
-            onSelect={handleBannerAssetSelect}
-          />
-
-          {/* Archive Confirmation Dialog */}
-          <AlertDialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Archive Post</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This will archive the post and hide it from public view. You can restore it later by changing its status back to Published.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={archivePost} className="bg-amber-500 hover:bg-amber-600">Archive</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-
-          {/* Unsaved Changes Dialog */}
-          <AlertDialog open={showNavigateAwayDialog} onOpenChange={setShowNavigateAwayDialog}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
-                <AlertDialogDescription>
-                  You have unsaved changes. Are you sure you want to leave? All unsaved changes will be lost.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Stay</AlertDialogCancel>
-                <AlertDialogAction onClick={() => navigate('/admin/blog-dashboard')} className="bg-destructive hover:bg-destructive/90">Leave Without Saving</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          {/* Preview Panel */}
+          {(viewMode === 'split' || viewMode === 'preview') && (
+            <div className="lg:sticky lg:top-6 h-[calc(100vh-120px)]">
+              <div className="border rounded-lg overflow-y-auto preview-scrollbar h-full">
+                <EditableTableWrapper body={body} onBodyUpdate={setBody}>
+                  <BlogPreview {...previewData} />
+                </EditableTableWrapper>
+              </div>
+            </div>
+          )}
         </div>
-      );
-    }
+      </div>
+
+      {/* Image Upload Modal */}
+      <ImageUploadModal
+        open={imageModalOpen}
+        onClose={() => setImageModalOpen(false)}
+        onInsert={handleImageInsert}
+      />
+
+      {/* Asset Picker for Banner */}
+      <AssetPicker
+        open={isAssetPickerOpen}
+        onClose={() => setIsAssetPickerOpen(false)}
+        onSelect={handleBannerAssetSelect}
+      />
+
+      {/* Archive Confirmation Dialog */}
+      <AlertDialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Archive Post</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will archive the post and hide it from public view. You can restore it later by changing its status back to Published.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={archivePost} className="bg-amber-500 hover:bg-amber-600">Archive</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Unsaved Changes Dialog */}
+      <AlertDialog open={showNavigateAwayDialog} onOpenChange={setShowNavigateAwayDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes. Are you sure you want to leave? All unsaved changes will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Stay</AlertDialogCancel>
+            <AlertDialogAction onClick={() => navigate('/admin/blog-dashboard')} className="bg-destructive hover:bg-destructive/90">Leave Without Saving</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
