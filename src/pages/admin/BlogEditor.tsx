@@ -716,356 +716,356 @@ export default function BlogEditor() {
           {(viewMode === 'edit' || viewMode === 'split') && (
             <div className="space-y-6">
               <div className="space-y-6">
-                <form className="space-y-6">
-                    <div>
-                      <Label htmlFor="title">Title *</Label>
-                      <Input
-                        id="title"
-                        {...register('title')}
-                        className="mt-2"
-                        style={{
-                          background: 'rgba(26, 11, 46, 0.6)',
-                          borderColor: errors.title ? 'hsl(var(--color-pink))' : 'hsl(var(--color-cyan) / 0.3)',
-                        }}
-                      />
-                      {errors.title && (
-                        <p className="mt-1 text-sm" style={{ color: 'hsl(var(--color-pink))' }}>
-                          {errors.title.message}
-                        </p>
-                      )}
-                    </div>
+                <div className="space-y-6">
+                  <div>
+                    <Label htmlFor="title">Title *</Label>
+                    <Input
+                      id="title"
+                      {...register('title')}
+                      className="mt-2"
+                      style={{
+                        background: 'rgba(26, 11, 46, 0.6)',
+                        borderColor: errors.title ? 'hsl(var(--color-pink))' : 'hsl(var(--color-cyan) / 0.3)',
+                      }}
+                    />
+                    {errors.title && (
+                      <p className="mt-1 text-sm" style={{ color: 'hsl(var(--color-pink))' }}>
+                        {errors.title.message}
+                      </p>
+                    )}
+                  </div>
 
+                  <div>
+                    <Label htmlFor="subtitle">Subtitle</Label>
+                    <Input
+                      id="subtitle"
+                      {...register('subtitle')}
+                      className="mt-2"
+                      style={{ background: 'rgba(26, 11, 46, 0.6)' }}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="subtitle">Subtitle</Label>
+                      <Label htmlFor="author">Author</Label>
                       <Input
-                        id="subtitle"
-                        {...register('subtitle')}
+                        id="author"
+                        {...register('author')}
                         className="mt-2"
                         style={{ background: 'rgba(26, 11, 46, 0.6)' }}
                       />
                     </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="author">Author</Label>
-                        <Input
-                          id="author"
-                          {...register('author')}
-                          className="mt-2"
-                          style={{ background: 'rgba(26, 11, 46, 0.6)' }}
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="slug">Slug *</Label>
-                        <Input
-                          id="slug"
-                          {...register('slug')}
-                          className="mt-2"
-                          style={{
-                            background: 'rgba(26, 11, 46, 0.6)',
-                            borderColor: errors.slug ? 'hsl(var(--color-pink))' : 'hsl(var(--color-cyan) / 0.3)',
-                          }}
-                        />
-                        {errors.slug && (
-                          <p className="mt-1 text-sm" style={{ color: 'hsl(var(--color-pink))' }}>
-                            {errors.slug.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
                     <div>
-                      <Label htmlFor="excerpt">Excerpt *</Label>
-                      <Textarea
-                        id="excerpt"
-                        {...register('excerpt')}
-                        rows={3}
+                      <Label htmlFor="slug">Slug *</Label>
+                      <Input
+                        id="slug"
+                        {...register('slug')}
                         className="mt-2"
                         style={{
                           background: 'rgba(26, 11, 46, 0.6)',
-                          borderColor: errors.excerpt ? 'hsl(var(--color-pink))' : 'hsl(var(--color-cyan) / 0.3)',
+                          borderColor: errors.slug ? 'hsl(var(--color-pink))' : 'hsl(var(--color-cyan) / 0.3)',
                         }}
                       />
-                      {errors.excerpt && (
+                      {errors.slug && (
                         <p className="mt-1 text-sm" style={{ color: 'hsl(var(--color-pink))' }}>
-                          {errors.excerpt.message}
+                          {errors.slug.message}
                         </p>
                       )}
                     </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="category">Category</Label>
-                        <Input
-                          id="category"
-                          {...register('category')}
-                          className="mt-2"
-                          style={{ background: 'rgba(26, 11, 46, 0.6)' }}
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="tags">Tags (comma-separated)</Label>
-                        <Input
-                          id="tags"
-                          {...register('tags')}
-                          placeholder="ai, coding, tutorial"
-                          className="mt-2"
-                          style={{ background: 'rgba(26, 11, 46, 0.6)' }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Image Upload Helper */}
-                    <ImageUploadHelper
-                      onBannerInsert={handleBannerInsert}
-                      onBodyInsert={handleBodyInsertFromHelper}
-                    />
-
-                    <div>
-                      <Label htmlFor="banner_image">Banner Image URL</Label>
-                      <div className="flex gap-2 mt-2">
-                        <Input
-                          id="banner_image"
-                          {...register('banner_image')}
-                          type="url"
-                          placeholder="https://example.com/image.jpg"
-                          className="flex-1"
-                          style={{ background: 'rgba(26, 11, 46, 0.6)' }}
-                        />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => setIsAssetPickerOpen(true)}
-                        >
-                          Choose from Library
-                        </Button>
-                      </div>
-                      {formData.banner_image && (
-                        <img
-                          src={formData.banner_image}
-                          alt="Banner preview"
-                          className="mt-2 w-32 h-32 object-cover rounded-lg"
-                        />
-                      )}
-                    </div>
-
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <Label>Content *</Label>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setImageModalOpen(true)}
-                        >
-                          <Image size={16} className="mr-2" />
-                          Insert Image
-                        </Button>
-                      </div>
-                      <div data-color-mode="dark" className="relative">
-                        <MDEditor
-                          value={body}
-                          onChange={(val) => {
-                            setBody(val || '');
-                            setValue('body', val || '');
-                          }}
-                          height={600}
-                          preview="edit"
-                          visibleDragbar={false}
-                          textareaProps={{
-                            onFocus: (e) => {
-                              const textarea = e.target;
-                              setTextApi({
-                                replaceSelection: (text: string) => {
-                                  const start = textarea.selectionStart;
-                                  const end = textarea.selectionEnd;
-                                  const newValue = body.substring(0, start) + text + body.substring(end);
-                                  setBody(newValue);
-                                  setValue('body', newValue);
-                                  setTimeout(() => {
-                                    textarea.focus();
-                                    textarea.setSelectionRange(start + text.length, start + text.length);
-                                  }, 0);
-                                }
-                              });
-                            }
-                          }}
-                          commands={[
-                            commands.group(
-                              [
-                                commands.title1,
-                                commands.title2,
-                                commands.title3,
-                                commands.title4,
-                                commands.title5,
-                                commands.title6,
-                              ],
-                              {
-                                name: 'headings',
-                                groupName: 'headings',
-                                buttonProps: { 'aria-label': 'Insert headings', title: 'Insert heading (H1-H6)' },
-                                icon: <span style={{ fontWeight: 'bold' }}>H</span>,
-                              }
-                            ),
-                            commands.divider,
-                            commands.group(
-                              [fontSizeSmall, fontSizeNormal, fontSizeLarge, fontSizeExtraLarge],
-                              {
-                                name: 'fontSizes',
-                                groupName: 'fontSizes',
-                                buttonProps: { 'aria-label': 'Font sizes', title: 'Font size' },
-                                icon: <span style={{ fontWeight: 'bold' }}>A</span>,
-                              }
-                            ),
-                            commands.divider,
-                            commands.group(
-                              [colorBlack, colorCyan, colorPink, colorGray, colorRed, colorGreen, colorYellow, colorBlue],
-                              {
-                                name: 'textColors',
-                                groupName: 'textColors',
-                                buttonProps: { 'aria-label': 'Text color', title: 'Text color' },
-                                icon: <Palette size={14} />,
-                              }
-                            ),
-                            commands.divider,
-                            commands.group(
-                              [alignLeft, alignCenter, alignRight, alignJustify],
-                              {
-                                name: 'textAlign',
-                                groupName: 'textAlign',
-                                buttonProps: { 'aria-label': 'Text alignment', title: 'Text alignment' },
-                                icon: <AlignLeft size={14} />,
-                              }
-                            ),
-                            commands.divider,
-                            emojiCommand,
-                            commands.divider,
-                            {
-                              ...commands.bold,
-                              buttonProps: { ...commands.bold.buttonProps, title: 'Bold text (Ctrl+B)' }
-                            },
-                            {
-                              ...commands.italic,
-                              buttonProps: { ...commands.italic.buttonProps, title: 'Italic text (Ctrl+I)' }
-                            },
-                            {
-                              ...underline,
-                              buttonProps: { ...underline.buttonProps, title: 'Underline text' }
-                            },
-                            {
-                              ...commands.strikethrough,
-                              buttonProps: { ...commands.strikethrough.buttonProps, title: 'Strikethrough text' }
-                            },
-                            commands.divider,
-                            {
-                              ...commands.link,
-                              buttonProps: { ...commands.link.buttonProps, title: 'Insert link (Ctrl+K)' }
-                            },
-                            {
-                              ...commands.quote,
-                              buttonProps: { ...commands.quote.buttonProps, title: 'Insert quote' }
-                            },
-                            {
-                              ...commands.code,
-                              buttonProps: { ...commands.code.buttonProps, title: 'Insert code' }
-                            },
-                            commands.divider,
-                            {
-                              ...commands.unorderedListCommand,
-                              buttonProps: { ...commands.unorderedListCommand.buttonProps, title: 'Bulleted list' }
-                            },
-                            {
-                              ...commands.orderedListCommand,
-                              buttonProps: { ...commands.orderedListCommand.buttonProps, title: 'Numbered list' }
-                            },
-                            {
-                              ...commands.checkedListCommand,
-                              buttonProps: { ...commands.checkedListCommand.buttonProps, title: 'Checklist' }
-                            },
-                            commands.divider,
-                            {
-                              name: 'table',
-                              keyCommand: 'table',
-                              buttonProps: { 'aria-label': 'Insert table', title: 'Insert table' },
-                              icon: (
-                                <TableBuilder 
-                                  onInsert={(markdown) => {
-                                    setBody((prev) => prev + '\n\n' + markdown + '\n\n');
-                                  }}
-                                />
-                              ),
-                            },
-                            commands.divider,
-                          ]}
-                          extraCommands={[
-                            {
-                              ...commands.codeEdit,
-                              buttonProps: { ...commands.codeEdit.buttonProps, title: 'Edit mode' }
-                            },
-                            {
-                              ...commands.codeLive,
-                              buttonProps: { ...commands.codeLive.buttonProps, title: 'Live preview' }
-                            },
-                            {
-                              ...commands.codePreview,
-                              buttonProps: { ...commands.codePreview.buttonProps, title: 'Preview mode' }
-                            },
-                            commands.divider,
-                            {
-                              ...commands.fullscreen,
-                              buttonProps: { ...commands.fullscreen.buttonProps, title: 'Toggle fullscreen' }
-                            },
-                          ]}
-                        />
-                        {showEmojiPicker && (
-                          <div className="absolute z-50 mt-2">
-                            <EmojiPicker onEmojiClick={handleEmojiClick} theme={Theme.DARK} />
-                          </div>
-                        )}
-                      </div>
-                      {errors.body && (
-                        <p className="mt-1 text-sm" style={{ color: 'hsl(var(--color-pink))' }}>
-                          {errors.body.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="space-y-3">
-                      <div>
-                        <Label className="text-foreground/70">Status</Label>
-                        <div className="mt-2 flex items-center gap-3">
-                          {formData.status === 'draft' && <Badge variant="outline" className="bg-muted text-muted-foreground">Draft - Not visible to public</Badge>}
-                          {formData.status === 'published' && <Badge className="bg-primary/20 text-primary border-primary">Published - Live and visible</Badge>}
-                          {formData.status === 'archived' && <Badge className="bg-amber-500/20 text-amber-500 border-amber-500">Archived - Hidden but preserved</Badge>}
-                        </div>
-                      </div>
-                      <div>
-                        <Label htmlFor="date_published">Publish Date</Label>
-                        <Input
-                          id="date_published"
-                          type="date"
-                          {...register('date_published')}
-                          className="mt-2"
-                          style={{ background: 'rgba(26, 11, 46, 0.6)' }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex flex-wrap gap-2 pt-4 border-t" style={{ borderColor: 'hsl(var(--color-cyan) / 0.2)' }}>
-                      <Button type="button" onClick={saveDraft}><Save size={16} className="mr-2" />Save Draft</Button>
-                      {formData.status === 'archived' ? (
-                        <Button type="button" onClick={restorePost}><RotateCcw size={16} className="mr-2" />Restore to Published</Button>
-                      ) : formData.status === 'published' ? (
-                        <Button type="button" variant="outline" onClick={unpublishPost}>Unpublish</Button>
-                      ) : (
-                        <Button type="button" onClick={publishPost} className="bg-primary/90 hover:bg-primary">Publish Now</Button>
-                      )}
-                      <div className="flex-1"></div>
-                      {blogId && <Button type="button" variant="outline" onClick={() => setArchiveDialogOpen(true)} className="text-amber-500 border-amber-500 hover:bg-amber-500/10">Archive</Button>}
-                      <Button type="button" variant="ghost" onClick={handleClearForm}>Clear Form</Button>
                   </div>
-                </form>
+
+                  <div>
+                    <Label htmlFor="excerpt">Excerpt *</Label>
+                    <Textarea
+                      id="excerpt"
+                      {...register('excerpt')}
+                      rows={3}
+                      className="mt-2"
+                      style={{
+                        background: 'rgba(26, 11, 46, 0.6)',
+                        borderColor: errors.excerpt ? 'hsl(var(--color-pink))' : 'hsl(var(--color-cyan) / 0.3)',
+                      }}
+                    />
+                    {errors.excerpt && (
+                      <p className="mt-1 text-sm" style={{ color: 'hsl(var(--color-pink))' }}>
+                        {errors.excerpt.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="category">Category</Label>
+                      <Input
+                        id="category"
+                        {...register('category')}
+                        className="mt-2"
+                        style={{ background: 'rgba(26, 11, 46, 0.6)' }}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="tags">Tags (comma-separated)</Label>
+                      <Input
+                        id="tags"
+                        {...register('tags')}
+                        placeholder="ai, coding, tutorial"
+                        className="mt-2"
+                        style={{ background: 'rgba(26, 11, 46, 0.6)' }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Image Upload Helper */}
+                  <ImageUploadHelper
+                    onBannerInsert={handleBannerInsert}
+                    onBodyInsert={handleBodyInsertFromHelper}
+                  />
+
+                  <div>
+                    <Label htmlFor="banner_image">Banner Image URL</Label>
+                    <div className="flex gap-2 mt-2">
+                      <Input
+                        id="banner_image"
+                        {...register('banner_image')}
+                        type="url"
+                        placeholder="https://example.com/image.jpg"
+                        className="flex-1"
+                        style={{ background: 'rgba(26, 11, 46, 0.6)' }}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setIsAssetPickerOpen(true)}
+                      >
+                        Choose from Library
+                      </Button>
+                    </div>
+                    {formData.banner_image && (
+                      <img
+                        src={formData.banner_image}
+                        alt="Banner preview"
+                        className="mt-2 w-32 h-32 object-cover rounded-lg"
+                      />
+                    )}
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <Label>Content *</Label>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setImageModalOpen(true)}
+                      >
+                        <Image size={16} className="mr-2" />
+                        Insert Image
+                      </Button>
+                    </div>
+                    <div data-color-mode="dark" className="relative">
+                      <MDEditor
+                        value={body}
+                        onChange={(val) => {
+                          setBody(val || '');
+                          setValue('body', val || '');
+                        }}
+                        height={600}
+                        preview="edit"
+                        visibleDragbar={false}
+                        textareaProps={{
+                          onFocus: (e) => {
+                            const textarea = e.target;
+                            setTextApi({
+                              replaceSelection: (text: string) => {
+                                const start = textarea.selectionStart;
+                                const end = textarea.selectionEnd;
+                                const newValue = body.substring(0, start) + text + body.substring(end);
+                                setBody(newValue);
+                                setValue('body', newValue);
+                                setTimeout(() => {
+                                  textarea.focus();
+                                  textarea.setSelectionRange(start + text.length, start + text.length);
+                                }, 0);
+                              }
+                            });
+                          }
+                        }}
+                        commands={[
+                          commands.group(
+                            [
+                              commands.title1,
+                              commands.title2,
+                              commands.title3,
+                              commands.title4,
+                              commands.title5,
+                              commands.title6,
+                            ],
+                            {
+                              name: 'headings',
+                              groupName: 'headings',
+                              buttonProps: { 'aria-label': 'Insert headings', title: 'Insert heading (H1-H6)' },
+                              icon: <span style={{ fontWeight: 'bold' }}>H</span>,
+                            }
+                          ),
+                          commands.divider,
+                          commands.group(
+                            [fontSizeSmall, fontSizeNormal, fontSizeLarge, fontSizeExtraLarge],
+                            {
+                              name: 'fontSizes',
+                              groupName: 'fontSizes',
+                              buttonProps: { 'aria-label': 'Font sizes', title: 'Font size' },
+                              icon: <span style={{ fontWeight: 'bold' }}>A</span>,
+                            }
+                          ),
+                          commands.divider,
+                          commands.group(
+                            [colorBlack, colorCyan, colorPink, colorGray, colorRed, colorGreen, colorYellow, colorBlue],
+                            {
+                              name: 'textColors',
+                              groupName: 'textColors',
+                              buttonProps: { 'aria-label': 'Text color', title: 'Text color' },
+                              icon: <Palette size={14} />, 
+                            }
+                          ),
+                          commands.divider,
+                          commands.group(
+                            [alignLeft, alignCenter, alignRight, alignJustify],
+                            {
+                              name: 'textAlign',
+                              groupName: 'textAlign',
+                              buttonProps: { 'aria-label': 'Text alignment', title: 'Text alignment' },
+                              icon: <AlignLeft size={14} />, 
+                            }
+                          ),
+                          commands.divider,
+                          emojiCommand,
+                          commands.divider,
+                          {
+                            ...commands.bold,
+                            buttonProps: { ...commands.bold.buttonProps, title: 'Bold text (Ctrl+B)' }
+                          },
+                          {
+                            ...commands.italic,
+                            buttonProps: { ...commands.italic.buttonProps, title: 'Italic text (Ctrl+I)' }
+                          },
+                          {
+                            ...underline,
+                            buttonProps: { ...underline.buttonProps, title: 'Underline text' }
+                          },
+                          {
+                            ...commands.strikethrough,
+                            buttonProps: { ...commands.strikethrough.buttonProps, title: 'Strikethrough text' }
+                          },
+                          commands.divider,
+                          {
+                            ...commands.link,
+                            buttonProps: { ...commands.link.buttonProps, title: 'Insert link (Ctrl+K)' }
+                          },
+                          {
+                            ...commands.quote,
+                            buttonProps: { ...commands.quote.buttonProps, title: 'Insert quote' }
+                          },
+                          {
+                            ...commands.code,
+                            buttonProps: { ...commands.code.buttonProps, title: 'Insert code' }
+                          },
+                          commands.divider,
+                          {
+                            ...commands.unorderedListCommand,
+                            buttonProps: { ...commands.unorderedListCommand.buttonProps, title: 'Bulleted list' }
+                          },
+                          {
+                            ...commands.orderedListCommand,
+                            buttonProps: { ...commands.orderedListCommand.buttonProps, title: 'Numbered list' }
+                          },
+                          {
+                            ...commands.checkedListCommand,
+                            buttonProps: { ...commands.checkedListCommand.buttonProps, title: 'Checklist' }
+                          },
+                          commands.divider,
+                          {
+                            name: 'table',
+                            keyCommand: 'table',
+                            buttonProps: { 'aria-label': 'Insert table', title: 'Insert table' },
+                            icon: (
+                              <TableBuilder 
+                                onInsert={(markdown) => {
+                                  setBody((prev) => prev + '\n\n' + markdown + '\n\n');
+                                }}
+                              />
+                            ),
+                          },
+                          commands.divider,
+                        ]}
+                        extraCommands={[
+                          {
+                            ...commands.codeEdit,
+                            buttonProps: { ...commands.codeEdit.buttonProps, title: 'Edit mode' }
+                          },
+                          {
+                            ...commands.codeLive,
+                            buttonProps: { ...commands.codeLive.buttonProps, title: 'Live preview' }
+                          },
+                          {
+                            ...commands.codePreview,
+                            buttonProps: { ...commands.codePreview.buttonProps, title: 'Preview mode' }
+                          },
+                          commands.divider,
+                          {
+                            ...commands.fullscreen,
+                            buttonProps: { ...commands.fullscreen.buttonProps, title: 'Toggle fullscreen' }
+                          },
+                        ]}
+                      />
+                      {showEmojiPicker && (
+                        <div className="absolute z-50 mt-2">
+                          <EmojiPicker onEmojiClick={handleEmojiClick} theme={Theme.DARK} />
+                        </div>
+                      )}
+                    </div>
+                    {errors.body && (
+                      <p className="mt-1 text-sm" style={{ color: 'hsl(var(--color-pink))' }}>
+                        {errors.body.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-3">
+                    <div>
+                      <Label className="text-foreground/70">Status</Label>
+                      <div className="mt-2 flex items-center gap-3">
+                        {formData.status === 'draft' && <Badge variant="outline" className="bg-muted text-muted-foreground">Draft - Not visible to public</Badge>}
+                        {formData.status === 'published' && <Badge className="bg-primary/20 text-primary border-primary">Published - Live and visible</Badge>}
+                        {formData.status === 'archived' && <Badge className="bg-amber-500/20 text-amber-500 border-amber-500">Archived - Hidden but preserved</Badge>}
+                      </div>
+                    </div>
+                    <div>
+                      <Label htmlFor="date_published">Publish Date</Label>
+                      <Input
+                        id="date_published"
+                        type="date"
+                        {...register('date_published')}
+                        className="mt-2"
+                        style={{ background: 'rgba(26, 11, 46, 0.6)' }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-wrap gap-2 pt-4 border-t" style={{ borderColor: 'hsl(var(--color-cyan) / 0.2)' }}>
+                    <Button type="button" onClick={saveDraft}><Save size={16} className="mr-2" />Save Draft</Button>
+                    {formData.status === 'archived' ? (
+                      <Button type="button" onClick={restorePost}><RotateCcw size={16} className="mr-2" />Restore to Published</Button>
+                    ) : formData.status === 'published' ? (
+                      <Button type="button" variant="outline" onClick={unpublishPost}>Unpublish</Button>
+                    ) : (
+                      <Button type="button" onClick={publishPost} className="bg-primary/90 hover:bg-primary">Publish Now</Button>
+                    )}
+                    <div className="flex-1"></div>
+                    {blogId && <Button type="button" variant="outline" onClick={() => setArchiveDialogOpen(true)} className="text-amber-500 border-amber-500 hover:bg-amber-500/10">Archive</Button>}
+                    <Button type="button" variant="ghost" onClick={handleClearForm}>Clear Form</Button>
+                  </div>
+                </div>
               </div>
             </div>
           )}
