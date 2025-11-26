@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Eye, EyeOff } from 'lucide-react';
@@ -14,17 +14,15 @@ const STORAGE_KEY = 'adminAuthenticated';
 export default function PasswordGate({ children }: PasswordGateProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem(STORAGE_KEY) === 'true';
+    }
+    return false;
+  });
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-
-  useEffect(() => {
-    const stored = sessionStorage.getItem(STORAGE_KEY);
-    if (stored === 'true') {
-      setIsAuthenticated(true);
-    }
-  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
