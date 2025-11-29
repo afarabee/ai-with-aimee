@@ -189,13 +189,31 @@ export default function AdminHome() {
   const { data: storageStats } = useQuery({
     queryKey: ['admin-storage-stats'],
     queryFn: async () => {
-      const { data, error } = await supabase.storage
-        .from('blog-images')
-        .list('', { limit: 100, sortBy: { column: 'created_at', order: 'desc' } });
-      if (error) throw error;
+      // Query both folders to get actual file count
+      const [blogResult, resumeResult] = await Promise.all([
+        supabase.storage.from('blog-images').list('blog', { 
+          limit: 500, 
+          sortBy: { column: 'created_at', order: 'desc' } 
+        }),
+        supabase.storage.from('blog-images').list('resume', { 
+          limit: 100, 
+          sortBy: { column: 'created_at', order: 'desc' } 
+        })
+      ]);
+      
+      if (blogResult.error) throw blogResult.error;
+      if (resumeResult.error) throw resumeResult.error;
+      
+      const allFiles = [...(blogResult.data || []), ...(resumeResult.data || [])];
+      
+      // Sort combined files by created_at to find the most recent
+      allFiles.sort((a, b) => 
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+      
       return {
-        total: data.length,
-        recentFile: data.length > 0 ? data[0].name : null
+        total: allFiles.length,
+        recentFile: allFiles.length > 0 ? allFiles[0].name : null
       };
     }
   });
