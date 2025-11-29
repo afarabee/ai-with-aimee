@@ -144,6 +144,20 @@ export default function AdminHome() {
     }
   });
 
+  // Fetch recent projects for feed
+  const { data: recentProjects } = useQuery({
+    queryKey: ['admin-recent-projects'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('id, project_title, status, updated_at')
+        .order('updated_at', { ascending: false })
+        .limit(5);
+      if (error) throw error;
+      return data;
+    }
+  });
+
   // Fetch project stats
   const { data: projectStats } = useQuery({
     queryKey: ['admin-project-stats'],
@@ -231,7 +245,7 @@ export default function AdminHome() {
           title="Blog Posts"
           value={blogStats?.total || '—'}
           subtitle={`${blogStats?.drafts || 0} drafts, ${blogStats?.published || 0} published`}
-          route="/admin/blog-dashboard"
+          route="/admin/blogs"
           color="cyan"
         />
           <MetricCard
@@ -283,7 +297,7 @@ export default function AdminHome() {
             {recentBlogs?.map((blog, index) => (
               <div
                 key={blog.id}
-                onClick={() => navigate(`/admin/blog-editor?id=${blog.id}`)}
+                onClick={() => navigate(`/admin/blogs/edit?id=${blog.id}`)}
                 className="flex items-start gap-3 p-3 rounded-lg cursor-pointer transition-all animate-fade-in"
                 style={{
                   background: 'rgba(0, 255, 255, 0.05)',
@@ -329,7 +343,7 @@ export default function AdminHome() {
           </div>
         </div>
 
-        {/* Right: System Activity */}
+        {/* Right: Recent Projects */}
         <div
           className="p-6 rounded-xl"
           style={{
@@ -342,30 +356,65 @@ export default function AdminHome() {
             className="text-2xl font-rajdhani font-bold mb-6 flex items-center gap-2"
             style={{ color: 'hsl(var(--color-pink))' }}
           >
-            ⚙️ Recent System Events
+            🚀 Recent Projects
           </h2>
           <div className="space-y-3">
-            {[
-              'Uploaded: neural_network.png',
-              'Draft saved: "Prompt Like a PM Playground"',
-              'Eval Framework updated',
-              'New project added: "AI Blog Assistant"',
-              'Image optimized: banner_ai_journey.jpg'
-            ].map((event, index) => (
+            {recentProjects?.map((project, index) => (
               <div
-                key={index}
-                className="flex items-start gap-3 p-3 rounded-lg transition-all animate-fade-in"
+                key={project.id}
+                onClick={() => navigate(`/admin/project-editor?id=${project.id}`)}
+                className="flex items-start gap-3 p-3 rounded-lg cursor-pointer transition-all animate-fade-in"
                 style={{
                   background: 'rgba(245, 12, 160, 0.05)',
                   animationDelay: `${index * 100}ms`,
                 }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(245, 12, 160, 0.15)';
+                  e.currentTarget.style.transform = 'translateX(8px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(245, 12, 160, 0.05)';
+                  e.currentTarget.style.transform = 'translateX(0)';
+                }}
               >
-                <Dot size={16} style={{ color: '#f50ca0' }} />
-                <p className="text-sm font-ibm-plex text-[#e0e0e0]">
-                  {event}
-                </p>
+                <Dot 
+                  size={16} 
+                  style={{ 
+                    color: project.status === 'Active' ? '#f9f940' : 
+                           project.status === 'Draft' ? '#00ffff' : '#888888' 
+                  }} 
+                />
+                <div className="flex-1">
+                  <p className="font-ibm-plex text-sm text-[#e0e0e0]">
+                    {project.project_title}
+                  </p>
+                  <div className="flex items-center gap-3 mt-1">
+                    <span 
+                      className="text-xs font-rajdhani px-2 py-0.5 rounded"
+                      style={{
+                        background: project.status === 'Active' ? 'rgba(249, 249, 64, 0.2)' : 
+                                   project.status === 'Draft' ? 'rgba(0, 255, 255, 0.2)' : 
+                                   'rgba(136, 136, 136, 0.2)',
+                        color: project.status === 'Active' ? '#f9f940' : 
+                               project.status === 'Draft' ? '#00ffff' : '#888888',
+                        border: `1px solid ${project.status === 'Active' ? '#f9f940' : 
+                                             project.status === 'Draft' ? '#00ffff' : '#888888'}`,
+                      }}
+                    >
+                      {project.status.toUpperCase()}
+                    </span>
+                    <span className="text-xs font-ibm-plex" style={{ color: 'hsl(var(--color-pink))' }}>
+                      {format(new Date(project.updated_at), 'MMM dd, HH:mm')}
+                    </span>
+                  </div>
+                </div>
               </div>
             ))}
+            {(!recentProjects || recentProjects.length === 0) && (
+              <p className="text-sm font-ibm-plex text-center py-8 text-[#888888]">
+                No projects yet. Create your first project!
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -382,7 +431,7 @@ export default function AdminHome() {
           <QuickActionButton
             icon={PlusCircle}
             label="New Blog Post"
-            route="/admin/blog-editor"
+            route="/admin/blogs/new"
             color="cyan"
           />
           <QuickActionButton
