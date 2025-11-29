@@ -151,6 +151,17 @@ export default function ProjectEditor() {
     setInitialBody(body);
   };
 
+  const updatePublished = async () => {
+    if (!projectId) return;
+    const data = watch();
+    const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
+    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Active', display_order: data.display_order, date_published: data.date_published };
+    await supabase.from('projects').update(payload).eq('id', projectId); 
+    toast.success('Published project updated!');
+    setInitialFormData(watch());
+    setInitialBody(body);
+  };
+
   const unpublishProject = async () => {
     if (!projectId) return;
     const data = watch();
@@ -282,7 +293,12 @@ export default function ProjectEditor() {
                 {formData.status === 'Archived' ? (
                   <Button type="button" onClick={restoreProject}><RotateCcw className="w-4 h-4 mr-2" />Restore to Active</Button>
                 ) : formData.status === 'Active' ? (
-                  <Button type="button" variant="outline" onClick={unpublishProject}>Unpublish</Button>
+                  <>
+                    <Button type="button" onClick={updatePublished} className="bg-green-600 hover:bg-green-700">
+                      <Save className="w-4 h-4 mr-2" />Update Published
+                    </Button>
+                    <Button type="button" variant="outline" onClick={unpublishProject}>Unpublish</Button>
+                  </>
                 ) : (
                   <Button type="button" onClick={publishProject} className="bg-primary/90 hover:bg-primary">Publish Now</Button>
                 )}

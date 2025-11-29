@@ -147,6 +147,16 @@ export default function BlogsWriter() {
     setInitialBody(body);
   };
 
+  const updatePublished = async () => {
+    if (!blogId) return;
+    const data = watch();
+    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, category: data.category || null, tags: data.tags || null, banner_image: data.banner_image || null, status: 'published', date_published: data.date_published };
+    await supabase.from('blogs').update(payload).eq('id', blogId); 
+    toast.success('Published blog updated!');
+    setInitialFormData(watch());
+    setInitialBody(body);
+  };
+
   const unpublishBlog = async () => {
     if (!blogId) return;
     const data = watch();
@@ -230,7 +240,21 @@ export default function BlogsWriter() {
             <div><Label htmlFor="banner_image">Banner Image URL</Label><div className="flex gap-2 mt-1"><Input id="banner_image" {...register('banner_image')} /><Button type="button" variant="outline" size="icon" onClick={() => setImageModalOpen(true)}><Image className="h-4 w-4" /></Button><Button type="button" variant="outline" size="icon" onClick={() => setIsAssetPickerOpen(true)}><Image className="h-4 w-4" /></Button></div></div>
             <div className="grid grid-cols-2 gap-4"><div><Label>Status</Label><Badge variant={formData.status === 'draft' ? 'outline' : 'default'} className="mt-2">{formData.status?.toUpperCase()}</Badge></div><div><Label htmlFor="date_published">Publish Date</Label><Input id="date_published" type="date" {...register('date_published')} className="mt-1" /></div></div>
           </div>
-          <div className="flex gap-2"><Button onClick={saveDraft} variant="outline"><Save className="w-4 h-4 mr-2" />Save Draft</Button>{formData.status === 'draft' && <Button onClick={publishBlog}>Publish Now</Button>}{formData.status === 'published' && <Button onClick={unpublishBlog} variant="outline">Unpublish</Button>}{formData.status === 'archived' && <Button onClick={restoreBlog} variant="outline"><RotateCcw className="w-4 h-4 mr-2" />Restore</Button>}<Button onClick={() => setArchiveDialogOpen(true)} variant="outline"><Trash2 className="w-4 h-4 mr-2" />Archive</Button><Button onClick={handleClearClick} variant="ghost">Clear</Button></div></div>
+          <div className="flex gap-2">
+            <Button onClick={saveDraft} variant="outline"><Save className="w-4 h-4 mr-2" />Save Draft</Button>
+            {formData.status === 'draft' && <Button onClick={publishBlog}>Publish Now</Button>}
+            {formData.status === 'published' && (
+              <>
+                <Button onClick={updatePublished} className="bg-green-600 hover:bg-green-700">
+                  <Save className="w-4 h-4 mr-2" />Update Published
+                </Button>
+                <Button onClick={unpublishBlog} variant="outline">Unpublish</Button>
+              </>
+            )}
+            {formData.status === 'archived' && <Button onClick={restoreBlog} variant="outline"><RotateCcw className="w-4 h-4 mr-2" />Restore</Button>}
+            <Button onClick={() => setArchiveDialogOpen(true)} variant="outline"><Trash2 className="w-4 h-4 mr-2" />Archive</Button>
+            <Button onClick={handleClearClick} variant="ghost">Clear</Button>
+          </div></div>
         )}
         {(viewMode === 'preview' || viewMode === 'split') && (
           <div className="h-[calc(100vh-200px)] overflow-y-auto"><BlogPreview {...previewData} /></div>
