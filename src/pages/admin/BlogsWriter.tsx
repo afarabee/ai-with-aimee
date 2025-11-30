@@ -29,7 +29,6 @@ const blogSchema = z.object({
   slug: z.string().min(1, 'Slug required').max(200),
   excerpt: z.string().min(1, 'Excerpt required').max(500),
   body: z.string().min(1, 'Content required'),
-  category: z.string().optional(),
   tags: z.string().optional(),
   banner_image: z.string().url().optional().or(z.literal('')),
   status: z.enum(['draft', 'published', 'archived']).default('draft'),
@@ -86,7 +85,7 @@ export default function BlogsWriter() {
         setLoading(true);
         const { data, error } = await supabase.from('blogs').select('*').eq('id', blogId).single();
         if (!error && data) {
-          const formData = { title: data.title, subtitle: data.subtitle || '', author: data.author || 'Aimee Farabee', slug: data.slug, excerpt: data.excerpt, body: data.body, category: data.category || '', tags: data.tags || '', banner_image: data.banner_image || '', status: data.status as any, date_published: new Date(data.date_published).toISOString().split('T')[0] };
+          const formData = { title: data.title, subtitle: data.subtitle || '', author: data.author || 'Aimee Farabee', slug: data.slug, excerpt: data.excerpt, body: data.body, tags: data.tags || '', banner_image: data.banner_image || '', status: data.status as any, date_published: new Date(data.date_published).toISOString().split('T')[0] };
           reset(formData);
           setBody(data.body);
           setInitialFormData(formData);
@@ -112,7 +111,7 @@ export default function BlogsWriter() {
 
   const saveDraft = async () => {
     const data = watch();
-    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, category: data.category || null, tags: data.tags || null, banner_image: data.banner_image || null, status: 'draft', date_published: data.date_published };
+    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'draft', date_published: data.date_published };
     if (blogId) { 
       await supabase.from('blogs').update(payload).eq('id', blogId); 
       toast.success('Draft saved');
@@ -130,7 +129,7 @@ export default function BlogsWriter() {
 
   const publishBlog = async () => {
     const data = watch();
-    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, category: data.category || null, tags: data.tags || null, banner_image: data.banner_image || null, status: 'published', date_published: new Date().toISOString() };
+    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'published', date_published: new Date().toISOString() };
     if (blogId) { 
       await supabase.from('blogs').update(payload).eq('id', blogId); 
       toast.success('Blog published!');
@@ -150,7 +149,7 @@ export default function BlogsWriter() {
   const updatePublished = async () => {
     if (!blogId) return;
     const data = watch();
-    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, category: data.category || null, tags: data.tags || null, banner_image: data.banner_image || null, status: 'published', date_published: data.date_published };
+    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'published', date_published: data.date_published };
     await supabase.from('blogs').update(payload).eq('id', blogId); 
     toast.success('Published blog updated!');
     setInitialFormData(watch());
@@ -160,7 +159,7 @@ export default function BlogsWriter() {
   const unpublishBlog = async () => {
     if (!blogId) return;
     const data = watch();
-    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, category: data.category || null, tags: data.tags || null, banner_image: data.banner_image || null, status: 'draft', date_published: data.date_published };
+    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'draft', date_published: data.date_published };
     await supabase.from('blogs').update(payload).eq('id', blogId); 
     toast.success('Blog unpublished');
     setValue('status', 'draft');
@@ -171,7 +170,7 @@ export default function BlogsWriter() {
   const archiveBlog = async () => {
     if (!blogId) return;
     const data = watch();
-    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, category: data.category || null, tags: data.tags || null, banner_image: data.banner_image || null, status: 'archived', date_published: data.date_published };
+    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'archived', date_published: data.date_published };
     await supabase.from('blogs').update(payload).eq('id', blogId); 
     toast.success('Blog archived');
     setValue('status', 'archived');
@@ -183,7 +182,7 @@ export default function BlogsWriter() {
   const restoreBlog = async () => {
     if (!blogId) return;
     const data = watch();
-    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, category: data.category || null, tags: data.tags || null, banner_image: data.banner_image || null, status: 'published', date_published: new Date().toISOString() };
+    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'published', date_published: new Date().toISOString() };
     await supabase.from('blogs').update(payload).eq('id', blogId); 
     toast.success('Blog restored to Published');
     setValue('status', 'published');
@@ -200,7 +199,7 @@ export default function BlogsWriter() {
   };
 
   const handleClearForm = () => { 
-    reset({ title: '', subtitle: '', author: 'Aimee Farabee', slug: '', excerpt: '', body: '', category: '', tags: '', banner_image: '', status: 'draft', date_published: new Date().toISOString().split('T')[0] }); 
+    reset({ title: '', subtitle: '', author: 'Aimee Farabee', slug: '', excerpt: '', body: '', tags: '', banner_image: '', status: 'draft', date_published: new Date().toISOString().split('T')[0] }); 
     setBody(''); 
     setBlogId(null); 
     setInitialFormData(null);
@@ -235,7 +234,6 @@ export default function BlogsWriter() {
             <div><Label>Content *</Label><div className="mt-2 relative"><EditableTableWrapper body={body} onBodyUpdate={setBody}><MDEditor value={body} onChange={(val) => setBody(val || '')} height={400} preview="edit" commands={editorCommands} /></EditableTableWrapper>{showEmojiPicker && (<div className="absolute z-50 top-12 right-0"><EmojiPicker onEmojiClick={(emojiData: EmojiClickData) => { setBody(prev => prev + emojiData.emoji); setShowEmojiPicker(false); }} theme={Theme.DARK} /></div>)}</div></div>
             <div><Label htmlFor="author">Author</Label><Input id="author" {...register('author')} className="mt-1" /></div>
             <div><Label htmlFor="slug">Slug *</Label><Input id="slug" {...register('slug')} className="mt-1" />{errors.slug && <p className="text-sm text-destructive mt-1">{errors.slug.message}</p>}</div>
-            <div><Label htmlFor="category">Category</Label><Input id="category" {...register('category')} className="mt-1" /></div>
             <div><Label htmlFor="tags">Tags (comma-separated)</Label><Input id="tags" {...register('tags')} className="mt-1" placeholder="AI, Technology, Tutorial" /></div>
             <div><Label htmlFor="banner_image">Banner Image URL</Label><div className="flex gap-2 mt-1"><Input id="banner_image" {...register('banner_image')} /><Button type="button" variant="outline" size="icon" onClick={() => setImageModalOpen(true)}><Image className="h-4 w-4" /></Button><Button type="button" variant="outline" size="icon" onClick={() => setIsAssetPickerOpen(true)}><Image className="h-4 w-4" /></Button></div></div>
             <div className="grid grid-cols-2 gap-4"><div><Label>Status</Label><Badge variant={formData.status === 'draft' ? 'outline' : 'default'} className="mt-2">{formData.status?.toUpperCase()}</Badge></div><div><Label htmlFor="date_published">Publish Date</Label><Input id="date_published" type="date" {...register('date_published')} className="mt-1" /></div></div>
