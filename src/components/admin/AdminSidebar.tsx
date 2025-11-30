@@ -28,12 +28,6 @@ const adminModules = [
     description: 'Create and manage blog posts (new)',
   },
   {
-    title: 'Blog Management',
-    url: '/admin/blog-dashboard',
-    icon: FileText,
-    description: 'Create and manage blog posts',
-  },
-  {
     title: 'Project Management',
     url: '/admin/project-dashboard',
     icon: Rocket,
