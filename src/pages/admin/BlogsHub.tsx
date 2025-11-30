@@ -18,7 +18,6 @@ interface Blog {
   slug: string;
   status: string;
   date_published: string;
-  category: string | null;
 }
 
 export default function BlogsHub() {
@@ -31,7 +30,7 @@ export default function BlogsHub() {
   const { data: blogs, isLoading, refetch } = useQuery({
     queryKey: ['blogs-hub'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('blogs').select('id, title, slug, status, date_published, category').is('deleted_at', null).order('date_published', { ascending: false });
+      const { data, error } = await supabase.from('blogs').select('id, title, slug, status, date_published').is('deleted_at', null).order('date_published', { ascending: false });
       if (error) throw error;
       return data as Blog[];
     },
@@ -41,7 +40,7 @@ export default function BlogsHub() {
     if (!blogs) return [];
     return blogs.filter(blog => {
       const searchLower = searchTerm.toLowerCase();
-      const matchesSearch = blog.title.toLowerCase().includes(searchLower) || (blog.category?.toLowerCase() || '').includes(searchLower);
+      const matchesSearch = blog.title.toLowerCase().includes(searchLower);
       const matchesStatus = statusFilter === 'all' || blog.status === statusFilter;
       return matchesSearch && matchesStatus;
     });
@@ -77,7 +76,7 @@ export default function BlogsHub() {
         <div className="bg-card border border-border p-6 rounded-xl mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label className="mb-2 block">Search by Title or Category</Label>
+              <Label className="mb-2 block">Search by Title</Label>
               <Input type="text" placeholder="Type to search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
             </div>
             <div>
@@ -113,7 +112,6 @@ export default function BlogsHub() {
                   <th className="text-left p-4">Title</th>
                   <th className="text-left p-4">Status</th>
                   <th className="text-left p-4">Date</th>
-                  <th className="text-left p-4">Category</th>
                   <th className="text-right p-4">Actions</th>
                 </tr>
               </thead>
@@ -125,7 +123,6 @@ export default function BlogsHub() {
                     </td>
                     <td className="p-4"><StatusBadge status={blog.status} /></td>
                     <td className="p-4 text-muted-foreground">{format(new Date(blog.date_published), 'MMM dd, yyyy')}</td>
-                    <td className="p-4 text-muted-foreground">{blog.category || 'Uncategorized'}</td>
                     <td className="p-4">
                       <div className="flex gap-2 justify-end">
                         <Button size="sm" variant="outline" onClick={() => navigate(`/admin/blogs/edit?id=${blog.id}`)}><Edit className="h-4 w-4" /></Button>
