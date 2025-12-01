@@ -157,7 +157,7 @@ const ProjectDetail = () => {
           {/* Metadata */}
           <div className="flex items-center justify-center gap-4 text-sm font-ibm mb-6">
             <div className="flex items-center gap-2">
-              <Calendar size={16} style={{ color: 'hsl(var(--color-cyan))' }} />
+              <Calendar size={16} style={{ color: 'hsl(var(--color-pink))' }} />
               <time style={{ 
                 color: 'hsl(var(--color-pink))',
                 textShadow: '0 0 10px hsl(var(--color-pink) / 0.5)'
