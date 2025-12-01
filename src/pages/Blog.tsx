@@ -215,13 +215,13 @@ const Blog = () => {
                         </p>
 
                         {/* Meta Info */}
-                        <div className="flex items-center gap-4 mb-4 text-xs" style={{ color: '#b4f2e3' }}>
+                        <div className="flex items-center gap-4 mb-4 text-xs" style={{ color: 'hsl(var(--color-pink))', textShadow: '0 0 8px hsl(var(--color-pink) / 0.4)' }}>
                           <span className="flex items-center gap-1">
-                            <Calendar size={14} />
+                            <Calendar size={14} style={{ color: 'hsl(var(--color-pink))' }} />
                             {new Date(post.date_published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                           </span>
                           <span className="flex items-center gap-1">
-                            <Clock size={14} />
+                            <Clock size={14} style={{ color: 'hsl(var(--color-pink))' }} />
                             {readTime} min read
                           </span>
                         </div>
