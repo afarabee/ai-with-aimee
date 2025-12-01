@@ -223,9 +223,9 @@ export default function BlogsWriter() {
 
   const tableCommand: ICommand = { name: 'table', keyCommand: 'table', buttonProps: { 'aria-label': 'Insert table', title: 'Insert table' }, icon: (<TableBuilder onInsert={(markdown) => { setBody((prev) => prev + '\n\n' + markdown + '\n\n'); }} />) };
 
-  const headingGroup = commands.group([heading1, heading2, heading3, heading4], { name: 'headings', groupName: 'headings', buttonProps: { 'aria-label': 'Insert heading', title: 'Insert heading (H1-H4)' }, icon: <span style={{ fontWeight: 'bold' }}>H</span> });
+  
 
-  const editorCommands = [commands.bold, commands.italic, underline, commands.strikethrough, commands.divider, headingGroup, commands.divider, fontSizeGroup, textColorGroup, textAlignGroup, commands.divider, commands.link, commands.quote, commands.code, commands.divider, commands.unorderedListCommand, commands.orderedListCommand, commands.divider, tableCommand, commands.divider, emojiCommand];
+  const editorCommands = [commands.bold, commands.italic, underline, commands.strikethrough, commands.divider, heading1, heading2, heading3, heading4, commands.divider, fontSizeGroup, textColorGroup, textAlignGroup, commands.divider, commands.link, commands.quote, commands.code, commands.divider, commands.unorderedListCommand, commands.orderedListCommand, commands.divider, tableCommand, commands.divider, emojiCommand];
 
   const previewData = useMemo(() => ({ title: formData.title || 'Untitled', subtitle: formData.subtitle || '', author: formData.author || 'Aimee Farabee', body, banner_image: formData.banner_image, excerpt: formData.excerpt || '', date_published: new Date(formData.date_published || new Date().toISOString()) }), [formData, body]);
 
