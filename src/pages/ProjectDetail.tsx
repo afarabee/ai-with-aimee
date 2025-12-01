@@ -158,7 +158,10 @@ const ProjectDetail = () => {
           <div className="flex items-center justify-center gap-4 text-sm font-ibm mb-6">
             <div className="flex items-center gap-2">
               <Calendar size={16} style={{ color: 'hsl(var(--color-cyan))' }} />
-              <time style={{ color: 'hsl(var(--color-light-text))' }}>
+              <time style={{ 
+                color: 'hsl(var(--color-pink))',
+                textShadow: '0 0 10px hsl(var(--color-pink) / 0.5)'
+              }}>
                 {format(new Date(project.date_published), 'MMMM d, yyyy')}
               </time>
             </div>
