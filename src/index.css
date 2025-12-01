@@ -570,7 +570,15 @@ All colors MUST be HSL.
     margin-bottom: 1rem;
   }
 
-  /* Blog subtitle (used in hero section for post subtitle field) */
+  .blog-h4 {
+    font-family: var(--font-title);
+    font-size: clamp(1rem, 1.8vw, 1.25rem);
+    font-weight: 500;
+    color: hsl(var(--color-light-text));
+    text-shadow: 0 0 8px hsl(var(--color-cyan) / 0.4);
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
   .blog-subtitle {
     font-family: var(--font-subtitle);
     font-style: italic;

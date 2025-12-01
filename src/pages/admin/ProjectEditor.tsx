@@ -285,36 +285,56 @@ export default function ProjectEditor() {
     }, 0);
   };
 
+  const HeadingButton = ({ level }: { level: number }) => (
+    <span
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        insertHeading(level);
+      }}
+      style={{
+        fontWeight: 'bold',
+        cursor: 'pointer',
+        display: 'inline-block',
+        minWidth: '24px',
+        textAlign: 'center',
+        fontSize:
+          level === 1 ? '16px' :
+          level === 2 ? '14px' :
+          level === 3 ? '12px' :
+          '11px',
+      }}
+    >
+      {`H${level}`}
+    </span>
+  );
+
   const heading1Command: ICommand = {
     name: 'heading1',
     keyCommand: 'heading1',
     buttonProps: { 'aria-label': 'Insert Heading 1', title: 'Heading 1' },
-    icon: <span style={{ fontSize: '16px', fontWeight: 'bold' }}>H1</span>,
-    execute: () => insertHeading(1),
+    icon: <HeadingButton level={1} />,
   };
 
   const heading2Command: ICommand = {
     name: 'heading2',
     keyCommand: 'heading2',
     buttonProps: { 'aria-label': 'Insert Heading 2', title: 'Heading 2' },
-    icon: <span style={{ fontSize: '14px', fontWeight: 'bold' }}>H2</span>,
-    execute: () => insertHeading(2),
+    icon: <HeadingButton level={2} />,
   };
 
   const heading3Command: ICommand = {
     name: 'heading3',
     keyCommand: 'heading3',
     buttonProps: { 'aria-label': 'Insert Heading 3', title: 'Heading 3' },
-    icon: <span style={{ fontSize: '12px', fontWeight: 'bold' }}>H3</span>,
-    execute: () => insertHeading(3),
+    icon: <HeadingButton level={3} />,
   };
 
   const heading4Command: ICommand = {
     name: 'heading4',
     keyCommand: 'heading4',
     buttonProps: { 'aria-label': 'Insert Heading 4', title: 'Heading 4' },
-    icon: <span style={{ fontSize: '11px', fontWeight: 'bold' }}>H4</span>,
-    execute: () => insertHeading(4),
+    icon: <HeadingButton level={4} />,
   };
 
   const editorCommands = [
