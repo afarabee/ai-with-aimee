@@ -229,7 +229,7 @@ const Blog = () => {
                         {/* Read Link */}
                         <a
                           href={`/blog/${post.slug}`}
-                          className="inline-flex items-center gap-2 font-montserrat font-bold text-sm neon-text-pink hover:neon-text-cyan transition-all duration-300 group-hover:gap-3"
+                          className="inline-flex items-center gap-2 font-montserrat font-bold text-sm neon-text-yellow hover:neon-text-blue transition-all duration-300 group-hover:gap-3"
                         >
                           Read →
                         </a>
