@@ -136,11 +136,11 @@ const BlogPost = () => {
           
           {/* Date with Icon */}
           <div className="flex items-center justify-center gap-2 text-sm animate-fade-in" style={{
-          color: 'hsl(var(--color-cyan) / 0.8)',
-          textShadow: '0 0 8px hsl(var(--color-cyan) / 0.4)',
+          color: 'hsl(var(--color-pink))',
+          textShadow: '0 0 10px hsl(var(--color-pink) / 0.5)',
           animationDelay: '0.6s'
         }}>
-            <Calendar size={16} />
+            <Calendar size={16} style={{ color: 'hsl(var(--color-pink))' }} />
             <span>
               {new Date(post.date_published).toLocaleDateString('en-US', {
               month: 'long',
