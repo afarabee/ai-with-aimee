@@ -6,7 +6,7 @@ import { z } from 'zod';
 import MDEditor, { commands, ICommand } from '@uiw/react-md-editor';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw, Maximize2, Minimize2 } from 'lucide-react';
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import ProjectPreview from '@/components/admin/ProjectPreview';
 import ImageUploadModal from '@/components/admin/ImageUploadModal';
@@ -69,6 +69,7 @@ export default function ProjectEditor() {
   const [showNavigateAwayDialog, setShowNavigateAwayDialog] = useState(false);
   const [initialFormData, setInitialFormData] = useState<ProjectFormData | null>(null);
   const [initialBody, setInitialBody] = useState('');
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -266,10 +267,31 @@ export default function ProjectEditor() {
 
   if (loading) return <div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>;
 
+  const toggleFullScreen = () => {
+    setIsFullScreen(!isFullScreen);
+    if (!isFullScreen) {
+      setViewMode('edit');
+    } else {
+      setViewMode('split');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      <div className="border-b border-border bg-card"><div className="max-w-[1800px] mx-auto px-6 py-4"><div className="flex items-center justify-between"><div className="flex items-center gap-4"><Button variant="ghost" size="sm" onClick={handleBackClick}><ArrowLeft className="w-4 h-4 mr-2" />Back</Button><h1 className="text-2xl font-bold">{projectId ? 'Edit Project' : 'New Project'}</h1></div><div className="flex gap-2"><Button variant={viewMode === 'edit' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('edit')}>Edit</Button><Button variant={viewMode === 'split' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('split')}>Split</Button><Button variant={viewMode === 'preview' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('preview')}><Eye className="w-4 h-4 mr-2" />Preview</Button></div></div></div></div>
-      <div className="max-w-[1800px] mx-auto p-6"><div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {!isFullScreen && (
+        <div className="border-b border-border bg-card"><div className="max-w-[1800px] mx-auto px-6 py-4"><div className="flex items-center justify-between"><div className="flex items-center gap-4"><Button variant="ghost" size="sm" onClick={handleBackClick}><ArrowLeft className="w-4 h-4 mr-2" />Back</Button><h1 className="text-2xl font-bold">{projectId ? 'Edit Project' : 'New Project'}</h1></div><div className="flex gap-2"><Button variant={viewMode === 'edit' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('edit')}>Edit</Button><Button variant={viewMode === 'split' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('split')}>Split</Button><Button variant={viewMode === 'preview' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('preview')}><Eye className="w-4 h-4 mr-2" />Preview</Button><Button variant="outline" size="sm" onClick={toggleFullScreen} title="Focus mode"><Maximize2 className="w-4 h-4" /></Button></div></div></div></div>
+      )}
+      {isFullScreen && (
+        <div className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-card/95 backdrop-blur-sm">
+          <div className="px-6 py-3 flex items-center justify-between">
+            <h1 className="text-xl font-bold">{projectId ? 'Edit Project' : 'New Project'} - Focus Mode</h1>
+            <Button variant="outline" size="sm" onClick={toggleFullScreen} title="Exit focus mode">
+              <Minimize2 className="w-4 h-4 mr-2" />Exit Focus Mode
+            </Button>
+          </div>
+        </div>
+      )}
+      <div className={isFullScreen ? "pt-16" : ""}><div className={isFullScreen ? "max-w-5xl mx-auto p-6" : "max-w-[1800px] mx-auto p-6"}><div className={isFullScreen ? "grid grid-cols-1 gap-6" : "grid grid-cols-1 lg:grid-cols-2 gap-6"}>
         {(viewMode === 'edit' || viewMode === 'split') && (
           <div className="space-y-6"><div className="space-y-6">
             <div><Label>Title *</Label><Input {...register('project_title')} />{errors.project_title && <p className="text-sm text-destructive mt-1">{errors.project_title.message}</p>}</div>
@@ -309,7 +331,7 @@ export default function ProjectEditor() {
             </div></div></div>
         )}
         {(viewMode === 'split' || viewMode === 'preview') && <div className="lg:sticky lg:top-6 h-[calc(100vh-120px)]"><div className="border rounded-lg overflow-y-auto preview-scrollbar h-full"><EditableTableWrapper body={body} onBodyUpdate={setBody}><ProjectPreview {...previewData} /></EditableTableWrapper></div></div>}
-      </div></div>
+      </div></div></div>
       <ImageUploadModal open={imageModalOpen} onClose={() => setImageModalOpen(false)} onInsert={(url, alt) => { setBody(prev => `${prev}\n\n![${alt}](${url})\n\n`); setImageModalOpen(false); }} />
       <AssetPicker open={isAssetPickerOpen} onClose={() => setIsAssetPickerOpen(false)} onSelect={(url) => { setValue('thumbnail', url); setIsAssetPickerOpen(false); }} />
       <AlertDialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Archive Project</AlertDialogTitle><AlertDialogDescription>This will archive the project and hide it from public view. You can restore it later by changing its status back to Active.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={archiveProject} className="bg-amber-500 hover:bg-amber-600">Archive</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
