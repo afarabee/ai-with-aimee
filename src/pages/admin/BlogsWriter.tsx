@@ -57,6 +57,10 @@ const alignCenter: ICommand = { name: 'alignCenter', keyCommand: 'alignCenter', 
 const alignRight: ICommand = { name: 'alignRight', keyCommand: 'alignRight', buttonProps: { 'aria-label': 'Align right', title: 'Align right' }, icon: <AlignRight size={14} />, execute: (state, api) => api.replaceSelection(`<div style="text-align: right;">${state.selectedText || 'text'}</div>`) };
 const alignJustify: ICommand = { name: 'alignJustify', keyCommand: 'alignJustify', buttonProps: { 'aria-label': 'Justify', title: 'Justify text' }, icon: <AlignJustify size={14} />, execute: (state, api) => api.replaceSelection(`<div style="text-align: justify;">${state.selectedText || 'text'}</div>`) };
 const underline: ICommand = { name: 'underline', keyCommand: 'underline', buttonProps: { 'aria-label': 'Underline text', title: 'Underline text' }, icon: <Underline size={14} />, execute: (state, api) => api.replaceSelection(`<u>${state.selectedText || 'text'}</u>`) };
+const heading1: ICommand = { name: 'heading1', keyCommand: 'heading1', buttonProps: { 'aria-label': 'Insert Heading 1', title: 'Heading 1' }, icon: <span style={{ fontSize: '16px', fontWeight: 'bold' }}>H1</span>, execute: (state, api) => api.replaceSelection(state.selectedText ? `# ${state.selectedText}` : '# Heading 1') };
+const heading2: ICommand = { name: 'heading2', keyCommand: 'heading2', buttonProps: { 'aria-label': 'Insert Heading 2', title: 'Heading 2' }, icon: <span style={{ fontSize: '14px', fontWeight: 'bold' }}>H2</span>, execute: (state, api) => api.replaceSelection(state.selectedText ? `## ${state.selectedText}` : '## Heading 2') };
+const heading3: ICommand = { name: 'heading3', keyCommand: 'heading3', buttonProps: { 'aria-label': 'Insert Heading 3', title: 'Heading 3' }, icon: <span style={{ fontSize: '12px', fontWeight: 'bold' }}>H3</span>, execute: (state, api) => api.replaceSelection(state.selectedText ? `### ${state.selectedText}` : '### Heading 3') };
+const heading4: ICommand = { name: 'heading4', keyCommand: 'heading4', buttonProps: { 'aria-label': 'Insert Heading 4', title: 'Heading 4' }, icon: <span style={{ fontSize: '11px', fontWeight: 'bold' }}>H4</span>, execute: (state, api) => api.replaceSelection(state.selectedText ? `#### ${state.selectedText}` : '#### Heading 4') };
 
 export default function BlogsWriter() {
   const [searchParams] = useSearchParams();
@@ -218,50 +222,6 @@ export default function BlogsWriter() {
   const textAlignGroup = commands.group([alignLeft, alignCenter, alignRight, alignJustify], { name: 'textAlign', groupName: 'textAlign', buttonProps: { 'aria-label': 'Text alignment', title: 'Text alignment' }, icon: <AlignLeft size={14} /> });
 
   const tableCommand: ICommand = { name: 'table', keyCommand: 'table', buttonProps: { 'aria-label': 'Insert table', title: 'Insert table' }, icon: (<TableBuilder onInsert={(markdown) => { setBody((prev) => prev + '\n\n' + markdown + '\n\n'); }} />) };
-
-  const heading1: ICommand = {
-    name: 'heading1',
-    keyCommand: 'heading1',
-    buttonProps: { 'aria-label': 'Insert Heading 1', title: 'Heading 1' },
-    icon: <span style={{ fontSize: '16px', fontWeight: 'bold' }}>H1</span>,
-    execute: (state, api) => {
-      const newText = state.selectedText ? `# ${state.selectedText}` : '# Heading 1';
-      api.replaceSelection(newText);
-    },
-  };
-
-  const heading2: ICommand = {
-    name: 'heading2',
-    keyCommand: 'heading2',
-    buttonProps: { 'aria-label': 'Insert Heading 2', title: 'Heading 2' },
-    icon: <span style={{ fontSize: '14px', fontWeight: 'bold' }}>H2</span>,
-    execute: (state, api) => {
-      const newText = state.selectedText ? `## ${state.selectedText}` : '## Heading 2';
-      api.replaceSelection(newText);
-    },
-  };
-
-  const heading3: ICommand = {
-    name: 'heading3',
-    keyCommand: 'heading3',
-    buttonProps: { 'aria-label': 'Insert Heading 3', title: 'Heading 3' },
-    icon: <span style={{ fontSize: '12px', fontWeight: 'bold' }}>H3</span>,
-    execute: (state, api) => {
-      const newText = state.selectedText ? `### ${state.selectedText}` : '### Heading 3';
-      api.replaceSelection(newText);
-    },
-  };
-
-  const heading4: ICommand = {
-    name: 'heading4',
-    keyCommand: 'heading4',
-    buttonProps: { 'aria-label': 'Insert Heading 4', title: 'Heading 4' },
-    icon: <span style={{ fontSize: '11px', fontWeight: 'bold' }}>H4</span>,
-    execute: (state, api) => {
-      const newText = state.selectedText ? `#### ${state.selectedText}` : '#### Heading 4';
-      api.replaceSelection(newText);
-    },
-  };
 
   const headingGroup = commands.group([heading1, heading2, heading3, heading4], { name: 'headings', groupName: 'headings', buttonProps: { 'aria-label': 'Insert heading', title: 'Insert heading (H1-H4)' }, icon: <span style={{ fontWeight: 'bold' }}>H</span> });
 
