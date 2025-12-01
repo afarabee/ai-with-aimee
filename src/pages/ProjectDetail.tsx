@@ -146,8 +146,8 @@ const ProjectDetail = () => {
             <p 
               className="text-xl md:text-2xl font-josefin italic mb-6"
               style={{
-                color: 'hsl(var(--color-light-text))',
-                textShadow: '0 0 10px hsl(var(--color-cyan) / 0.3)'
+                color: 'hsl(var(--color-yellow))',
+                textShadow: '0 0 10px hsl(var(--color-yellow) / 0.5)'
               }}
             >
               {project.subtitle}
