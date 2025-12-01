@@ -231,11 +231,45 @@ export default function BlogsWriter() {
             <div><Label htmlFor="title">Title *</Label><Input id="title" {...register('title')} className="mt-1" />{errors.title && <p className="text-sm text-destructive mt-1">{errors.title.message}</p>}</div>
             <div><Label htmlFor="subtitle">Subtitle</Label><Input id="subtitle" {...register('subtitle')} className="mt-1" /></div>
             <div><Label htmlFor="excerpt">Excerpt *</Label><Textarea id="excerpt" {...register('excerpt')} className="mt-1" rows={3} />{errors.excerpt && <p className="text-sm text-destructive mt-1">{errors.excerpt.message}</p>}</div>
-            <div><Label>Content *</Label><div className="mt-2 relative"><EditableTableWrapper body={body} onBodyUpdate={setBody}><MDEditor value={body} onChange={(val) => setBody(val || '')} height={400} preview="edit" commands={editorCommands} /></EditableTableWrapper>{showEmojiPicker && (<div className="absolute z-50 top-12 right-0"><EmojiPicker onEmojiClick={(emojiData: EmojiClickData) => { setBody(prev => prev + emojiData.emoji); setShowEmojiPicker(false); }} theme={Theme.DARK} /></div>)}</div></div>
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <Label>Content *</Label>
+                <Button type="button" variant="outline" size="sm" onClick={() => setImageModalOpen(true)}>
+                  <Image className="w-4 h-4 mr-2" />Insert Image
+                </Button>
+              </div>
+              <div className="relative">
+                <EditableTableWrapper body={body} onBodyUpdate={setBody}>
+                  <MDEditor value={body} onChange={(val) => setBody(val || '')} height={400} preview="edit" commands={editorCommands} />
+                </EditableTableWrapper>
+                {showEmojiPicker && (
+                  <div className="absolute z-50 top-12 right-0">
+                    <EmojiPicker onEmojiClick={(emojiData: EmojiClickData) => { setBody(prev => prev + emojiData.emoji); setShowEmojiPicker(false); }} theme={Theme.DARK} />
+                  </div>
+                )}
+              </div>
+            </div>
             <div><Label htmlFor="author">Author</Label><Input id="author" {...register('author')} className="mt-1" /></div>
             <div><Label htmlFor="slug">Slug *</Label><Input id="slug" {...register('slug')} className="mt-1" />{errors.slug && <p className="text-sm text-destructive mt-1">{errors.slug.message}</p>}</div>
             <div><Label htmlFor="tags">Tags (comma-separated)</Label><Input id="tags" {...register('tags')} className="mt-1" placeholder="AI, Technology, Tutorial" /></div>
-            <div><Label htmlFor="banner_image">Banner Image URL</Label><div className="flex gap-2 mt-1"><Input id="banner_image" {...register('banner_image')} /><Button type="button" variant="outline" size="icon" onClick={() => setImageModalOpen(true)}><Image className="h-4 w-4" /></Button><Button type="button" variant="outline" size="icon" onClick={() => setIsAssetPickerOpen(true)}><Image className="h-4 w-4" /></Button></div></div>
+            <div>
+              <Label htmlFor="banner_image">Banner Image URL</Label>
+              <div className="flex gap-2 mt-1">
+                <Input id="banner_image" {...register('banner_image')} />
+                <Button type="button" variant="outline" onClick={() => setIsAssetPickerOpen(true)}>
+                  Library
+                </Button>
+              </div>
+              {formData.banner_image && (
+                <div className="mt-2">
+                  <img src={formData.banner_image} alt="Banner preview" className="w-full h-48 object-cover rounded-md border border-border" />
+                </div>
+              )}
+              <ImageUploadHelper 
+                onBannerInsert={(url) => setValue('banner_image', url)} 
+                onBodyInsert={(markdown) => setBody(prev => `${prev}\n\n${markdown}\n\n`)} 
+              />
+            </div>
             <div className="grid grid-cols-2 gap-4"><div><Label>Status</Label><Badge variant={formData.status === 'draft' ? 'outline' : 'default'} className="mt-2">{formData.status?.toUpperCase()}</Badge></div><div><Label htmlFor="date_published">Publish Date</Label><Input id="date_published" type="date" {...register('date_published')} className="mt-1" /></div></div>
           </div>
           <div className="flex gap-2">
@@ -258,7 +292,7 @@ export default function BlogsWriter() {
           <div className="h-[calc(100vh-200px)] overflow-y-auto"><BlogPreview {...previewData} /></div>
         )}
       </div></div>
-      <ImageUploadModal open={imageModalOpen} onClose={() => setImageModalOpen(false)} onInsert={(url) => { setValue('banner_image', url); setImageModalOpen(false); }} />
+      <ImageUploadModal open={imageModalOpen} onClose={() => setImageModalOpen(false)} onInsert={(url, alt) => { setBody(prev => `${prev}\n\n![${alt}](${url})\n\n`); setImageModalOpen(false); }} />
       <AssetPicker open={isAssetPickerOpen} onClose={() => setIsAssetPickerOpen(false)} onSelect={(url) => { setValue('banner_image', url); setIsAssetPickerOpen(false); }} />
       <AlertDialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Archive Blog?</AlertDialogTitle><AlertDialogDescription>This will change the status to Archived.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={archiveBlog}>Archive</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
       <AlertDialog open={clearDialogOpen} onOpenChange={setClearDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Clear form?</AlertDialogTitle><AlertDialogDescription>All unsaved changes will be lost.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={handleClearForm}>Clear</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
