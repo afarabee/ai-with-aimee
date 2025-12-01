@@ -4,18 +4,16 @@ import remarkGfm from 'remark-gfm';
 import rehypeSanitize from 'rehype-sanitize';
 export const parseMarkdownContent = (markdown: string): React.ReactNode => {
   return <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSanitize]} components={{
+    // Heading 1
+    h1: ({ children }) => <h1 className="blog-h1">{children}</h1>,
     // Heading 2
-    h2: ({
-      children
-    }) => <h2 className="blog-h2">{children}</h2>,
+    h2: ({ children }) => <h2 className="blog-h2">{children}</h2>,
     // Heading 3
-    h3: ({
-      children
-    }) => <h3 className="blog-h3">{children}</h3>,
+    h3: ({ children }) => <h3 className="blog-h3">{children}</h3>,
+    // Heading 4
+    h4: ({ children }) => <h4 className="blog-h4">{children}</h4>,
     // Paragraphs
-    p: ({
-      children
-    }) => <p className="mb-4 leading-relaxed" style={{
+    p: ({ children }) => <p className="mb-4 leading-relaxed" style={{
       color: 'hsl(var(--color-light-text))'
     }}>
             {children}
