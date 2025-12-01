@@ -64,8 +64,6 @@ const App = () => {
             <Route path="blog-editor" element={<BlogEditor />} />
             <Route path="blog-editor/:slug" element={<BlogEditor />} />
               <Route path="blogs" element={<BlogsHub />} />
-              <Route path="blogs/new" element={<BlogsWriter />} />
-              <Route path="blogs/edit" element={<BlogsWriter />} />
               <Route path="project-dashboard" element={<ProjectDashboard />} />
               <Route path="project-editor" element={<ProjectEditor />} />
                 <Route path="asset-gallery" element={<AssetGallery />} />
@@ -75,6 +73,9 @@ const App = () => {
               <Route path="newsletter-composer" element={<NewsletterComposer />} />
               <Route path="newsletter-logs" element={<NewsletterLogs />} />
             </Route>
+            {/* Standalone Blog Writer - Full-screen editor without sidebar */}
+            <Route path="/admin/blogs/new" element={<BlogsWriter />} />
+            <Route path="/admin/blogs/edit" element={<BlogsWriter />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
