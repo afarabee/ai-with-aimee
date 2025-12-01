@@ -219,7 +219,51 @@ export default function BlogsWriter() {
 
   const tableCommand: ICommand = { name: 'table', keyCommand: 'table', buttonProps: { 'aria-label': 'Insert table', title: 'Insert table' }, icon: (<TableBuilder onInsert={(markdown) => { setBody((prev) => prev + '\n\n' + markdown + '\n\n'); }} />) };
 
-  const headingGroup = commands.group([commands.title1, commands.title2, commands.title3, commands.title4], { name: 'headings', groupName: 'headings', buttonProps: { 'aria-label': 'Insert heading', title: 'Insert heading (H1-H4)' }, icon: <span style={{ fontWeight: 'bold' }}>H</span> });
+  const heading1: ICommand = {
+    name: 'heading1',
+    keyCommand: 'heading1',
+    buttonProps: { 'aria-label': 'Insert Heading 1', title: 'Heading 1' },
+    icon: <span style={{ fontSize: '16px', fontWeight: 'bold' }}>H1</span>,
+    execute: (state, api) => {
+      const newText = state.selectedText ? `# ${state.selectedText}` : '# Heading 1';
+      api.replaceSelection(newText);
+    },
+  };
+
+  const heading2: ICommand = {
+    name: 'heading2',
+    keyCommand: 'heading2',
+    buttonProps: { 'aria-label': 'Insert Heading 2', title: 'Heading 2' },
+    icon: <span style={{ fontSize: '14px', fontWeight: 'bold' }}>H2</span>,
+    execute: (state, api) => {
+      const newText = state.selectedText ? `## ${state.selectedText}` : '## Heading 2';
+      api.replaceSelection(newText);
+    },
+  };
+
+  const heading3: ICommand = {
+    name: 'heading3',
+    keyCommand: 'heading3',
+    buttonProps: { 'aria-label': 'Insert Heading 3', title: 'Heading 3' },
+    icon: <span style={{ fontSize: '12px', fontWeight: 'bold' }}>H3</span>,
+    execute: (state, api) => {
+      const newText = state.selectedText ? `### ${state.selectedText}` : '### Heading 3';
+      api.replaceSelection(newText);
+    },
+  };
+
+  const heading4: ICommand = {
+    name: 'heading4',
+    keyCommand: 'heading4',
+    buttonProps: { 'aria-label': 'Insert Heading 4', title: 'Heading 4' },
+    icon: <span style={{ fontSize: '11px', fontWeight: 'bold' }}>H4</span>,
+    execute: (state, api) => {
+      const newText = state.selectedText ? `#### ${state.selectedText}` : '#### Heading 4';
+      api.replaceSelection(newText);
+    },
+  };
+
+  const headingGroup = commands.group([heading1, heading2, heading3, heading4], { name: 'headings', groupName: 'headings', buttonProps: { 'aria-label': 'Insert heading', title: 'Insert heading (H1-H4)' }, icon: <span style={{ fontWeight: 'bold' }}>H</span> });
 
   const editorCommands = [commands.bold, commands.italic, underline, commands.strikethrough, commands.divider, headingGroup, commands.divider, fontSizeGroup, textColorGroup, textAlignGroup, commands.divider, commands.link, commands.quote, commands.code, commands.divider, commands.unorderedListCommand, commands.orderedListCommand, commands.divider, tableCommand, commands.divider, emojiCommand];
 
