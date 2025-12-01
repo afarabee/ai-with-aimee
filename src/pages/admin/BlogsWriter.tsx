@@ -249,6 +249,10 @@ export default function BlogsWriter() {
                 )}
               </div>
             </div>
+            <ImageUploadHelper 
+              onBannerInsert={(url) => setValue('banner_image', url)} 
+              onBodyInsert={(markdown) => setBody(prev => `${prev}\n\n${markdown}\n\n`)} 
+            />
             <div><Label htmlFor="author">Author</Label><Input id="author" {...register('author')} className="mt-1" /></div>
             <div><Label htmlFor="slug">Slug *</Label><Input id="slug" {...register('slug')} className="mt-1" />{errors.slug && <p className="text-sm text-destructive mt-1">{errors.slug.message}</p>}</div>
             <div><Label htmlFor="tags">Tags (comma-separated)</Label><Input id="tags" {...register('tags')} className="mt-1" placeholder="AI, Technology, Tutorial" /></div>
@@ -265,10 +269,6 @@ export default function BlogsWriter() {
                   <img src={formData.banner_image} alt="Banner preview" className="w-full h-48 object-cover rounded-md border border-border" />
                 </div>
               )}
-              <ImageUploadHelper 
-                onBannerInsert={(url) => setValue('banner_image', url)} 
-                onBodyInsert={(markdown) => setBody(prev => `${prev}\n\n${markdown}\n\n`)} 
-              />
             </div>
             <div className="grid grid-cols-2 gap-4"><div><Label>Status</Label><Badge variant={formData.status === 'draft' ? 'outline' : 'default'} className="mt-2">{formData.status?.toUpperCase()}</Badge></div><div><Label htmlFor="date_published">Publish Date</Label><Input id="date_published" type="date" {...register('date_published')} className="mt-1" /></div></div>
           </div>
