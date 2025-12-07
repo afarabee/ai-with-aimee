@@ -6,6 +6,7 @@ import { z } from 'zod';
 import MDEditor, { commands, ICommand } from '@uiw/react-md-editor';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { slugify } from '@/utils/slugify';
 import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw, Maximize2, Minimize2 } from 'lucide-react';
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import PasswordGate from '@/components/admin/PasswordGate';
@@ -77,7 +78,7 @@ export default function BlogsWriter() {
   const [initialBody, setInitialBody] = useState('');
   const [isFullScreen, setIsFullScreen] = useState(false);
 
-  const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm<BlogFormData>({
+  const { register, handleSubmit, setValue, watch, reset, getValues, formState: { errors } } = useForm<BlogFormData>({
     resolver: zodResolver(blogSchema),
     defaultValues: { status: 'draft', author: 'Aimee Farabee', date_published: new Date().toISOString().split('T')[0] },
   });
@@ -115,31 +116,35 @@ export default function BlogsWriter() {
   }, [isDirty]);
 
   const saveDraft = async () => {
-    const data = watch();
-    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'draft', date_published: data.date_published };
+    const data = getValues();
+    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug || slugify(data.title), excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'draft', date_published: data.date_published };
     if (blogId) { 
-      await supabase.from('blogs').update(payload).eq('id', blogId); 
+      const { error } = await supabase.from('blogs').update(payload).eq('id', blogId); 
+      if (error) { toast.error('Failed to save: ' + error.message); return; }
       toast.success('Draft saved');
     } else { 
-      const { data: newBlog } = await supabase.from('blogs').insert([payload]).select().single(); 
+      const { data: newBlog, error } = await supabase.from('blogs').insert([payload]).select().single(); 
+      if (error) { toast.error('Failed to save: ' + error.message); return; }
       if (newBlog) { 
         setBlogId(newBlog.id); 
         navigate(`/admin/blogs/edit?id=${newBlog.id}`, { replace: true }); 
         toast.success('Draft saved');
       } 
     }
-    setInitialFormData(watch());
+    setInitialFormData(getValues());
     setInitialBody(body);
   };
 
   const publishBlog = async () => {
-    const data = watch();
-    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'published', date_published: new Date().toISOString() };
+    const data = getValues();
+    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug || slugify(data.title), excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'published', date_published: new Date().toISOString() };
     if (blogId) { 
-      await supabase.from('blogs').update(payload).eq('id', blogId); 
+      const { error } = await supabase.from('blogs').update(payload).eq('id', blogId); 
+      if (error) { toast.error('Failed to publish: ' + error.message); return; }
       toast.success('Blog published!');
     } else { 
-      const { data: newBlog } = await supabase.from('blogs').insert([payload]).select().single(); 
+      const { data: newBlog, error } = await supabase.from('blogs').insert([payload]).select().single(); 
+      if (error) { toast.error('Failed to publish: ' + error.message); return; }
       if (newBlog) { 
         setBlogId(newBlog.id); 
         navigate(`/admin/blogs/edit?id=${newBlog.id}`, { replace: true }); 
@@ -147,51 +152,55 @@ export default function BlogsWriter() {
       } 
     }
     setValue('status', 'published');
-    setInitialFormData(watch());
+    setInitialFormData(getValues());
     setInitialBody(body);
   };
 
   const updatePublished = async () => {
     if (!blogId) return;
-    const data = watch();
-    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'published', date_published: data.date_published };
-    await supabase.from('blogs').update(payload).eq('id', blogId); 
+    const data = getValues();
+    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug || slugify(data.title), excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'published', date_published: data.date_published };
+    const { error } = await supabase.from('blogs').update(payload).eq('id', blogId); 
+    if (error) { toast.error('Failed to update: ' + error.message); return; }
     toast.success('Published blog updated!');
-    setInitialFormData(watch());
+    setInitialFormData(getValues());
     setInitialBody(body);
   };
 
   const unpublishBlog = async () => {
     if (!blogId) return;
-    const data = watch();
-    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'draft', date_published: data.date_published };
-    await supabase.from('blogs').update(payload).eq('id', blogId); 
+    const data = getValues();
+    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug || slugify(data.title), excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'draft', date_published: data.date_published };
+    const { error } = await supabase.from('blogs').update(payload).eq('id', blogId); 
+    if (error) { toast.error('Failed to unpublish: ' + error.message); return; }
     toast.success('Blog unpublished');
     setValue('status', 'draft');
-    setInitialFormData(watch());
+    setInitialFormData(getValues());
     setInitialBody(body);
   };
 
   const archiveBlog = async () => {
     if (!blogId) return;
-    const data = watch();
-    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'archived', date_published: data.date_published };
-    await supabase.from('blogs').update(payload).eq('id', blogId); 
+    const data = getValues();
+    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug || slugify(data.title), excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'archived', date_published: data.date_published };
+    const { error } = await supabase.from('blogs').update(payload).eq('id', blogId); 
+    if (error) { toast.error('Failed to archive: ' + error.message); return; }
     toast.success('Blog archived');
     setValue('status', 'archived');
     setArchiveDialogOpen(false);
-    setInitialFormData(watch());
+    setInitialFormData(getValues());
     setInitialBody(body);
   };
 
   const restoreBlog = async () => {
     if (!blogId) return;
-    const data = watch();
-    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug, excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'published', date_published: new Date().toISOString() };
-    await supabase.from('blogs').update(payload).eq('id', blogId); 
+    const data = getValues();
+    const payload = { title: data.title, subtitle: data.subtitle || null, author: data.author, slug: data.slug || slugify(data.title), excerpt: data.excerpt, body, tags: data.tags || null, banner_image: data.banner_image || null, status: 'published', date_published: new Date().toISOString() };
+    const { error } = await supabase.from('blogs').update(payload).eq('id', blogId); 
+    if (error) { toast.error('Failed to restore: ' + error.message); return; }
     toast.success('Blog restored to Published');
     setValue('status', 'published');
-    setInitialFormData(watch());
+    setInitialFormData(getValues());
     setInitialBody(body);
   };
 
