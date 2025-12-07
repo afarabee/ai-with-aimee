@@ -13,7 +13,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
+
 
 const adminModules = [
   {
@@ -92,9 +92,9 @@ export default function AdminSidebar() {
     return path !== '/admin' && location.pathname.startsWith(path);
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate('/admin/login');
+  const handleLogout = () => {
+    sessionStorage.removeItem('admin_authenticated');
+    navigate('/admin');
     toast.info('Logged out successfully', {
       style: {
         background: 'rgba(0, 255, 255, 0.1)',

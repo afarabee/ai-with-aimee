@@ -29,7 +29,7 @@ import PromptEditor from "./pages/admin/PromptEditor";
 import NewsletterDashboard from "./pages/admin/NewsletterDashboard";
 import NewsletterComposer from "./pages/admin/NewsletterComposer";
 import NewsletterLogs from "./pages/admin/NewsletterLogs";
-import AdminAuth from "./pages/AdminAuth";
+
 
 const queryClient = new QueryClient();
 
@@ -57,8 +57,6 @@ const App = () => {
             <Route path="/blog/agents-arent-the-answer" element={<Navigate to="/blog/agents-arent-always-the-answer" replace />} />
             {/* Dynamic blog post handler - renders all posts via BlogPost.tsx */}
             <Route path="/blog/:slug" element={<BlogPost />} />
-            {/* Admin login route */}
-            <Route path="/admin/login" element={<AdminAuth />} />
             {/* Admin routes with nested layout */}
             <Route path="/admin" element={<AdminLayout><Outlet /></AdminLayout>}>
             <Route index element={<AdminHome />} />
