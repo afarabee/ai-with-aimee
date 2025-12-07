@@ -53,13 +53,6 @@ export default function ProjectPreview({
             </p>
           )}
 
-          {/* Excerpt */}
-          {excerpt && (
-            <p className="text-lg mb-4 italic" style={{ color: 'hsl(var(--foreground) / 0.8)' }}>
-              {excerpt}
-            </p>
-          )}
-
           {/* Metadata */}
           <div className="flex flex-wrap gap-4 items-center text-sm" style={{ color: 'hsl(var(--foreground) / 0.7)' }}>
             <div className="flex items-center gap-2">
