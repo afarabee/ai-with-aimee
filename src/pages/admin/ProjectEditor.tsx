@@ -20,6 +20,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { slugify } from '@/utils/slugify';
 const projectSchema = z.object({
   project_title: z.string().min(1, 'Title required').max(200),
   subtitle: z.string().min(1, 'Subtitle required').max(200),
@@ -116,7 +117,8 @@ export default function ProjectEditor() {
   const saveDraft = async () => {
     const data = watch();
     const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
-    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Draft', display_order: data.display_order, date_published: data.date_published };
+    const slug = slugify(data.project_title);
+    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Draft', display_order: data.display_order, date_published: data.date_published, slug };
     if (projectId) { 
       await supabase.from('projects').update(payload).eq('id', projectId); 
       toast.success('Draft saved');
@@ -136,7 +138,8 @@ export default function ProjectEditor() {
   const publishProject = async () => {
     const data = watch();
     const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
-    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Active', display_order: data.display_order, date_published: new Date().toISOString() };
+    const slug = slugify(data.project_title);
+    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Active', display_order: data.display_order, date_published: new Date().toISOString(), slug };
     if (projectId) { 
       await supabase.from('projects').update(payload).eq('id', projectId); 
       toast.success('Project published!');
@@ -158,7 +161,8 @@ export default function ProjectEditor() {
     if (!projectId) return;
     const data = watch();
     const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
-    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Active', display_order: data.display_order, date_published: data.date_published };
+    const slug = slugify(data.project_title);
+    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Active', display_order: data.display_order, date_published: data.date_published, slug };
     await supabase.from('projects').update(payload).eq('id', projectId); 
     toast.success('Published project updated!');
     setInitialFormData(watch());
@@ -169,7 +173,8 @@ export default function ProjectEditor() {
     if (!projectId) return;
     const data = watch();
     const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
-    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Draft', display_order: data.display_order, date_published: data.date_published };
+    const slug = slugify(data.project_title);
+    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Draft', display_order: data.display_order, date_published: data.date_published, slug };
     await supabase.from('projects').update(payload).eq('id', projectId); 
     toast.success('Project unpublished');
     setValue('status', 'Draft');
@@ -181,7 +186,8 @@ export default function ProjectEditor() {
     if (!projectId) return;
     const data = watch();
     const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
-    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Archived', display_order: data.display_order, date_published: data.date_published };
+    const slug = slugify(data.project_title);
+    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Archived', display_order: data.display_order, date_published: data.date_published, slug };
     await supabase.from('projects').update(payload).eq('id', projectId); 
     toast.success('Project archived');
     setValue('status', 'Archived');
@@ -194,7 +200,8 @@ export default function ProjectEditor() {
     if (!projectId) return;
     const data = watch();
     const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
-    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Active', display_order: data.display_order, date_published: new Date().toISOString() };
+    const slug = slugify(data.project_title);
+    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Active', display_order: data.display_order, date_published: new Date().toISOString(), slug };
     await supabase.from('projects').update(payload).eq('id', projectId); 
     toast.success('Project restored to Active');
     setValue('status', 'Active');
