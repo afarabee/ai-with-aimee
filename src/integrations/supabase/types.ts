@@ -113,6 +113,7 @@ export type Database = {
           created_at: string
           date_published: string
           display_order: number
+          excerpt: string | null
           github_link: string | null
           id: string
           project_page_link: string | null
@@ -129,6 +130,7 @@ export type Database = {
           created_at?: string
           date_published?: string
           display_order?: number
+          excerpt?: string | null
           github_link?: string | null
           id?: string
           project_page_link?: string | null
@@ -145,6 +147,7 @@ export type Database = {
           created_at?: string
           date_published?: string
           display_order?: number
+          excerpt?: string | null
           github_link?: string | null
           id?: string
           project_page_link?: string | null

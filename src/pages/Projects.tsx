@@ -33,6 +33,7 @@ const Projects = () => {
   const projects = projectsData?.map(project => ({
     title: project.project_title,
     subtitle: project.subtitle,
+    excerpt: project.excerpt || '',
     body: project.body || '',
     thumbnail: project.thumbnail || undefined,
     tags: project.technologies || [],
@@ -135,9 +136,9 @@ const Projects = () => {
                         {project.subtitle}
                       </p>
 
-                      {/* Body excerpt */}
+                      {/* Excerpt */}
                       <div className="mb-6 font-ibm text-sm" style={{ color: '#e6e6e6', lineHeight: '1.6em' }}>
-                        <p>{project.body.slice(0, 200)}...</p>
+                        <p>{project.excerpt || project.body.slice(0, 200) + '...'}</p>
                       </div>
 
                       {/* Tags */}
@@ -206,9 +207,9 @@ const Projects = () => {
                       {project.subtitle}
                     </p>
 
-                    {/* Body excerpt */}
+                    {/* Excerpt */}
                     <div className="mb-6 font-ibm text-sm" style={{ color: '#e6e6e6', lineHeight: '1.6em' }}>
-                      <p>{project.body.slice(0, 200)}...</p>
+                      <p>{project.excerpt || project.body.slice(0, 200) + '...'}</p>
                     </div>
 
                     {/* Tags */}

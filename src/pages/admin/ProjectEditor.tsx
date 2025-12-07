@@ -24,6 +24,7 @@ import { slugify } from '@/utils/slugify';
 const projectSchema = z.object({
   project_title: z.string().min(1, 'Title required').max(200),
   subtitle: z.string().min(1, 'Subtitle required').max(200),
+  excerpt: z.string().max(500).optional().or(z.literal('')),
   body: z.string().min(1, 'Content required'),
   technologies: z.string().min(1, 'At least one technology required'),
   thumbnail: z.string().url().optional().or(z.literal('')),
@@ -76,7 +77,7 @@ export default function ProjectEditor() {
 
   const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
-    defaultValues: { status: 'Draft', display_order: 0, date_published: new Date().toISOString().split('T')[0] },
+    defaultValues: { status: 'Draft', display_order: 0, date_published: new Date().toISOString().split('T')[0], excerpt: '' },
   });
 
   const formData = watch();
@@ -87,7 +88,7 @@ export default function ProjectEditor() {
         setLoading(true);
         const { data, error } = await supabase.from('projects').select('*').eq('id', projectId).single();
         if (!error && data) {
-          const formData = { project_title: data.project_title, subtitle: data.subtitle, body: data.body, technologies: data.technologies.join(', '), thumbnail: data.thumbnail || '', github_link: data.github_link || '', project_page_link: data.project_page_link || '', status: data.status as any, display_order: data.display_order, date_published: new Date(data.date_published).toISOString().split('T')[0] };
+          const formData = { project_title: data.project_title, subtitle: data.subtitle, excerpt: data.excerpt || '', body: data.body, technologies: data.technologies.join(', '), thumbnail: data.thumbnail || '', github_link: data.github_link || '', project_page_link: data.project_page_link || '', status: data.status as any, display_order: data.display_order, date_published: new Date(data.date_published).toISOString().split('T')[0] };
           reset(formData);
           setBody(data.body);
           setInitialFormData(formData);
@@ -118,7 +119,7 @@ export default function ProjectEditor() {
     const data = watch();
     const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
     const slug = slugify(data.project_title);
-    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Draft', display_order: data.display_order, date_published: data.date_published, slug };
+    const payload = { project_title: data.project_title, subtitle: data.subtitle, excerpt: data.excerpt || '', body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Draft', display_order: data.display_order, date_published: data.date_published, slug };
     if (projectId) { 
       await supabase.from('projects').update(payload).eq('id', projectId); 
       toast.success('Draft saved');
@@ -139,7 +140,7 @@ export default function ProjectEditor() {
     const data = watch();
     const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
     const slug = slugify(data.project_title);
-    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Active', display_order: data.display_order, date_published: new Date().toISOString(), slug };
+    const payload = { project_title: data.project_title, subtitle: data.subtitle, excerpt: data.excerpt || '', body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Active', display_order: data.display_order, date_published: new Date().toISOString(), slug };
     if (projectId) { 
       await supabase.from('projects').update(payload).eq('id', projectId); 
       toast.success('Project published!');
@@ -162,7 +163,7 @@ export default function ProjectEditor() {
     const data = watch();
     const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
     const slug = slugify(data.project_title);
-    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Active', display_order: data.display_order, date_published: data.date_published, slug };
+    const payload = { project_title: data.project_title, subtitle: data.subtitle, excerpt: data.excerpt || '', body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Active', display_order: data.display_order, date_published: data.date_published, slug };
     await supabase.from('projects').update(payload).eq('id', projectId); 
     toast.success('Published project updated!');
     setInitialFormData(watch());
@@ -174,7 +175,7 @@ export default function ProjectEditor() {
     const data = watch();
     const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
     const slug = slugify(data.project_title);
-    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Draft', display_order: data.display_order, date_published: data.date_published, slug };
+    const payload = { project_title: data.project_title, subtitle: data.subtitle, excerpt: data.excerpt || '', body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Draft', display_order: data.display_order, date_published: data.date_published, slug };
     await supabase.from('projects').update(payload).eq('id', projectId); 
     toast.success('Project unpublished');
     setValue('status', 'Draft');
@@ -187,7 +188,7 @@ export default function ProjectEditor() {
     const data = watch();
     const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
     const slug = slugify(data.project_title);
-    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Archived', display_order: data.display_order, date_published: data.date_published, slug };
+    const payload = { project_title: data.project_title, subtitle: data.subtitle, excerpt: data.excerpt || '', body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Archived', display_order: data.display_order, date_published: data.date_published, slug };
     await supabase.from('projects').update(payload).eq('id', projectId); 
     toast.success('Project archived');
     setValue('status', 'Archived');
@@ -201,7 +202,7 @@ export default function ProjectEditor() {
     const data = watch();
     const techs = data.technologies.split(',').map(t => t.trim()).filter(Boolean);
     const slug = slugify(data.project_title);
-    const payload = { project_title: data.project_title, subtitle: data.subtitle, body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Active', display_order: data.display_order, date_published: new Date().toISOString(), slug };
+    const payload = { project_title: data.project_title, subtitle: data.subtitle, excerpt: data.excerpt || '', body, technologies: techs, thumbnail: data.thumbnail || null, github_link: data.github_link || null, project_page_link: data.project_page_link || null, status: 'Active', display_order: data.display_order, date_published: new Date().toISOString(), slug };
     await supabase.from('projects').update(payload).eq('id', projectId); 
     toast.success('Project restored to Active');
     setValue('status', 'Active');
@@ -226,7 +227,7 @@ export default function ProjectEditor() {
   };
 
   const handleClearForm = () => { 
-    reset({ project_title: '', subtitle: '', body: '', technologies: '', thumbnail: '', github_link: '', project_page_link: '', status: 'Draft', display_order: 0, date_published: new Date().toISOString().split('T')[0] }); 
+    reset({ project_title: '', subtitle: '', excerpt: '', body: '', technologies: '', thumbnail: '', github_link: '', project_page_link: '', status: 'Draft', display_order: 0, date_published: new Date().toISOString().split('T')[0] });
     setBody(''); 
     setProjectId(null); 
     setInitialFormData(null);
@@ -371,7 +372,7 @@ export default function ProjectEditor() {
     emojiCommand,
   ];
 
-  const previewData = useMemo(() => ({ title: formData.project_title || 'Untitled', subtitle: formData.subtitle || '', body, thumbnail: formData.thumbnail, technologies: formData.technologies ? formData.technologies.split(',').map(t => t.trim()).filter(Boolean) : [], githubLink: formData.github_link, projectPageLink: formData.project_page_link, publishDate: formData.date_published || new Date().toISOString(), status: formData.status }), [formData, body]);
+  const previewData = useMemo(() => ({ title: formData.project_title || 'Untitled', subtitle: formData.subtitle || '', excerpt: formData.excerpt || '', body, thumbnail: formData.thumbnail, technologies: formData.technologies ? formData.technologies.split(',').map(t => t.trim()).filter(Boolean) : [], githubLink: formData.github_link, projectPageLink: formData.project_page_link, publishDate: formData.date_published || new Date().toISOString(), status: formData.status }), [formData, body]);
 
   if (loading) return <div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>;
 
@@ -404,6 +405,7 @@ export default function ProjectEditor() {
           <div className="space-y-6"><div className="space-y-6">
             <div><Label>Title *</Label><Input {...register('project_title')} />{errors.project_title && <p className="text-sm text-destructive mt-1">{errors.project_title.message}</p>}</div>
             <div><Label>Subtitle *</Label><Input {...register('subtitle')} />{errors.subtitle && <p className="text-sm text-destructive mt-1">{errors.subtitle.message}</p>}</div>
+            <div><Label>Excerpt (shown on cards)</Label><Input {...register('excerpt')} placeholder="Short description for project cards (max 500 chars)" maxLength={500} />{errors.excerpt && <p className="text-sm text-destructive mt-1">{errors.excerpt.message}</p>}</div>
             <div><Label>Technologies *</Label><Input {...register('technologies')} placeholder="React, TypeScript" />{errors.technologies && <p className="text-sm text-destructive mt-1">{errors.technologies.message}</p>}</div>
             <div><Label>Thumbnail</Label><div className="flex gap-2"><Input {...register('thumbnail')} /><Button type="button" variant="outline" onClick={() => setIsAssetPickerOpen(true)}>Library</Button></div>{formData.thumbnail && <img src={formData.thumbnail} alt="Preview" className="w-full h-48 object-cover rounded-lg mt-2" />}<ImageUploadHelper onBannerInsert={(url) => setValue('thumbnail', url)} onBodyInsert={(markdown) => setBody(prev => `${prev}\n\n${markdown}\n\n`)} /></div>
             <div><div className="flex justify-between mb-2"><Label>Content *</Label><Button type="button" variant="outline" size="sm" onClick={() => setImageModalOpen(true)}><Image className="w-4 h-4 mr-2" />Insert Image</Button></div><div data-color-mode="dark"><MDEditor value={body} onChange={(val) => setBody(val || '')} commands={editorCommands} height={500} preview="edit" /></div>{showEmojiPicker && <div className="absolute z-50 mt-2"><EmojiPicker onEmojiClick={(e) => { setBody(prev => `${prev}${e.emoji}`); setShowEmojiPicker(false); }} theme={Theme.DARK} /></div>}</div>
