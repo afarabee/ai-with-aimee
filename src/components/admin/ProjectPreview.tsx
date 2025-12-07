@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 interface ProjectPreviewProps {
   title: string;
   subtitle: string;
+  excerpt?: string;
   body: string;
   thumbnail?: string;
   technologies: string[];
@@ -18,6 +19,7 @@ interface ProjectPreviewProps {
 export default function ProjectPreview({
   title,
   subtitle,
+  excerpt,
   body,
   thumbnail,
   technologies,
@@ -48,6 +50,13 @@ export default function ProjectPreview({
           {subtitle && (
             <p className="text-xl mb-4" style={{ color: 'hsl(var(--color-cyan))' }}>
               {subtitle}
+            </p>
+          )}
+
+          {/* Excerpt */}
+          {excerpt && (
+            <p className="text-lg mb-4 italic" style={{ color: 'hsl(var(--foreground) / 0.8)' }}>
+              {excerpt}
             </p>
           )}
 

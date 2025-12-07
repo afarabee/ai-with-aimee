@@ -33,6 +33,7 @@ const ProjectsSection = () => {
   const projects = projectsData?.map(project => ({
     title: project.project_title,
     subtitle: project.subtitle,
+    excerpt: project.excerpt || '',
     body: project.body || '',
     thumbnail: project.thumbnail || undefined,
     tags: project.technologies || [],
@@ -130,12 +131,12 @@ const ProjectsSection = () => {
                       {project.subtitle}
                     </p>
 
-                    {/* Body excerpt */}
+                    {/* Excerpt */}
                     <div className="mb-6 font-ibm text-sm" style={{
                 color: 'hsl(var(--clr-text-light))',
                 lineHeight: '1.6em'
               }}>
-                      <p>{project.body.slice(0, 200)}...</p>
+                      <p>{project.excerpt || project.body.slice(0, 200) + '...'}</p>
                     </div>
 
                     {/* Tags */}
@@ -174,12 +175,12 @@ const ProjectsSection = () => {
                     {project.subtitle}
                   </p>
 
-                  {/* Body excerpt */}
+                  {/* Excerpt */}
                   <div className="mb-6 font-ibm text-sm" style={{
               color: 'hsl(var(--clr-text-light))',
               lineHeight: '1.6em'
             }}>
-                    <p>{project.body.slice(0, 200)}...</p>
+                    <p>{project.excerpt || project.body.slice(0, 200) + '...'}</p>
                   </div>
 
                   {/* Tags */}
