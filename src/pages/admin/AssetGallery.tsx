@@ -282,8 +282,75 @@ export default function AssetGallery() {
   const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    const file = e.dataTransfer.files?.[0];
-    if (file) await handleUpload(file);
+    const files = e.dataTransfer.files;
+    if (files?.length) await handleMultipleUpload(Array.from(files));
+  };
+
+  const handleMultipleUpload = async (files: File[]) => {
+    if (files.length === 0) return;
+    
+    setUploading(true);
+    let successCount = 0;
+    let failCount = 0;
+    
+    const validTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg+xml', 'application/pdf'];
+    
+    for (const file of files) {
+      if (!validTypes.includes(file.type)) {
+        failCount++;
+        continue;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        failCount++;
+        continue;
+      }
+      
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload-blog-image`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            },
+            body: formData,
+          }
+        );
+        
+        if (response.ok) {
+          successCount++;
+        } else {
+          failCount++;
+        }
+      } catch {
+        failCount++;
+      }
+    }
+    
+    if (successCount > 0) {
+      toast.success(`${successCount} file${successCount > 1 ? 's' : ''} uploaded successfully!`, {
+        style: {
+          background: 'rgba(0, 255, 255, 0.1)',
+          border: '1px solid hsl(var(--color-cyan))',
+          color: 'hsl(var(--color-cyan))',
+        },
+      });
+    }
+    if (failCount > 0) {
+      toast.error(`${failCount} file${failCount > 1 ? 's' : ''} failed to upload`, {
+        style: {
+          background: 'rgba(245, 12, 160, 0.1)',
+          border: '1px solid hsl(var(--color-pink))',
+          color: 'hsl(var(--color-pink))',
+        },
+      });
+    }
+    
+    setUploading(false);
+    refetch();
   };
 
   const handleRename = async (asset: Asset, newName: string) => {
@@ -395,14 +462,15 @@ export default function AssetGallery() {
               className="text-sm mb-2 font-ibm-plex" 
               style={{ color: 'hsl(var(--color-light-text))' }}
             >
-              Drag & drop an image or PDF here, or
+              Drag & drop images or PDFs here, or
             </p>
             <input
               type="file"
               accept="image/*,.pdf"
+              multiple
               onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) handleUpload(file);
+                const files = e.target.files;
+                if (files?.length) handleMultipleUpload(Array.from(files));
               }}
               className="hidden"
               id="asset-upload-input"
@@ -422,7 +490,7 @@ export default function AssetGallery() {
                 asChild
               >
                 <span>
-                  {uploading ? 'Uploading...' : 'Choose File'}
+                  {uploading ? 'Uploading...' : 'Choose Files'}
                 </span>
               </Button>
             </label>
