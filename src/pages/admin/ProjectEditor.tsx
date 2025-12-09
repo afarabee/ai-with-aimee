@@ -55,8 +55,8 @@ const alignCenter: ICommand = { name: 'alignCenter', keyCommand: 'alignCenter', 
 const alignRight: ICommand = { name: 'alignRight', keyCommand: 'alignRight', buttonProps: { 'aria-label': 'Align right', title: 'Align right' }, icon: <AlignRight size={14} />, execute: (state, api) => api.replaceSelection(`<div style="text-align: right;">${state.selectedText || 'text'}</div>`) };
 const alignJustify: ICommand = { name: 'alignJustify', keyCommand: 'alignJustify', buttonProps: { 'aria-label': 'Justify', title: 'Justify text' }, icon: <AlignJustify size={14} />, execute: (state, api) => api.replaceSelection(`<div style="text-align: justify;">${state.selectedText || 'text'}</div>`) };
 const underline: ICommand = { name: 'underline', keyCommand: 'underline', buttonProps: { 'aria-label': 'Underline text', title: 'Underline text' }, icon: <Underline size={14} />, execute: (state, api) => api.replaceSelection(`<u>${state.selectedText || 'text'}</u>`) };
-const clearFormatting: ICommand = { name: 'clearFormatting', keyCommand: 'clearFormatting', buttonProps: { 'aria-label': 'Clear formatting - removes HTML styling from selected text', title: 'Clear formatting' }, icon: <RemoveFormatting size={14} />, execute: (state, api) => { if (!state.selectedText) return; api.replaceSelection(state.selectedText.replace(/<[^>]*>/g, '')); } };
-  // Heading commands are defined inside the component to work reliably with the editor selection
+// clearFormatting is defined inside the component to work reliably with the editor selection
+// Heading commands are defined inside the component to work reliably with the editor selection
 
 
 export default function ProjectEditor() {
@@ -258,6 +258,41 @@ export default function ProjectEditor() {
     buttonProps: { 'aria-label': 'Text alignment', title: 'Text alignment' },
     icon: <AlignLeft size={14} />,
   });
+
+  const clearFormatting: ICommand = {
+    name: 'clearFormatting',
+    keyCommand: 'clearFormatting',
+    buttonProps: { 'aria-label': 'Clear formatting - removes HTML styling from selected text', title: 'Clear formatting' },
+    icon: (
+      <span
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const textarea = document.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement;
+          if (!textarea) return;
+          const start = textarea.selectionStart;
+          const end = textarea.selectionEnd;
+          if (start === end) {
+            toast.info('Select text to clear formatting');
+            return;
+          }
+          const selectedText = body.substring(start, end);
+          const cleanedText = selectedText.replace(/<[^>]*>/g, '');
+          const newValue = body.substring(0, start) + cleanedText + body.substring(end);
+          setBody(newValue);
+          setTimeout(() => {
+            textarea.focus();
+            textarea.setSelectionRange(start, start + cleanedText.length);
+          }, 0);
+          toast.success('Formatting cleared');
+        }}
+        style={{ cursor: 'pointer' }}
+      >
+        <RemoveFormatting size={14} />
+      </span>
+    ),
+    execute: () => {},
+  };
 
   const tableCommand: ICommand = {
     name: 'table',
