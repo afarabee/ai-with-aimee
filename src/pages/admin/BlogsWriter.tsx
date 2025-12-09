@@ -13,7 +13,6 @@ import PasswordGate from '@/components/admin/PasswordGate';
 import AboutBackground from '@/components/AboutBackground';
 import BlogPreview from '@/components/admin/BlogPreview';
 import ImageUploadModal from '@/components/admin/ImageUploadModal';
-import ImageUploadHelper from '@/components/admin/ImageUploadHelper';
 import AssetPicker from '@/components/admin/AssetPicker';
 import { TableBuilder } from '@/components/admin/TableBuilder';
 import { EditableTableWrapper } from '@/components/admin/EditableTableWrapper';
@@ -422,10 +421,6 @@ export default function BlogsWriter() {
                 )}
               </div>
             </div>
-            <ImageUploadHelper 
-              onBannerInsert={(url) => setValue('banner_image', url)} 
-              onBodyInsert={(markdown) => setBody(prev => `${prev}\n\n${markdown}\n\n`)} 
-            />
             <div><Label htmlFor="author">Author</Label><Input id="author" {...register('author')} className="mt-1" /></div>
             <div><Label htmlFor="slug">Slug *</Label><Input id="slug" {...register('slug')} className="mt-1" />{errors.slug && <p className="text-sm text-destructive mt-1">{errors.slug.message}</p>}</div>
             <div><Label htmlFor="tags">Tags (comma-separated)</Label><Input id="tags" {...register('tags')} className="mt-1" placeholder="AI, Technology, Tutorial" /></div>
