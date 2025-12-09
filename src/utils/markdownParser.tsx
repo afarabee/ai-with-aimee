@@ -75,7 +75,7 @@ export const parseMarkdownContent = (markdown: string): React.ReactNode => {
       children
     }) => <strong className="font-bold" style={{
       color: 'hsl(var(--color-cyan) / 0.85)',
-      textShadow: '0 0 4px hsl(var(--color-cyan) / 0.15)'
+      textShadow: '0 0 2px hsl(var(--color-cyan) / 0.08)'
     }}>
             {children}
           </strong>,
