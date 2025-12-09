@@ -19,7 +19,21 @@ export const parseMarkdownContent = (markdown: string): React.ReactNode => {
             {children}
           </p>,
     // Blockquotes
-    blockquote: () => null,
+    blockquote: ({ children }) => (
+      <blockquote 
+        className="my-6 pl-4 py-2 border-l-4 italic"
+        style={{
+          borderColor: 'hsl(var(--color-cyan))',
+          backgroundColor: 'hsl(var(--color-violet) / 0.3)',
+          borderRadius: '0 8px 8px 0',
+          boxShadow: '0 0 15px hsl(var(--color-cyan) / 0.1)',
+        }}
+      >
+        <div style={{ color: 'hsl(var(--color-light-text) / 0.9)' }}>
+          {children}
+        </div>
+      </blockquote>
+    ),
     // Unordered Lists
     ul: ({
       children
