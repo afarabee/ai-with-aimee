@@ -860,11 +860,18 @@ All colors MUST be HSL.
   .w-md-editor-text-input {
     color: hsl(var(--color-light-text)) !important;
     font-family: 'IBM Plex Sans', sans-serif !important;
+    font-size: 14px !important;
+    line-height: 18px !important;
   }
 
   .w-md-editor-text-pre code,
-  .w-md-editor-text-input code {
+  .w-md-editor-text-input code,
+  .w-md-editor-text-pre > code,
+  .w-md-editor-text > .w-md-editor-text-pre > code {
     color: hsl(var(--color-light-text)) !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+    font-size: 14px !important;
+    line-height: 18px !important;
   }
 
   /* Image Upload Helper Component */
