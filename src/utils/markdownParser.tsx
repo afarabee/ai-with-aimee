@@ -83,7 +83,7 @@ export const parseMarkdownContent = (markdown: string): React.ReactNode => {
     em: ({
       children
     }) => <em className="italic font-josefin" style={{
-      color: 'hsl(var(--color-cyan) / 0.9)'
+      color: 'hsl(var(--color-yellow))'
     }}>
             {children}
           </em>,
