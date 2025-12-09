@@ -10,7 +10,6 @@ import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import ProjectPreview from '@/components/admin/ProjectPreview';
 import ImageUploadModal from '@/components/admin/ImageUploadModal';
-import ImageUploadHelper from '@/components/admin/ImageUploadHelper';
 import AssetPicker from '@/components/admin/AssetPicker';
 import { TableBuilder } from '@/components/admin/TableBuilder';
 import { EditableTableWrapper } from '@/components/admin/EditableTableWrapper';
@@ -444,7 +443,7 @@ export default function ProjectEditor() {
             <div><Label>Subtitle *</Label><Input {...register('subtitle')} />{errors.subtitle && <p className="text-sm text-destructive mt-1">{errors.subtitle.message}</p>}</div>
             <div><Label>Excerpt (shown on cards)</Label><Input {...register('excerpt')} placeholder="Short description for project cards (max 500 chars)" maxLength={500} />{errors.excerpt && <p className="text-sm text-destructive mt-1">{errors.excerpt.message}</p>}</div>
             <div><Label>Technologies *</Label><Input {...register('technologies')} placeholder="React, TypeScript" />{errors.technologies && <p className="text-sm text-destructive mt-1">{errors.technologies.message}</p>}</div>
-            <div><Label>Thumbnail</Label><div className="flex gap-2"><Input {...register('thumbnail')} /><Button type="button" variant="outline" onClick={() => setIsAssetPickerOpen(true)}>Library</Button></div>{formData.thumbnail && <img src={formData.thumbnail} alt="Preview" className="w-full h-48 object-cover rounded-lg mt-2" />}<ImageUploadHelper onBannerInsert={(url) => setValue('thumbnail', url)} onBodyInsert={(markdown) => setBody(prev => `${prev}\n\n${markdown}\n\n`)} /></div>
+            <div><Label>Thumbnail</Label><div className="flex gap-2"><Input {...register('thumbnail')} /><Button type="button" variant="outline" onClick={() => setIsAssetPickerOpen(true)}>Library</Button></div>{formData.thumbnail && <img src={formData.thumbnail} alt="Preview" className="w-full h-48 object-cover rounded-lg mt-2" />}</div>
             <div><div className="flex justify-between mb-2"><Label>Content *</Label><Button type="button" variant="outline" size="sm" onClick={() => setImageModalOpen(true)}><Image className="w-4 h-4 mr-2" />Insert Image</Button></div><div data-color-mode="dark"><MDEditor value={body} onChange={(val) => setBody(val || '')} commands={editorCommands} height={500} preview="edit" /></div>{showEmojiPicker && <div className="absolute z-50 mt-2"><EmojiPicker onEmojiClick={(e) => { setBody(prev => `${prev}${e.emoji}`); setShowEmojiPicker(false); }} theme={Theme.DARK} /></div>}</div>
             <div className="grid grid-cols-2 gap-4"><div><Label>GitHub</Label><Input {...register('github_link')} /></div><div><Label>Demo</Label><Input {...register('project_page_link')} /></div></div>
             <div className="grid grid-cols-2 gap-4"><div><Label>Order</Label><Input type="number" {...register('display_order', { valueAsNumber: true })} /></div><div><Label>Date</Label><Input type="date" {...register('date_published')} /></div></div>
