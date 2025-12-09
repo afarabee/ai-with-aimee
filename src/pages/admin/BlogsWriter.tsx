@@ -366,7 +366,7 @@ export default function BlogsWriter() {
           <div className="space-y-6"><div className="space-y-6">
             <div><Label htmlFor="title">Title *</Label><Input id="title" {...register('title')} className="mt-1" />{errors.title && <p className="text-sm text-destructive mt-1">{errors.title.message}</p>}</div>
             <div><Label htmlFor="subtitle">Subtitle</Label><Input id="subtitle" {...register('subtitle')} className="mt-1" /></div>
-            <div><Label htmlFor="excerpt">Excerpt *</Label><Textarea id="excerpt" {...register('excerpt')} className="mt-1" rows={3} />{errors.excerpt && <p className="text-sm text-destructive mt-1">{errors.excerpt.message}</p>}</div>
+            <div><Label htmlFor="excerpt">Excerpt (150 characters or less) *</Label><Textarea id="excerpt" {...register('excerpt')} className="mt-1" rows={3} />{errors.excerpt && <p className="text-sm text-destructive mt-1">{errors.excerpt.message}</p>}</div>
             <div>
               <div className="flex justify-between items-center mb-2">
                 <Label>Content *</Label>
