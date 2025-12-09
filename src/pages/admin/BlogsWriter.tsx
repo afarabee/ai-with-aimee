@@ -235,7 +235,7 @@ export default function BlogsWriter() {
     buttonProps: { 'aria-label': 'Clear formatting - removes HTML styling from selected text', title: 'Clear formatting' },
     icon: (
       <span
-        onClick={(e) => {
+        onMouseDown={(e) => {
           e.preventDefault();
           e.stopPropagation();
           const textarea = document.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement;
