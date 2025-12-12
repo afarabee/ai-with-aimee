@@ -46,7 +46,7 @@ const AboutSection = () => {
                     alt="Aimee Farabee - AI Strategist and Product Director"
                     className="w-full h-full object-cover"
                     style={{
-                      objectPosition: '20% 15%',
+                      objectPosition: '40% 15%',
                       transform: 'scale(1.8)',
                     }}
                   />
