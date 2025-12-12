@@ -44,9 +44,10 @@ const AboutSection = () => {
                   <img 
                     src="/lovable-uploads/15c91267-920d-4352-9832-0fa710794a29.png" 
                     alt="Aimee Farabee - AI Strategist and Product Director"
+                    key="headshot-v2"
                     className="w-full h-full object-cover"
                     style={{
-                      objectPosition: '30% 15%',
+                      objectPosition: '25% 15%',
                       transform: 'scale(1.8)',
                     }}
                   />

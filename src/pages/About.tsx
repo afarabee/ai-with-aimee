@@ -46,10 +46,16 @@ const About = () => {
                 borderColor: 'hsl(180 100% 56%)',
                 boxShadow: '0 0 8px hsl(180 100% 56% / 0.6), 0 0 20px hsl(180 100% 56% / 0.4), inset 0 0 40px hsl(320 95% 50% / 0.15)'
               }}>
-                  <img alt="Aimee Farabee - AI Strategist and Product Director" className="w-full h-full object-cover" style={{
-                  objectPosition: '30% 15%',
-                  transform: 'scale(1.8)'
-                }} src="/lovable-uploads/15c91267-920d-4352-9832-0fa710794a29.png" />
+                  <img 
+                    key="headshot-v2"
+                    alt="Aimee Farabee - AI Strategist and Product Director" 
+                    className="w-full h-full object-cover" 
+                    style={{
+                      objectPosition: '25% 15%',
+                      transform: 'scale(1.8)'
+                    }} 
+                    src="/lovable-uploads/15c91267-920d-4352-9832-0fa710794a29.png" 
+                  />
                 </div>
                 {/* Reflection effect */}
                 <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-3/4 h-10 rounded-full blur-2xl opacity-30" style={{
