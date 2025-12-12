@@ -42,12 +42,12 @@ const AboutSection = () => {
                   }}
                 >
                   <img 
-                    src={aimeeHeadshot} 
+                    src="/lovable-uploads/15c91267-920d-4352-9832-0fa710794a29.png" 
                     alt="Aimee Farabee - AI Strategist and Product Director"
                     className="w-full h-full object-cover"
                     style={{
-                      objectPosition: 'center 30%',
-                      transform: 'scale(1.2)',
+                      objectPosition: '20% 15%',
+                      transform: 'scale(1.8)',
                     }}
                   />
                 </div>
