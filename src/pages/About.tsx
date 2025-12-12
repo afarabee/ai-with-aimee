@@ -80,7 +80,7 @@ const About = () => {
               </p>
               
               <p>
-                I believe AI should not feel mysterious or intimidating. It should feel safe. It should feel ethical. It should feel like a capability that lifts people up, not something that replaces them.
+                I believe AI should not feel mysterious or intimidating. It should feel usable. It should feel safe. It should feel like a capability that lifts people up, not something that replaces them.
               </p>
               
               <p>
