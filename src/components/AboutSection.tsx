@@ -71,15 +71,23 @@ const AboutSection = () => {
 
               <div className="space-y-4 font-ibm" style={{ color: '#e6e6e6', lineHeight: '1.5em' }}>
                 <p>
-                  With more than 15 years in product management at Express Scripts, Cigna, and American Express, I have built my career at the intersection of technology, business, and human needs. My work is guided by a belief that great products do more than deliver features — they solve meaningful problems in smart, scalable ways.
+                  I'm Aimee Farabee, a product director turned AI enablement nerd who loves taking messy, ambiguous problems and turning them into governed, scalable, genuinely human solutions.
                 </p>
                 
                 <p>
-                  At Charles River Laboratories, I led the Apollo platform and early AI enablement initiatives, bridging data, people, and process. This work strengthened my expertise in AI governance, enablement, and prompt engineering while helping teams navigate the complexities of emerging technology.
+                  For more than 15 years, I have worked inside large and complex enterprises including Express Scripts, Cigna, American Express, and now Charles River Laboratories. I lead teams through digital transformation long before AI strategy became a trending topic. My work lives at the intersection of product, people, and emerging technology, where success is measured by repeatable systems, measurable outcomes, and teams who feel empowered rather than overwhelmed.
                 </p>
                 
                 <p>
-                  AI with Aimee was born from blending creativity, governance, and hands-on experimentation. This portfolio represents my evolution from traditional product director to AI-focused leader — committed to making AI usable, ethical, and impactful within the enterprise.
+                  At CRL, I helped shape the early wave of enterprise AI adoption. My work includes delivering generative AI products powered by fine tuned LLMs trained on proprietary CRL data, launching governance councils and champion networks, and creating structured frameworks that let teams use AI safely, responsibly, and productively.
+                </p>
+                
+                <p>
+                  I believe AI should not feel mysterious or intimidating. It should feel usable. It should feel ethical. It should feel like a capability that lifts people up, not something that replaces them.
+                </p>
+                
+                <p>
+                  AI with Aimee is where I bring that philosophy to life. It is a blend of experimentation, governance, practical workflows, and neon flavored creativity. It is a space for builders, skeptics, and anyone who is AI curious to understand how this technology really works in high trust environments. I share the wins, the lessons, the failures, and the frameworks that make AI adoption stick.
                 </p>
               </div>
             </div>
