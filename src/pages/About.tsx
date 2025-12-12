@@ -48,7 +48,7 @@ const About = () => {
               }}>
                   <img alt="Aimee Farabee - AI Strategist and Product Director" className="w-full h-full object-cover" style={{
                   objectPosition: 'center 20%',
-                  transform: 'scale(1.5)'
+                  transform: 'scale(1.8)'
                 }} src="/lovable-uploads/15c91267-920d-4352-9832-0fa710794a29.png" />
                 </div>
                 {/* Reflection effect */}
