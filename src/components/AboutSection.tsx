@@ -75,11 +75,15 @@ const AboutSection = () => {
                 </p>
                 
                 <p>
-                  For more than 15 years, I have worked inside large and complex enterprises including Express Scripts, Cigna, American Express, and now Charles River Laboratories. I lead teams through digital transformation long before AI strategy became a trending topic. My work lives at the intersection of product, people, and emerging technology, where success is measured by repeatable systems, measurable outcomes, and teams who feel empowered rather than overwhelmed.
+                  For more than 15 years, I've lived inside the machinery of large, complex enterprises, including Express Scripts, Cigna, American Express, and now Charles River Laboratories. I've led teams through digital transformation long before "AI strategy" became a buzzword.
                 </p>
                 
                 <p>
-                  At CRL, I helped shape the early wave of enterprise AI adoption. My work includes delivering generative AI products powered by fine tuned LLMs trained on proprietary CRL data, launching governance councils and champion networks, and creating structured frameworks that let teams use AI safely, responsibly, and productively.
+                  I've built my career at the intersection of technology, business, and human needs. My work is guided by a belief that great products do more than deliver features; they solve meaningful problems in smart, scalable ways.
+                </p>
+                
+                <p>
+                  My recent focus has been leading the charge on early enterprise AI adoption and pioneering the strategic rollout of generative AI solutions at Charles River. To continually lead these complex, cross-functional initiatives, I secured an Applied Generative AI Specialization, deepening my hands-on expertise in AI theory, productization, and governance, guaranteeing the safe and valuable integration of new platform capabilities.
                 </p>
                 
                 <p>
@@ -87,7 +91,7 @@ const AboutSection = () => {
                 </p>
                 
                 <p>
-                  AI with Aimee is where I bring that philosophy to life. It is a blend of experimentation, governance, practical workflows, and neon flavored creativity. It is a space for builders, skeptics, and anyone who is AI curious to understand how this technology really works in high trust environments. I share the wins, the lessons, the failures, and the frameworks that make AI adoption stick.
+                  AI with Aimee is my digital portfolio, where I bring that philosophy to life. It's my blend of experimentation, practical workflows, and neon flavored creativity. Each project featured here represents both curiosity and intent: a commitment to making AI usable, ethical, and impactful within the enterprise.
                 </p>
               </div>
             </div>
