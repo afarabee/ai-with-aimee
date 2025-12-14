@@ -99,6 +99,11 @@ export default function BlogsWriter() {
         }
         setLoading(false);
       })();
+    } else {
+      // For new blogs, set initial values so isDirty can detect changes
+      const defaultFormData: BlogFormData = { title: '', subtitle: '', author: 'Aimee Farabee', slug: '', excerpt: '', body: '', tags: '', banner_image: '', status: 'draft', date_published: new Date().toISOString().split('T')[0] };
+      setInitialFormData(defaultFormData);
+      setInitialBody('');
     }
   }, [blogId]);
 
