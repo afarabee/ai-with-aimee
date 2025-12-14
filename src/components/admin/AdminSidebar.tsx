@@ -13,7 +13,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { toast } from 'sonner';
-
+import { useNavigationGuard } from '@/hooks/useNavigationGuard';
 
 const adminModules = [
   {
@@ -82,6 +82,7 @@ export default function AdminSidebar() {
   const { open } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
+  const navGuard = useNavigationGuard();
   
   const isActive = (path: string) => {
     // Exact match for dashboard
@@ -90,6 +91,18 @@ export default function AdminSidebar() {
     }
     // Prefix match for other routes
     return path !== '/admin' && location.pathname.startsWith(path);
+  };
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, url: string, disabled: boolean) => {
+    if (disabled) {
+      e.preventDefault();
+      return;
+    }
+    // If there are unsaved changes, block navigation and show dialog
+    if (navGuard.isDirty && url !== location.pathname) {
+      e.preventDefault();
+      navGuard.setPendingNavigation(url);
+    }
   };
 
   const handleLogout = () => {
@@ -170,7 +183,7 @@ export default function AdminSidebar() {
                   >
                     <NavLink 
                       to={item.disabled ? '#' : item.url}
-                      onClick={(e) => item.disabled && e.preventDefault()}
+                      onClick={(e) => handleNavClick(e, item.url, item.disabled || false)}
                       className={`flex items-center gap-3 p-3 rounded-md transition-all ${
                         isActive(item.url) && !item.disabled
                           ? 'bg-cyan-500/20 border-l-4 border-cyan-400'
