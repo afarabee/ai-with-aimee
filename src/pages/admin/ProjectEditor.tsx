@@ -98,6 +98,11 @@ export default function ProjectEditor() {
         }
         setLoading(false);
       })();
+    } else {
+      // For new projects, set initial values so isDirty can detect changes
+      const defaultFormData: ProjectFormData = { project_title: '', subtitle: '', excerpt: '', body: '', technologies: '', thumbnail: '', github_link: '', project_page_link: '', status: 'Draft', display_order: 0, date_published: new Date().toISOString().split('T')[0] };
+      setInitialFormData(defaultFormData);
+      setInitialBody('');
     }
   }, [projectId]);
 
