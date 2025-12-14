@@ -76,6 +76,8 @@ export default function ProjectEditor() {
   const [initialFormData, setInitialFormData] = useState<ProjectFormData | null>(null);
   const [initialBody, setInitialBody] = useState('');
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [cursorImageModalOpen, setCursorImageModalOpen] = useState(false);
+  const [cursorPosition, setCursorPosition] = useState(0);
 
   const { register, handleSubmit, setValue, watch, getValues, reset, formState: { errors } } = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -349,6 +351,29 @@ export default function ProjectEditor() {
     execute: () => {},
   };
 
+  const insertImageCommand: ICommand = {
+    name: 'insertImage',
+    keyCommand: 'insertImage',
+    buttonProps: { 'aria-label': 'Insert image at cursor', title: 'Insert image at cursor' },
+    icon: (
+      <span
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const textarea = document.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement;
+          if (textarea) {
+            setCursorPosition(textarea.selectionStart);
+          }
+          setCursorImageModalOpen(true);
+        }}
+        style={{ cursor: 'pointer' }}
+      >
+        <Image size={14} />
+      </span>
+    ),
+    execute: () => {},
+  };
+
   const insertHeading = (level: number) => {
     const textarea = document.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement | null;
     if (!textarea) return;
@@ -448,6 +473,7 @@ export default function ProjectEditor() {
     commands.divider,
     tableCommand,
     neonDividerCommand,
+    insertImageCommand,
     commands.divider,
     emojiCommand,
   ];
@@ -523,6 +549,7 @@ export default function ProjectEditor() {
         {(viewMode === 'split' || viewMode === 'preview') && <div className="lg:sticky lg:top-6 h-[calc(100vh-120px)]"><div className="border rounded-lg overflow-y-auto preview-scrollbar h-full"><EditableTableWrapper body={body} onBodyUpdate={setBody}><ProjectPreview {...previewData} /></EditableTableWrapper></div></div>}
       </div></div></div>
       <ImageUploadModal open={imageModalOpen} onClose={() => setImageModalOpen(false)} onInsert={(url, alt) => { setBody(prev => `${prev}\n\n![${alt}](${url})\n\n`); setImageModalOpen(false); }} />
+      <ImageUploadModal open={cursorImageModalOpen} onClose={() => setCursorImageModalOpen(false)} onInsert={(url, alt) => { const imageMarkdown = `![${alt}](${url})`; setBody(prev => prev.substring(0, cursorPosition) + imageMarkdown + prev.substring(cursorPosition)); setCursorImageModalOpen(false); }} />
       <AssetPicker open={isAssetPickerOpen} onClose={() => setIsAssetPickerOpen(false)} onSelect={(url) => { setValue('thumbnail', url); setIsAssetPickerOpen(false); }} />
       <AlertDialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Archive Project</AlertDialogTitle><AlertDialogDescription>This will archive the project and hide it from public view. You can restore it later by changing its status back to Active.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={archiveProject} className="bg-amber-500 hover:bg-amber-600">Archive</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
       <AlertDialog open={clearDialogOpen} onOpenChange={setClearDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Clear Form</AlertDialogTitle><AlertDialogDescription>All unsaved changes will be lost.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={handleClearForm}>Clear</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
