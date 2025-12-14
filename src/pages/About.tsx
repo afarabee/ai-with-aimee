@@ -64,7 +64,7 @@ const About = () => {
             lineHeight: '1.6'
           }}>
               <p>
-                I'm Aimee Farabee, a Product Director turned AI enablement nerd and quasi-AI developer who turns messy, ambiguous problems into governed, scalable, genuinely human solutions.
+                I'm Aimee Farabee, a Product Director turned AI enablement nerd and quasi-AI developer. I turn messy, ambiguous problems into governed, scalable, genuinely human solutions.
               </p>
               
               <p>
