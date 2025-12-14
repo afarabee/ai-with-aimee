@@ -72,7 +72,7 @@ const AboutSection = () => {
 
               <div className="space-y-4 font-ibm" style={{ color: '#e6e6e6', lineHeight: '1.5em' }}>
                 <p>
-                  I'm Aimee Farabee, a Product Director turned AI enablement nerd and quasi-AI developer who turns messy, ambiguous problems into governed, scalable, genuinely human solutions.
+                  I'm Aimee Farabee, a Product Director turned AI enablement nerd and quasi-AI developer. I turn messy, ambiguous problems into governed, scalable, genuinely human solutions.
                 </p>
                 
                 <p>
