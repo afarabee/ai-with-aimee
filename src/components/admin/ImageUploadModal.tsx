@@ -96,7 +96,7 @@ export default function ImageUploadModal({ open, onClose, onInsert }: ImageUploa
             Insert Image
           </DialogTitle>
         </DialogHeader>
-        <Tabs defaultValue="url" className="w-full">
+        <Tabs defaultValue="library" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="url">
               <LinkIcon className="w-4 h-4 mr-2" />
