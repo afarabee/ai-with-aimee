@@ -92,7 +92,7 @@ const AboutSection = () => {
                 </p>
                 
                 <p>
-                  AI with Aimee is my digital portfolio, where I bring that philosophy to life. It's my blend of experimentation, practical workflows, and neon flavored creativity. Each project featured here represents both curiosity and intent: a commitment to making AI usable, ethical, and impactful within the enterprise.
+                  AI with Aimee is my digital portfolio, where I bring that philosophy to life. It's my blend of experimentation, practical workflows, and neon flavored creativity. Each project featured here represents both curiosity and intent. It's my commitment to making AI usable, ethical, and impactful within the enterprise.
                 </p>
               </div>
             </div>
