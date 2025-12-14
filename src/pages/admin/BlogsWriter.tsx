@@ -7,7 +7,7 @@ import MDEditor, { commands, ICommand } from '@uiw/react-md-editor';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { slugify } from '@/utils/slugify';
-import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw, Maximize2, Minimize2, RemoveFormatting } from 'lucide-react';
+import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw, Maximize2, Minimize2, RemoveFormatting, Minus } from 'lucide-react';
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import PasswordGate from '@/components/admin/PasswordGate';
 import AboutBackground from '@/components/AboutBackground';
@@ -270,6 +270,33 @@ export default function BlogsWriter() {
 
   const tableCommand: ICommand = { name: 'table', keyCommand: 'table', buttonProps: { 'aria-label': 'Insert table', title: 'Insert table' }, icon: (<TableBuilder onInsert={(markdown) => { setBody((prev) => prev + '\n\n' + markdown + '\n\n'); }} />) };
 
+  const neonDividerCommand: ICommand = {
+    name: 'neonDivider',
+    keyCommand: 'neonDivider',
+    buttonProps: { 'aria-label': 'Insert neon divider line', title: 'Insert neon divider' },
+    icon: (
+      <span
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const textarea = document.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement;
+          if (!textarea) return;
+          const pos = textarea.selectionStart;
+          const newValue = body.substring(0, pos) + '\n\n---\n\n' + body.substring(pos);
+          setBody(newValue);
+          setTimeout(() => {
+            textarea.focus();
+            textarea.setSelectionRange(pos + 6, pos + 6);
+          }, 0);
+        }}
+        style={{ cursor: 'pointer' }}
+      >
+        <Minus size={14} />
+      </span>
+    ),
+    execute: () => {},
+  };
+
   const insertHeading = (level: number) => {
     const textarea = document.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement | null;
     if (!textarea) return;
@@ -368,6 +395,7 @@ export default function BlogsWriter() {
     commands.orderedListCommand,
     commands.divider,
     tableCommand,
+    neonDividerCommand,
     commands.divider,
     emojiCommand,
   ];

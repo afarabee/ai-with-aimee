@@ -128,8 +128,8 @@ export const parseMarkdownContent = (markdown: string): React.ReactNode => {
     pre: ({
       children
     }) => <pre className="mb-6">{children}</pre>,
-    // Horizontal Rule (becomes divider)
-    hr: () => null,
+    // Horizontal Rule (becomes neon divider)
+    hr: () => <div className="blog-divider my-6" />,
     // Images
     img: ({
       src,
