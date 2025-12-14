@@ -77,6 +77,8 @@ export default function BlogsWriter() {
   const [initialFormData, setInitialFormData] = useState<BlogFormData | null>(null);
   const [initialBody, setInitialBody] = useState('');
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [cursorImageModalOpen, setCursorImageModalOpen] = useState(false);
+  const [cursorPosition, setCursorPosition] = useState(0);
 
   const { register, handleSubmit, setValue, watch, reset, getValues, formState: { errors } } = useForm<BlogFormData>({
     resolver: zodResolver(blogSchema),
@@ -297,6 +299,29 @@ export default function BlogsWriter() {
     execute: () => {},
   };
 
+  const insertImageCommand: ICommand = {
+    name: 'insertImage',
+    keyCommand: 'insertImage',
+    buttonProps: { 'aria-label': 'Insert image at cursor', title: 'Insert image at cursor' },
+    icon: (
+      <span
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const textarea = document.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement;
+          if (textarea) {
+            setCursorPosition(textarea.selectionStart);
+          }
+          setCursorImageModalOpen(true);
+        }}
+        style={{ cursor: 'pointer' }}
+      >
+        <Image size={14} />
+      </span>
+    ),
+    execute: () => {},
+  };
+
   const insertHeading = (level: number) => {
     const textarea = document.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement | null;
     if (!textarea) return;
@@ -396,6 +421,7 @@ export default function BlogsWriter() {
     commands.divider,
     tableCommand,
     neonDividerCommand,
+    insertImageCommand,
     commands.divider,
     emojiCommand,
   ];
@@ -494,6 +520,7 @@ export default function BlogsWriter() {
         )}
       </div></div></div>
       <ImageUploadModal open={imageModalOpen} onClose={() => setImageModalOpen(false)} onInsert={(url, alt) => { setBody(prev => `${prev}\n\n![${alt}](${url})\n\n`); setImageModalOpen(false); }} />
+      <ImageUploadModal open={cursorImageModalOpen} onClose={() => setCursorImageModalOpen(false)} onInsert={(url, alt) => { const imageMarkdown = `![${alt}](${url})`; setBody(prev => prev.substring(0, cursorPosition) + imageMarkdown + prev.substring(cursorPosition)); setCursorImageModalOpen(false); }} />
       <AssetPicker open={isAssetPickerOpen} onClose={() => setIsAssetPickerOpen(false)} onSelect={(url) => { setValue('banner_image', url); setIsAssetPickerOpen(false); }} />
       <AlertDialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Archive Blog?</AlertDialogTitle><AlertDialogDescription>This will change the status to Archived.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={archiveBlog}>Archive</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
       <AlertDialog open={clearDialogOpen} onOpenChange={setClearDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Clear form?</AlertDialogTitle><AlertDialogDescription>All unsaved changes will be lost.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={handleClearForm}>Clear</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
