@@ -76,7 +76,7 @@ const AboutSection = () => {
                 </p>
                 
                 <p>
-                  For more than 15 years, I've lived inside the machinery of large, complex enterprises, including Express Scripts, Cigna, American Express, and now Charles River Laboratories. I've led teams through digital transformation long before "AI strategy" became a buzzword.
+                  For more than 15 years, I've lived inside the machinery of large, complex enterprises, including Express Scripts, Cigna, American Express, and now Charles River Laboratories.
                 </p>
                 
                 <p>
