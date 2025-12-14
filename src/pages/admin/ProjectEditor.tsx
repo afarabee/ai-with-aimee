@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate, useSearchParams, useBlocker } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigationGuard } from '@/hooks/useNavigationGuard';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -61,6 +62,7 @@ const underline: ICommand = { name: 'underline', keyCommand: 'underline', button
 export default function ProjectEditor() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const navGuard = useNavigationGuard();
   const [projectId, setProjectId] = useState<string | null>(searchParams.get('id'));
   const [body, setBody] = useState('');
   const [viewMode, setViewMode] = useState<'edit' | 'split' | 'preview'>('split');
@@ -104,18 +106,18 @@ export default function ProjectEditor() {
     return JSON.stringify(formData) !== JSON.stringify(initialFormData) || body !== initialBody;
   }, [formData, body, initialFormData, initialBody]);
 
-  // Block navigation when there are unsaved changes
-  const blocker = useBlocker(
-    ({ currentLocation, nextLocation }) =>
-      isDirty && currentLocation.pathname !== nextLocation.pathname
-  );
-
-  // Show dialog when navigation is blocked
+  // Sync dirty state with navigation guard context
   useEffect(() => {
-    if (blocker.state === 'blocked') {
+    navGuard.setIsDirty(isDirty);
+    return () => navGuard.setIsDirty(false);
+  }, [isDirty]);
+
+  // Show dialog when navigation is blocked by sidebar
+  useEffect(() => {
+    if (navGuard.pendingNavigation) {
       setShowNavigateAwayDialog(true);
     }
-  }, [blocker.state]);
+  }, [navGuard.pendingNavigation]);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -491,7 +493,7 @@ export default function ProjectEditor() {
       <AssetPicker open={isAssetPickerOpen} onClose={() => setIsAssetPickerOpen(false)} onSelect={(url) => { setValue('thumbnail', url); setIsAssetPickerOpen(false); }} />
       <AlertDialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Archive Project</AlertDialogTitle><AlertDialogDescription>This will archive the project and hide it from public view. You can restore it later by changing its status back to Active.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={archiveProject} className="bg-amber-500 hover:bg-amber-600">Archive</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
       <AlertDialog open={clearDialogOpen} onOpenChange={setClearDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Clear Form</AlertDialogTitle><AlertDialogDescription>All unsaved changes will be lost.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={handleClearForm}>Clear</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
-      <AlertDialog open={showNavigateAwayDialog} onOpenChange={(open) => { setShowNavigateAwayDialog(open); if (!open && blocker.state === 'blocked') blocker.reset?.(); }}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Unsaved Changes</AlertDialogTitle><AlertDialogDescription>You have unsaved changes. What would you like to do?</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter className="flex-col sm:flex-row gap-2"><AlertDialogCancel onClick={() => blocker.reset?.()}>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => { blocker.proceed?.(); }} className="bg-destructive hover:bg-destructive/90">Exit Without Saving</AlertDialogAction><AlertDialogAction onClick={async () => { await saveDraft(); blocker.proceed?.(); }}>Save Changes</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
+      <AlertDialog open={showNavigateAwayDialog} onOpenChange={(open) => { setShowNavigateAwayDialog(open); if (!open) navGuard.setPendingNavigation(null); }}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Unsaved Changes</AlertDialogTitle><AlertDialogDescription>You have unsaved changes. What would you like to do?</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter className="flex-col sm:flex-row gap-2"><AlertDialogCancel onClick={() => navGuard.setPendingNavigation(null)}>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => { const target = navGuard.pendingNavigation; navGuard.setPendingNavigation(null); if (target) navigate(target); }} className="bg-destructive hover:bg-destructive/90">Exit Without Saving</AlertDialogAction><AlertDialogAction onClick={async () => { await saveDraft(); const target = navGuard.pendingNavigation; navGuard.setPendingNavigation(null); if (target) navigate(target); }}>Save Changes</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
     </div>
   );
 }
