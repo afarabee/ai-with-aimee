@@ -67,9 +67,6 @@ const About = () => {
                 I'm Aimee Farabee, a Product Director turned AI enablement nerd and quasi-AI developer who turns messy, ambiguous problems into governed, scalable, genuinely human solutions.
               </p>
               
-              <p>
-                For more than 15 years, I've lived inside the machinery of large, complex enterprises, including Express Scripts, Cigna, American Express, and now Charles River Laboratories. I've led teams through digital transformation long before "AI strategy" became a buzzword.
-              </p>
               
               <p>
                 I've built my career at the intersection of technology, business, and human needs. My work is guided by a belief that great products do more than deliver features; they solve meaningful problems in smart, scalable ways.
