@@ -1,1 +1,10 @@
 project_id = "axmjbykoyrwbfxeifbnp"
+
+[functions.edit-headshot]
+verify_jwt = false
+
+[functions.chat-admin]
+verify_jwt = false
+
+[functions.upload-blog-image]
+verify_jwt = false
