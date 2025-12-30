@@ -29,6 +29,7 @@ import PromptEditor from "./pages/admin/PromptEditor";
 import NewsletterDashboard from "./pages/admin/NewsletterDashboard";
 import NewsletterComposer from "./pages/admin/NewsletterComposer";
 import NewsletterLogs from "./pages/admin/NewsletterLogs";
+import HeadshotEditor from "./pages/admin/HeadshotEditor";
 
 
 const queryClient = new QueryClient();
@@ -72,6 +73,7 @@ const App = () => {
               <Route path="newsletter-dashboard" element={<NewsletterDashboard />} />
               <Route path="newsletter-composer" element={<NewsletterComposer />} />
               <Route path="newsletter-logs" element={<NewsletterLogs />} />
+              <Route path="headshot-editor" element={<HeadshotEditor />} />
             </Route>
             {/* Standalone Blog Writer - Full-screen editor without sidebar */}
             <Route path="/admin/blogs/new" element={<BlogsWriter />} />
