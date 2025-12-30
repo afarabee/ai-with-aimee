@@ -2,7 +2,7 @@ import { Linkedin, Github, Mail } from 'lucide-react';
 import AboutBackground from './AboutBackground';
 import { Button } from './ui/button';
 import SectionDivider from './SectionDivider';
-import aimeeHeadshot from '@/assets/aimee-headshot.jpg';
+import aimeeHeadshot from '@/assets/aimee-headshot-new.png';
 import { RESUME_URL } from '@/constants/urls';
 
 const AboutSection = () => {
@@ -42,13 +42,13 @@ const AboutSection = () => {
                   }}
                 >
                   <img 
-                    src="/lovable-uploads/15c91267-920d-4352-9832-0fa710794a29.png" 
+                    src={aimeeHeadshot} 
                     alt="Aimee Farabee - AI Strategist and Product Director"
-                    key="headshot-v2"
+                    key="headshot-v3"
                     className="w-full h-full object-cover"
                     style={{
-                      objectPosition: '25% 15%',
-                      transform: 'scale(1.8)',
+                      objectPosition: '50% 20%',
+                      transform: 'scale(1.15)',
                     }}
                   />
                 </div>
