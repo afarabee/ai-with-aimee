@@ -18,13 +18,24 @@ const HeadshotEditor = () => {
   );
   const { toast } = useToast();
 
+  const convertImageToBase64 = async (imageSrc: string): Promise<string> => {
+    const response = await fetch(imageSrc);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
   const processImage = async () => {
     setIsProcessing(true);
     setEditedImage(null);
 
     try {
-      // Convert the imported image to a full URL
-      const imageUrl = new URL(aimeeHeadshotOriginal, window.location.origin).href;
+      // Convert the imported image to base64 data URL
+      const base64Image = await convertImageToBase64(aimeeHeadshotOriginal);
       
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/edit-headshot`, {
         method: 'POST',
@@ -32,7 +43,7 @@ const HeadshotEditor = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          imageUrl,
+          imageUrl: base64Image,
           prompt: customPrompt
         }),
       });
