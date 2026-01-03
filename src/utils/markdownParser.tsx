@@ -70,9 +70,9 @@ export const parseMarkdownContent = (markdown: string): React.ReactNode => {
         className="my-6 pl-4 py-2 border-l-4 italic"
         style={{
           borderColor: 'hsl(var(--color-cyan))',
-          backgroundColor: 'hsl(262 45% 18%)',
+          backgroundColor: 'hsl(262 35% 28%)',
           borderRadius: '0 8px 8px 0',
-          boxShadow: '0 0 20px hsl(var(--color-cyan) / 0.15)',
+          boxShadow: '0 0 25px hsl(var(--color-pink) / 0.2)',
         }}
       >
         <div style={{ color: 'hsl(var(--color-light-text) / 0.9)' }}>
@@ -151,9 +151,9 @@ export const parseMarkdownContent = (markdown: string): React.ReactNode => {
       if (isBlock) {
         // Code block
         return <code className={`block p-4 rounded-lg mb-6 overflow-x-auto font-mono text-sm ${className || ''}`} style={{
-          backgroundColor: 'hsl(262 50% 22%)',
-          border: '1px solid hsl(var(--color-cyan) / 0.4)',
-          boxShadow: '0 0 20px hsl(var(--color-cyan) / 0.25)',
+          backgroundColor: 'hsl(262 35% 32%)',
+          border: '1px solid hsl(var(--color-pink) / 0.3)',
+          boxShadow: '0 0 25px hsl(var(--color-pink) / 0.2)',
           color: 'hsl(var(--color-cyan) / 0.9)'
         }}>
                 {children}
@@ -162,8 +162,9 @@ export const parseMarkdownContent = (markdown: string): React.ReactNode => {
 
       // Inline code
       return <code className="px-2 py-1 rounded font-mono text-sm" style={{
-        backgroundColor: 'hsl(262 50% 20%)',
-        border: '1px solid hsl(var(--color-cyan) / 0.4)',
+        backgroundColor: 'hsl(262 35% 28%)',
+        border: '1px solid hsl(var(--color-pink) / 0.25)',
+        boxShadow: '0 0 10px hsl(var(--color-pink) / 0.15)',
         color: 'hsl(var(--color-cyan))',
         textShadow: '0 0 8px hsl(var(--color-cyan) / 0.4)'
       }}>
