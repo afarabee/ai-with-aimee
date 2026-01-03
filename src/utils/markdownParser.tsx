@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 
 // Custom schema that allows safe inline styles on span and div elements
@@ -31,7 +32,7 @@ const parseSafeStyles = (styleString: string): React.CSSProperties => {
 };
 
 export const parseMarkdownContent = (markdown: string): React.ReactNode => {
-  return <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[[rehypeSanitize, customSchema]]} components={{
+  return <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, [rehypeSanitize, customSchema]]} components={{
     // Heading 1
     h1: ({ children }) => <h1 className="blog-h1">{children}</h1>,
     // Heading 2
