@@ -229,7 +229,28 @@ export default function BlogsWriter() {
     setClearDialogOpen(false); 
   };
 
-  const emojiCommand: ICommand = { name: 'emoji', keyCommand: 'emoji', buttonProps: { 'aria-label': 'Emoji', title: 'Insert emoji' }, icon: <Smile size={14} />, execute: () => setShowEmojiPicker(!showEmojiPicker) };
+  const emojiCommand: ICommand = { 
+    name: 'emoji', 
+    keyCommand: 'emoji', 
+    buttonProps: { 'aria-label': 'Emoji', title: 'Insert emoji' }, 
+    icon: (
+      <span
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const textarea = document.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement;
+          if (textarea) {
+            setCursorPosition(textarea.selectionStart);
+          }
+          setShowEmojiPicker(!showEmojiPicker);
+        }}
+        style={{ cursor: 'pointer' }}
+      >
+        <Smile size={14} />
+      </span>
+    ), 
+    execute: () => {} 
+  };
   
   const fontSizeGroup = commands.group([fontSizeSmall, fontSizeNormal, fontSizeLarge, fontSizeXL], { name: 'fontSize', groupName: 'fontSize', buttonProps: { 'aria-label': 'Font size', title: 'Font size' }, icon: <span style={{ fontSize: '14px', fontWeight: 'bold' }}>A</span> });
   const textColorGroup = commands.group([colorBlack, colorCyan, colorPink, colorGray, colorRed, colorGreen, colorYellow, colorBlue], { name: 'textColor', groupName: 'textColor', buttonProps: { 'aria-label': 'Text color', title: 'Text color' }, icon: <Palette size={14} /> });
@@ -475,7 +496,7 @@ export default function BlogsWriter() {
                 </EditableTableWrapper>
                 {showEmojiPicker && (
                   <div className="absolute z-50 top-12 right-0">
-                    <EmojiPicker onEmojiClick={(emojiData: EmojiClickData) => { setBody(prev => prev + emojiData.emoji); setShowEmojiPicker(false); }} theme={Theme.DARK} />
+                    <EmojiPicker onEmojiClick={(emojiData: EmojiClickData) => { setBody(prev => prev.substring(0, cursorPosition) + emojiData.emoji + prev.substring(cursorPosition)); setShowEmojiPicker(false); }} theme={Theme.DARK} />
                   </div>
                 )}
               </div>
