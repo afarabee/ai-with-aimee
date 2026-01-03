@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Plus, Trash2, X } from 'lucide-react';
+import { Table, Plus, Trash2, X, ClipboardPaste } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -12,6 +12,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { toast } from '@/hooks/use-toast';
 
 interface TableEditorProps {
   onInsert: (tableMarkdown: string) => void;
@@ -31,6 +33,88 @@ export const TableEditor: React.FC<TableEditorProps> = ({
   const [open, setOpen] = useState(mode === 'edit');
   const [tableData, setTableData] = useState<CellData[][]>([]);
   const [includeHeaders, setIncludeHeaders] = useState(true);
+  const [pasteInput, setPasteInput] = useState('');
+
+  // Parse pasted clipboard data (tab, comma, or pipe separated)
+  const parseClipboardData = (text: string): CellData[][] | null => {
+    const lines = text.trim().split('\n').filter(line => line.trim());
+    if (lines.length === 0) return null;
+
+    // Detect delimiter: tab first, then pipe, then comma
+    const firstLine = lines[0];
+    let delimiter = '\t';
+    if (firstLine.includes('\t')) {
+      delimiter = '\t';
+    } else if (firstLine.includes('|')) {
+      delimiter = '|';
+    } else if (firstLine.includes(',')) {
+      delimiter = ',';
+    }
+
+    const data: CellData[][] = [];
+    
+    for (const line of lines) {
+      // Skip markdown separator lines (e.g., |---|---|)
+      if (line.match(/^\|?\s*[-:]+\s*\|/)) continue;
+      
+      let cells: string[];
+      if (delimiter === '|') {
+        // Handle markdown-style: | cell | cell |
+        cells = line.split('|')
+          .filter((cell, i, arr) => {
+            // Remove empty first/last from pipe-delimited
+            if (i === 0 && cell.trim() === '') return false;
+            if (i === arr.length - 1 && cell.trim() === '') return false;
+            return true;
+          })
+          .map(cell => cell.trim());
+      } else {
+        cells = line.split(delimiter).map(cell => cell.trim());
+      }
+      
+      if (cells.length > 0) {
+        data.push(cells.map(content => ({ content })));
+      }
+    }
+
+    // Normalize column count (fill missing cells)
+    const maxCols = Math.max(...data.map(row => row.length));
+    data.forEach(row => {
+      while (row.length < maxCols) {
+        row.push({ content: '' });
+      }
+    });
+
+    return data.length > 0 ? data : null;
+  };
+
+  const handleLoadPastedData = () => {
+    if (!pasteInput.trim()) {
+      toast({
+        title: "No data to load",
+        description: "Please paste some table data first.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const parsedData = parseClipboardData(pasteInput);
+    if (!parsedData) {
+      toast({
+        title: "Could not parse data",
+        description: "Make sure your data is tab, comma, or pipe separated.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setTableData(parsedData);
+    setPasteInput('');
+    toast({
+      title: "Table loaded",
+      description: `Loaded ${parsedData.length} rows and ${parsedData[0]?.length || 0} columns.`,
+    });
+  };
 
   // Open dialog automatically in edit mode
   useEffect(() => {
@@ -179,6 +263,27 @@ export const TableEditor: React.FC<TableEditorProps> = ({
         </DialogHeader>
         
         <div className="space-y-4 py-4">
+          {/* Paste Area */}
+          <div className="space-y-2">
+            <Label className="text-foreground">Paste table data (from Excel, Sheets, or text):</Label>
+            <div className="flex gap-2">
+              <Textarea
+                placeholder="Paste tab-separated, comma-separated, or pipe-separated data here..."
+                value={pasteInput}
+                onChange={(e) => setPasteInput(e.target.value)}
+                className="min-h-[80px] font-mono text-sm"
+              />
+              <Button 
+                variant="outline" 
+                onClick={handleLoadPastedData}
+                className="shrink-0"
+              >
+                <ClipboardPaste className="h-4 w-4 mr-1" />
+                Load
+              </Button>
+            </div>
+          </div>
+
           {/* Controls */}
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div className="flex items-center space-x-2">
