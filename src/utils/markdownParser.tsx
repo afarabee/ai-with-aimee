@@ -7,6 +7,7 @@ import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 // Custom schema that allows safe inline styles on span and div elements
 const customSchema = {
   ...defaultSchema,
+  tagNames: [...(defaultSchema.tagNames || []), 'span', 'div', 'u'],
   attributes: {
     ...defaultSchema.attributes,
     span: [...(defaultSchema.attributes?.span || []), 'style'],
@@ -14,19 +15,35 @@ const customSchema = {
   },
 };
 
-// Helper to parse and apply only safe CSS properties
+// Safe CSS properties allowed for inline styling
+const safeProperties = ['color', 'fontSize', 'textAlign', 'backgroundColor'];
+const safeCssProperties = ['color', 'font-size', 'text-align', 'background-color'];
+
+// Helper to parse CSS string and apply only safe CSS properties
 const parseSafeStyles = (styleString: string): React.CSSProperties => {
-  const safeProperties = ['color', 'font-size', 'text-align', 'background-color'];
   const styles: React.CSSProperties = {};
   
   styleString.split(';').forEach(declaration => {
     const [property, value] = declaration.split(':').map(s => s.trim());
-    if (property && value && safeProperties.includes(property.toLowerCase())) {
+    if (property && value && safeCssProperties.includes(property.toLowerCase())) {
       // Convert CSS property to camelCase for React
       const camelProperty = property.replace(/-([a-z])/g, g => g[1].toUpperCase());
       (styles as Record<string, string>)[camelProperty] = value;
     }
   });
+  
+  return styles;
+};
+
+// Helper to filter object styles to only safe properties
+const filterSafeStyles = (styleObj: Record<string, string>): React.CSSProperties => {
+  const styles: React.CSSProperties = {};
+  
+  for (const [key, value] of Object.entries(styleObj)) {
+    if (safeProperties.includes(key) && value) {
+      (styles as Record<string, string>)[key] = value;
+    }
+  }
   
   return styles;
 };
@@ -218,12 +235,22 @@ export const parseMarkdownContent = (markdown: string): React.ReactNode => {
           </td>,
     // Styled spans (for text colors, font sizes, etc.)
     span: ({ style, children, ...props }) => {
-      const safeStyles = typeof style === 'string' ? parseSafeStyles(style) : {};
+      let safeStyles: React.CSSProperties = {};
+      if (typeof style === 'string') {
+        safeStyles = parseSafeStyles(style);
+      } else if (style && typeof style === 'object') {
+        safeStyles = filterSafeStyles(style as Record<string, string>);
+      }
       return <span style={safeStyles} {...props}>{children}</span>;
     },
     // Styled divs (for text alignment)
     div: ({ style, children, ...props }) => {
-      const safeStyles = typeof style === 'string' ? parseSafeStyles(style) : {};
+      let safeStyles: React.CSSProperties = {};
+      if (typeof style === 'string') {
+        safeStyles = parseSafeStyles(style);
+      } else if (style && typeof style === 'object') {
+        safeStyles = filterSafeStyles(style as Record<string, string>);
+      }
       return <div style={safeStyles} {...props}>{children}</div>;
     }
   }}>
