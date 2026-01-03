@@ -35,57 +35,82 @@ export const TableEditor: React.FC<TableEditorProps> = ({
   const [includeHeaders, setIncludeHeaders] = useState(true);
   const [pasteInput, setPasteInput] = useState('');
 
-  // Parse pasted clipboard data (tab, comma, or pipe separated)
-  const parseClipboardData = (text: string): CellData[][] | null => {
-    const lines = text.trim().split('\n').filter(line => line.trim());
+  // Detect the format and delimiter of pasted data
+  const detectFormat = (text: string): { format: string; delimiter: string } => {
+    const lines = text.trim().split('\n');
+    const firstLine = lines[0] || '';
+    
+    // Check for markdown table (pipes with content)
+    const pipeCount = (firstLine.match(/\|/g) || []).length;
+    if (pipeCount >= 2) {
+      return { format: 'Markdown', delimiter: '|' };
+    }
+    
+    // Check for tabs (Excel/Sheets copy)
+    if (firstLine.includes('\t')) {
+      return { format: 'TSV (Excel/Sheets)', delimiter: '\t' };
+    }
+    
+    // Check for commas
+    if (firstLine.includes(',')) {
+      return { format: 'CSV', delimiter: ',' };
+    }
+    
+    // Fallback - try to detect based on consistent spacing
+    return { format: 'Plain text', delimiter: '\t' };
+  };
+
+  // Parse pasted clipboard data with improved format handling
+  const parseClipboardData = (text: string): { data: CellData[][]; format: string } | null => {
+    // Normalize line endings
+    const normalizedText = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    const lines = normalizedText.trim().split('\n').filter(line => line.trim());
     if (lines.length === 0) return null;
 
-    // Detect delimiter: tab first, then pipe, then comma
-    const firstLine = lines[0];
-    let delimiter = '\t';
-    if (firstLine.includes('\t')) {
-      delimiter = '\t';
-    } else if (firstLine.includes('|')) {
-      delimiter = '|';
-    } else if (firstLine.includes(',')) {
-      delimiter = ',';
-    }
-
+    const { format, delimiter } = detectFormat(normalizedText);
     const data: CellData[][] = [];
     
     for (const line of lines) {
-      // Skip markdown separator lines (e.g., |---|---|)
-      if (line.match(/^\|?\s*[-:]+\s*\|/)) continue;
+      // Skip markdown separator lines (e.g., |---|---|, |:---:|:---:|)
+      if (line.match(/^\|?\s*[:|-]+\s*\|/) && line.match(/^[\s|:-]+$/)) continue;
+      if (line.match(/^\|[\s-:|]+\|$/)) continue;
       
       let cells: string[];
       if (delimiter === '|') {
         // Handle markdown-style: | cell | cell |
-        cells = line.split('|')
-          .filter((cell, i, arr) => {
-            // Remove empty first/last from pipe-delimited
-            if (i === 0 && cell.trim() === '') return false;
-            if (i === arr.length - 1 && cell.trim() === '') return false;
-            return true;
-          })
-          .map(cell => cell.trim());
+        // Also handle cells without leading/trailing pipes
+        let cleanLine = line.trim();
+        
+        // Remove leading pipe if present
+        if (cleanLine.startsWith('|')) cleanLine = cleanLine.slice(1);
+        // Remove trailing pipe if present  
+        if (cleanLine.endsWith('|')) cleanLine = cleanLine.slice(0, -1);
+        
+        cells = cleanLine.split('|').map(cell => {
+          // Clean up cell content - handle escaped pipes and trim
+          return cell.replace(/\\\|/g, '|').trim();
+        });
       } else {
         cells = line.split(delimiter).map(cell => cell.trim());
       }
       
-      if (cells.length > 0) {
+      // Filter out completely empty rows
+      if (cells.length > 0 && cells.some(c => c !== '')) {
         data.push(cells.map(content => ({ content })));
       }
     }
 
-    // Normalize column count (fill missing cells)
-    const maxCols = Math.max(...data.map(row => row.length));
-    data.forEach(row => {
-      while (row.length < maxCols) {
-        row.push({ content: '' });
-      }
-    });
+    // Normalize column count (fill missing cells with empty strings)
+    if (data.length > 0) {
+      const maxCols = Math.max(...data.map(row => row.length));
+      data.forEach(row => {
+        while (row.length < maxCols) {
+          row.push({ content: '' });
+        }
+      });
+    }
 
-    return data.length > 0 ? data : null;
+    return data.length > 0 ? { data, format } : null;
   };
 
   const handleLoadPastedData = () => {
@@ -98,21 +123,21 @@ export const TableEditor: React.FC<TableEditorProps> = ({
       return;
     }
 
-    const parsedData = parseClipboardData(pasteInput);
-    if (!parsedData) {
+    const result = parseClipboardData(pasteInput);
+    if (!result) {
       toast({
         title: "Could not parse data",
-        description: "Make sure your data is tab, comma, or pipe separated.",
+        description: "Make sure your data is in a supported format: markdown table, TSV (Excel/Sheets), or CSV.",
         variant: "destructive",
       });
       return;
     }
 
-    setTableData(parsedData);
+    setTableData(result.data);
     setPasteInput('');
     toast({
       title: "Table loaded",
-      description: `Loaded ${parsedData.length} rows and ${parsedData[0]?.length || 0} columns.`,
+      description: `Detected ${result.format} format. Loaded ${result.data.length} rows × ${result.data[0]?.length || 0} columns.`,
     });
   };
 
@@ -265,13 +290,16 @@ export const TableEditor: React.FC<TableEditorProps> = ({
         <div className="space-y-4 py-4">
           {/* Paste Area */}
           <div className="space-y-2">
-            <Label className="text-foreground">Paste table data (from Excel, Sheets, or text):</Label>
+            <Label className="text-foreground">Paste table data:</Label>
+            <p className="text-xs text-muted-foreground">
+              Supports: Markdown tables (with pipes), Excel/Sheets (tab-separated), or CSV
+            </p>
             <div className="flex gap-2">
               <Textarea
-                placeholder="Paste tab-separated, comma-separated, or pipe-separated data here..."
+                placeholder={`Example formats:\n| Header 1 | Header 2 |\n|----------|----------|\n| Cell 1   | Cell 2   |\n\nOr paste directly from Excel/Sheets...`}
                 value={pasteInput}
                 onChange={(e) => setPasteInput(e.target.value)}
-                className="min-h-[80px] font-mono text-sm"
+                className="min-h-[100px] font-mono text-sm"
               />
               <Button 
                 variant="outline" 
