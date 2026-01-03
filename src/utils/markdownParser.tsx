@@ -1,9 +1,37 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import rehypeSanitize from 'rehype-sanitize';
+import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
+
+// Custom schema that allows safe inline styles on span and div elements
+const customSchema = {
+  ...defaultSchema,
+  attributes: {
+    ...defaultSchema.attributes,
+    span: [...(defaultSchema.attributes?.span || []), 'style'],
+    div: [...(defaultSchema.attributes?.div || []), 'style'],
+  },
+};
+
+// Helper to parse and apply only safe CSS properties
+const parseSafeStyles = (styleString: string): React.CSSProperties => {
+  const safeProperties = ['color', 'font-size', 'text-align', 'background-color'];
+  const styles: React.CSSProperties = {};
+  
+  styleString.split(';').forEach(declaration => {
+    const [property, value] = declaration.split(':').map(s => s.trim());
+    if (property && value && safeProperties.includes(property.toLowerCase())) {
+      // Convert CSS property to camelCase for React
+      const camelProperty = property.replace(/-([a-z])/g, g => g[1].toUpperCase());
+      (styles as Record<string, string>)[camelProperty] = value;
+    }
+  });
+  
+  return styles;
+};
+
 export const parseMarkdownContent = (markdown: string): React.ReactNode => {
-  return <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSanitize]} components={{
+  return <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[[rehypeSanitize, customSchema]]} components={{
     // Heading 1
     h1: ({ children }) => <h1 className="blog-h1">{children}</h1>,
     // Heading 2
@@ -186,7 +214,17 @@ export const parseMarkdownContent = (markdown: string): React.ReactNode => {
       borderRight: '1px solid hsl(var(--color-cyan) / 0.1)'
     }}>
             {children}
-          </td>
+          </td>,
+    // Styled spans (for text colors, font sizes, etc.)
+    span: ({ style, children, ...props }) => {
+      const safeStyles = typeof style === 'string' ? parseSafeStyles(style) : {};
+      return <span style={safeStyles} {...props}>{children}</span>;
+    },
+    // Styled divs (for text alignment)
+    div: ({ style, children, ...props }) => {
+      const safeStyles = typeof style === 'string' ? parseSafeStyles(style) : {};
+      return <div style={safeStyles} {...props}>{children}</div>;
+    }
   }}>
       {markdown}
     </ReactMarkdown>;
