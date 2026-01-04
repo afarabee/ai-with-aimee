@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { slugify } from '@/utils/slugify';
 import { applySpanStyle, applyDivStyle } from '@/utils/editorStyleUtils';
 import { handleListKeyDown } from '@/utils/editorListUtils';
-import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw, Maximize2, Minimize2, RemoveFormatting, Minus, Code2 } from 'lucide-react';
+import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw, Maximize2, Minimize2, RemoveFormatting, Minus, Type } from 'lucide-react';
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import PasswordGate from '@/components/admin/PasswordGate';
 import AboutBackground from '@/components/AboutBackground';
@@ -59,7 +59,11 @@ const alignCenter: ICommand = { name: 'alignCenter', keyCommand: 'alignCenter', 
 const alignRight: ICommand = { name: 'alignRight', keyCommand: 'alignRight', buttonProps: { 'aria-label': 'Align right', title: 'Align right' }, icon: <AlignRight size={14} />, execute: (state, api) => api.replaceSelection(applyDivStyle(state.selectedText, 'text-align: right')) };
 const alignJustify: ICommand = { name: 'alignJustify', keyCommand: 'alignJustify', buttonProps: { 'aria-label': 'Justify', title: 'Justify text' }, icon: <AlignJustify size={14} />, execute: (state, api) => api.replaceSelection(applyDivStyle(state.selectedText, 'text-align: justify')) };
 const underline: ICommand = { name: 'underline', keyCommand: 'underline', buttonProps: { 'aria-label': 'Underline text', title: 'Underline text' }, icon: <Underline size={14} />, execute: (state, api) => api.replaceSelection(`<u>${state.selectedText || 'text'}</u>`) };
-const fontCode: ICommand = { name: 'fontCode', keyCommand: 'fontCode', buttonProps: { 'aria-label': 'Code font (monospace)', title: 'Code font (monospace)' }, icon: <Code2 size={14} />, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'font-family: "Fira Code", monospace')) };
+const fontDefault: ICommand = { name: 'fontDefault', keyCommand: 'fontDefault', buttonProps: { 'aria-label': 'Default font', title: 'Default font' }, icon: <span style={{ fontWeight: 'bold' }}>Aa</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'font-family: inherit')) };
+const fontCode: ICommand = { name: 'fontCode', keyCommand: 'fontCode', buttonProps: { 'aria-label': 'Code font', title: 'Code font (monospace)' }, icon: <span style={{ fontFamily: '"Fira Code", monospace', fontSize: '12px' }}>Aa</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'font-family: "Fira Code", monospace')) };
+const fontHandwritten: ICommand = { name: 'fontHandwritten', keyCommand: 'fontHandwritten', buttonProps: { 'aria-label': 'Handwritten font', title: 'Handwritten font' }, icon: <span style={{ fontFamily: '"Caveat", cursive', fontSize: '14px' }}>Aa</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'font-family: "Caveat", cursive')) };
+const fontScript: ICommand = { name: 'fontScript', keyCommand: 'fontScript', buttonProps: { 'aria-label': 'Script font', title: 'Script font (elegant)' }, icon: <span style={{ fontFamily: '"Dancing Script", cursive', fontSize: '14px' }}>Aa</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'font-family: "Dancing Script", cursive')) };
+const fontSerif: ICommand = { name: 'fontSerif', keyCommand: 'fontSerif', buttonProps: { 'aria-label': 'Serif font', title: 'Serif font (classic)' }, icon: <span style={{ fontFamily: '"Playfair Display", serif', fontSize: '12px' }}>Aa</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'font-family: "Playfair Display", serif')) };
 // clearFormatting is defined inside the component to work reliably with the editor selection
 // Heading commands are defined inside the component to work reliably with the editor selection
 
@@ -258,6 +262,7 @@ export default function BlogsWriter() {
   const fontSizeGroup = commands.group([fontSizeSmall, fontSizeNormal, fontSizeLarge, fontSizeXL], { name: 'fontSize', groupName: 'fontSize', buttonProps: { 'aria-label': 'Font size', title: 'Font size' }, icon: <span style={{ fontSize: '14px', fontWeight: 'bold' }}>A</span> });
   const textColorGroup = commands.group([colorBlack, colorCyan, colorPink, colorGray, colorRed, colorGreen, colorYellow, colorBlue], { name: 'textColor', groupName: 'textColor', buttonProps: { 'aria-label': 'Text color', title: 'Text color' }, icon: <Palette size={14} /> });
   const textAlignGroup = commands.group([alignLeft, alignCenter, alignRight, alignJustify], { name: 'textAlign', groupName: 'textAlign', buttonProps: { 'aria-label': 'Text alignment', title: 'Text alignment' }, icon: <AlignLeft size={14} /> });
+  const fontFamilyGroup = commands.group([fontDefault, fontCode, fontHandwritten, fontScript, fontSerif], { name: 'fontFamily', groupName: 'fontFamily', buttonProps: { 'aria-label': 'Font family', title: 'Font family' }, icon: <Type size={14} /> });
 
   const clearFormatting: ICommand = {
     name: 'clearFormatting',
@@ -439,7 +444,7 @@ export default function BlogsWriter() {
     commands.link,
     commands.quote,
     commands.code,
-    fontCode,
+    fontFamilyGroup,
     commands.divider,
     commands.unorderedListCommand,
     commands.orderedListCommand,
