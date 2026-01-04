@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { slugify } from '@/utils/slugify';
 import { applySpanStyle, applyDivStyle } from '@/utils/editorStyleUtils';
+import { handleListKeyDown } from '@/utils/editorListUtils';
 import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw, Maximize2, Minimize2, RemoveFormatting, Minus } from 'lucide-react';
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import PasswordGate from '@/components/admin/PasswordGate';
@@ -493,7 +494,16 @@ export default function BlogsWriter() {
               </div>
               <div className="relative">
                 <EditableTableWrapper body={body} onBodyUpdate={setBody}>
-                  <MDEditor value={body} onChange={(val) => setBody(val || '')} height={400} preview="edit" commands={editorCommands} />
+                  <MDEditor 
+                    value={body} 
+                    onChange={(val) => setBody(val || '')} 
+                    height={400} 
+                    preview="edit" 
+                    commands={editorCommands}
+                    textareaProps={{
+                      onKeyDown: (e) => handleListKeyDown(e, body, setBody)
+                    }}
+                  />
                 </EditableTableWrapper>
                 {showEmojiPicker && (
                   <div className="absolute z-50 top-12 right-0">
