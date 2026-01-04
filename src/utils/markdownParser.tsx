@@ -4,10 +4,10 @@ import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 
-// Custom schema that allows safe inline styles on span and div elements
+// Custom schema that allows safe inline styles on span and div elements, plus br for table cells
 const customSchema = {
   ...defaultSchema,
-  tagNames: [...(defaultSchema.tagNames || []), 'span', 'div', 'u'],
+  tagNames: [...(defaultSchema.tagNames || []), 'span', 'div', 'u', 'br'],
   attributes: {
     ...defaultSchema.attributes,
     span: [...(defaultSchema.attributes?.span || []), 'style'],
@@ -185,13 +185,15 @@ export const parseMarkdownContent = (markdown: string): React.ReactNode => {
       border: '2px solid hsl(var(--color-cyan) / 0.4)',
       boxShadow: '0 0 20px hsl(var(--color-cyan) / 0.3), 0 4px 15px hsl(var(--color-shadow) / 0.5)'
     }} />,
-    // Tables
+    // Tables - constrained width with word-wrap to prevent horizontal overflow
     table: ({
       children
-    }) => <div className="overflow-x-auto mb-6">
-            <table className="w-full border-collapse rounded-lg overflow-hidden" style={{
+    }) => <div className="overflow-x-auto mb-6 max-w-full">
+            <table className="w-full border-collapse rounded-lg overflow-hidden table-fixed" style={{
               border: '1px solid hsl(var(--color-cyan) / 0.3)',
-              boxShadow: '0 0 15px hsl(var(--color-cyan) / 0.2)'
+              boxShadow: '0 0 15px hsl(var(--color-cyan) / 0.2)',
+              minWidth: '300px',
+              maxWidth: '100%'
             }}>
               {children}
             </table>
@@ -220,17 +222,19 @@ export const parseMarkdownContent = (markdown: string): React.ReactNode => {
           </tr>,
     th: ({
       children
-    }) => <th className="px-4 py-3 text-left font-semibold" style={{
+    }) => <th className="px-4 py-3 text-left font-semibold break-words" style={{
       color: 'hsl(var(--color-cyan))',
-      textShadow: '0 0 10px hsl(var(--color-cyan) / 0.4)'
+      textShadow: '0 0 10px hsl(var(--color-cyan) / 0.4)',
+      wordBreak: 'break-word'
     }}>
             {children}
           </th>,
     td: ({
       children
-    }) => <td className="px-4 py-3" style={{
+    }) => <td className="px-4 py-3 break-words" style={{
       color: 'hsl(var(--color-light-text))',
-      borderRight: '1px solid hsl(var(--color-cyan) / 0.1)'
+      borderRight: '1px solid hsl(var(--color-cyan) / 0.1)',
+      wordBreak: 'break-word'
     }}>
             {children}
           </td>,

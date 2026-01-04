@@ -9,7 +9,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -35,82 +34,172 @@ export const TableEditor: React.FC<TableEditorProps> = ({
   const [includeHeaders, setIncludeHeaders] = useState(true);
   const [pasteInput, setPasteInput] = useState('');
 
+  // Quote-aware parser for TSV/CSV that preserves newlines inside quoted fields
+  const parseDelimitedWithQuotes = (text: string, delimiter: string): CellData[][] => {
+    const data: CellData[][] = [];
+    let currentRow: string[] = [];
+    let currentCell = '';
+    let inQuotes = false;
+    let i = 0;
+
+    while (i < text.length) {
+      const char = text[i];
+      const nextChar = text[i + 1];
+
+      if (inQuotes) {
+        if (char === '"') {
+          if (nextChar === '"') {
+            // Escaped quote
+            currentCell += '"';
+            i += 2;
+            continue;
+          } else {
+            // End of quoted field
+            inQuotes = false;
+            i++;
+            continue;
+          }
+        } else {
+          // Regular character inside quotes (including newlines)
+          currentCell += char;
+          i++;
+          continue;
+        }
+      } else {
+        if (char === '"') {
+          // Start of quoted field
+          inQuotes = true;
+          i++;
+          continue;
+        } else if (char === delimiter) {
+          // Cell boundary
+          currentRow.push(currentCell.trim());
+          currentCell = '';
+          i++;
+          continue;
+        } else if (char === '\n' || (char === '\r' && nextChar === '\n')) {
+          // Row boundary
+          currentRow.push(currentCell.trim());
+          if (currentRow.some(c => c !== '')) {
+            data.push(currentRow.map(content => ({ content })));
+          }
+          currentRow = [];
+          currentCell = '';
+          i += char === '\r' ? 2 : 1;
+          continue;
+        } else if (char === '\r') {
+          // Row boundary (old Mac style)
+          currentRow.push(currentCell.trim());
+          if (currentRow.some(c => c !== '')) {
+            data.push(currentRow.map(content => ({ content })));
+          }
+          currentRow = [];
+          currentCell = '';
+          i++;
+          continue;
+        } else {
+          currentCell += char;
+          i++;
+          continue;
+        }
+      }
+    }
+
+    // Handle last cell/row
+    currentRow.push(currentCell.trim());
+    if (currentRow.some(c => c !== '')) {
+      data.push(currentRow.map(content => ({ content })));
+    }
+
+    return data;
+  };
+
   // Detect the format and delimiter of pasted data
-  const detectFormat = (text: string): { format: string; delimiter: string } => {
+  const detectFormat = (text: string): { format: string; delimiter: string; isMarkdown: boolean } => {
     const lines = text.trim().split('\n');
     const firstLine = lines[0] || '';
     
     // Check for markdown table (pipes with content)
     const pipeCount = (firstLine.match(/\|/g) || []).length;
     if (pipeCount >= 2) {
-      return { format: 'Markdown', delimiter: '|' };
+      return { format: 'Markdown', delimiter: '|', isMarkdown: true };
     }
     
     // Check for tabs (Excel/Sheets copy)
     if (firstLine.includes('\t')) {
-      return { format: 'TSV (Excel/Sheets)', delimiter: '\t' };
+      return { format: 'TSV (Excel/Sheets)', delimiter: '\t', isMarkdown: false };
     }
     
     // Check for commas
     if (firstLine.includes(',')) {
-      return { format: 'CSV', delimiter: ',' };
+      return { format: 'CSV', delimiter: ',', isMarkdown: false };
     }
     
     // Fallback - try to detect based on consistent spacing
-    return { format: 'Plain text', delimiter: '\t' };
+    return { format: 'Plain text', delimiter: '\t', isMarkdown: false };
   };
 
-  // Parse pasted clipboard data with improved format handling
-  const parseClipboardData = (text: string): { data: CellData[][]; format: string } | null => {
-    // Normalize line endings
-    const normalizedText = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-    const lines = normalizedText.trim().split('\n').filter(line => line.trim());
-    if (lines.length === 0) return null;
-
-    const { format, delimiter } = detectFormat(normalizedText);
+  // Parse markdown pipe format (line = row, <br> -> \n)
+  const parseMarkdownTable = (text: string): CellData[][] => {
+    const lines = text.trim().split('\n').filter(line => line.trim());
     const data: CellData[][] = [];
-    
+
     for (const line of lines) {
       // Skip markdown separator lines (e.g., |---|---|, |:---:|:---:|)
       if (line.match(/^\|?\s*[:|-]+\s*\|/) && line.match(/^[\s|:-]+$/)) continue;
       if (line.match(/^\|[\s-:|]+\|$/)) continue;
+
+      let cleanLine = line.trim();
       
-      let cells: string[];
-      if (delimiter === '|') {
-        // Handle markdown-style: | cell | cell |
-        // Also handle cells without leading/trailing pipes
-        let cleanLine = line.trim();
-        
-        // Remove leading pipe if present
-        if (cleanLine.startsWith('|')) cleanLine = cleanLine.slice(1);
-        // Remove trailing pipe if present  
-        if (cleanLine.endsWith('|')) cleanLine = cleanLine.slice(0, -1);
-        
-        cells = cleanLine.split('|').map(cell => {
-          // Clean up cell content - handle escaped pipes and trim
-          return cell.replace(/\\\|/g, '|').trim();
-        });
-      } else {
-        cells = line.split(delimiter).map(cell => cell.trim());
-      }
+      // Remove leading pipe if present
+      if (cleanLine.startsWith('|')) cleanLine = cleanLine.slice(1);
+      // Remove trailing pipe if present  
+      if (cleanLine.endsWith('|')) cleanLine = cleanLine.slice(0, -1);
       
-      // Filter out completely empty rows
+      const cells = cleanLine.split('|').map(cell => {
+        // Clean up cell content - handle escaped pipes, convert <br> to newlines
+        return cell
+          .replace(/\\\|/g, '|')
+          .replace(/<br\s*\/?>/gi, '\n')
+          .trim();
+      });
+
       if (cells.length > 0 && cells.some(c => c !== '')) {
         data.push(cells.map(content => ({ content })));
       }
     }
 
-    // Normalize column count (fill missing cells with empty strings)
-    if (data.length > 0) {
-      const maxCols = Math.max(...data.map(row => row.length));
-      data.forEach(row => {
-        while (row.length < maxCols) {
-          row.push({ content: '' });
-        }
-      });
+    return data;
+  };
+
+  // Parse pasted clipboard data with improved format handling
+  const parseClipboardData = (text: string): { data: CellData[][]; format: string } | null => {
+    // Normalize line endings for initial detection
+    const normalizedText = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    if (!normalizedText.trim()) return null;
+
+    const { format, delimiter, isMarkdown } = detectFormat(normalizedText);
+    let data: CellData[][];
+
+    if (isMarkdown) {
+      // Use line-based parsing for markdown (it doesn't support multiline cells natively)
+      data = parseMarkdownTable(normalizedText);
+    } else {
+      // Use quote-aware parsing for TSV/CSV
+      data = parseDelimitedWithQuotes(normalizedText, delimiter);
     }
 
-    return data.length > 0 ? { data, format } : null;
+    if (data.length === 0) return null;
+
+    // Normalize column count (fill missing cells with empty strings)
+    const maxCols = Math.max(...data.map(row => row.length));
+    data.forEach(row => {
+      while (row.length < maxCols) {
+        row.push({ content: '' });
+      }
+    });
+
+    return { data, format };
   };
 
   const handleLoadPastedData = () => {
@@ -154,14 +243,18 @@ export const TableEditor: React.FC<TableEditorProps> = ({
     const hasHeaders = lines.length > 1 && lines[1].includes('---');
     const data: CellData[][] = [];
 
-    lines.forEach((line, index) => {
+    lines.forEach((line) => {
       // Skip separator line
       if (line.includes('---')) return;
       
       const cells = line
         .split('|')
         .filter((cell, i, arr) => i > 0 && i < arr.length - 1) // Remove empty first/last
-        .map(cell => ({ content: cell.trim() }));
+        .map(cell => ({ 
+          content: cell
+            .replace(/<br\s*\/?>/gi, '\n') // Convert <br> back to newlines for editing
+            .trim() 
+        }));
       
       if (cells.length > 0) {
         data.push(cells);
@@ -194,7 +287,7 @@ export const TableEditor: React.FC<TableEditorProps> = ({
   };
 
   const addRow = () => {
-    const newRow = Array(tableData[0]?.length || 3).fill(null).map(() => ({ content: 'Cell' }));
+    const newRow = Array(tableData[0]?.length || 3).fill(null).map(() => ({ content: '' }));
     setTableData([...tableData, newRow]);
   };
 
@@ -204,7 +297,7 @@ export const TableEditor: React.FC<TableEditorProps> = ({
   };
 
   const addColumn = () => {
-    const newData = tableData.map(row => [...row, { content: 'Cell' }]);
+    const newData = tableData.map(row => [...row, { content: '' }]);
     setTableData(newData);
   };
 
@@ -217,10 +310,12 @@ export const TableEditor: React.FC<TableEditorProps> = ({
     if (tableData.length === 0) return '';
 
     let markdown = '';
-    const startRow = includeHeaders ? 1 : 0;
 
     tableData.forEach((row, rowIndex) => {
-      const cells = row.map(cell => cell.content).join(' | ');
+      // Encode newlines as <br /> for valid markdown table (one row per line)
+      const cells = row.map(cell => 
+        cell.content.replace(/\n/g, '<br />')
+      ).join(' | ');
       markdown += `| ${cells} |\n`;
 
       // Add separator after first row if headers are included
@@ -277,13 +372,13 @@ export const TableEditor: React.FC<TableEditorProps> = ({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto bg-background border-border z-[9999]">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-background border-border z-[9999]">
         <DialogHeader>
           <DialogTitle className="text-foreground">
             {mode === 'insert' ? 'Insert Table' : 'Edit Table'}
           </DialogTitle>
           <DialogDescription className="text-muted-foreground">
-            Edit cells, add/remove rows and columns to build your table.
+            Edit cells, add/remove rows and columns to build your table. Cells support multiple lines.
           </DialogDescription>
         </DialogHeader>
         
@@ -292,7 +387,7 @@ export const TableEditor: React.FC<TableEditorProps> = ({
           <div className="space-y-2">
             <Label className="text-foreground">Paste table data:</Label>
             <p className="text-xs text-muted-foreground">
-              Supports: Markdown tables (with pipes), Excel/Sheets (tab-separated), or CSV
+              Supports: Markdown tables, Excel/Sheets (tab-separated), or CSV. Multiline cells are preserved.
             </p>
             <div className="flex gap-2">
               <Textarea
@@ -339,65 +434,74 @@ export const TableEditor: React.FC<TableEditorProps> = ({
             </div>
           </div>
 
-          {/* Table Editor */}
-          <div className="border border-border rounded-lg overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr>
-                  <th className="w-12 bg-muted/50 border-r border-border"></th>
+          {/* Table Editor - constrained width */}
+          <div className="border border-border rounded-lg overflow-hidden">
+            <div className="overflow-x-auto max-h-[400px] overflow-y-auto">
+              <table className="w-full table-fixed" style={{ minWidth: '400px' }}>
+                <colgroup>
+                  <col className="w-12" />
                   {tableData[0]?.map((_, colIndex) => (
-                    <th key={colIndex} className="bg-muted/50 border-r border-border p-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => deleteColumn(colIndex)}
-                        className="h-6 w-6 p-0"
-                        title="Delete column"
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </th>
+                    <col key={colIndex} style={{ minWidth: '120px', maxWidth: '250px' }} />
                   ))}
-                </tr>
-              </thead>
-              <tbody>
-                {tableData.map((row, rowIndex) => (
-                  <tr key={rowIndex} className="border-t border-border">
-                    <td className="bg-muted/50 border-r border-border p-2 text-center">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => deleteRow(rowIndex)}
-                        className="h-6 w-6 p-0"
-                        title="Delete row"
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </Button>
-                    </td>
-                    {row.map((cell, colIndex) => (
-                      <td key={colIndex} className="border-r border-border p-1">
-                        <Input
-                          value={cell.content}
-                          onChange={(e) => updateCell(rowIndex, colIndex, e.target.value)}
-                          className={`text-sm ${
-                            includeHeaders && rowIndex === 0 
-                              ? 'font-semibold bg-primary/5' 
-                              : ''
-                          }`}
-                        />
-                      </td>
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th className="w-12 bg-muted/50 border-r border-b border-border"></th>
+                    {tableData[0]?.map((_, colIndex) => (
+                      <th key={colIndex} className="bg-muted/50 border-r border-b border-border p-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => deleteColumn(colIndex)}
+                          className="h-6 w-6 p-0"
+                          title="Delete column"
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {tableData.map((row, rowIndex) => (
+                    <tr key={rowIndex} className="border-b border-border last:border-b-0">
+                      <td className="bg-muted/50 border-r border-border p-2 text-center">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => deleteRow(rowIndex)}
+                          className="h-6 w-6 p-0"
+                          title="Delete row"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </td>
+                      {row.map((cell, colIndex) => (
+                        <td key={colIndex} className="border-r border-border p-1 last:border-r-0 align-top">
+                          <Textarea
+                            value={cell.content}
+                            onChange={(e) => updateCell(rowIndex, colIndex, e.target.value)}
+                            rows={2}
+                            className={`text-sm resize-none min-h-[48px] max-h-[120px] ${
+                              includeHeaders && rowIndex === 0 
+                                ? 'font-semibold bg-primary/5' 
+                                : ''
+                            }`}
+                          />
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           {/* Markdown Preview */}
           <div className="space-y-2">
             <Label className="text-foreground">Markdown Preview:</Label>
-            <div className="bg-muted/30 p-3 rounded-md overflow-x-auto">
-              <pre className="text-xs font-mono text-foreground whitespace-pre">
+            <div className="bg-muted/30 p-3 rounded-md overflow-x-auto max-w-full">
+              <pre className="text-xs font-mono text-foreground whitespace-pre-wrap break-all">
                 {generateTableMarkdown()}
               </pre>
             </div>
