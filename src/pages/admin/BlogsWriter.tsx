@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { slugify } from '@/utils/slugify';
 import { applySpanStyle, applyDivStyle } from '@/utils/editorStyleUtils';
 import { handleListKeyDown } from '@/utils/editorListUtils';
-import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw, Maximize2, Minimize2, RemoveFormatting, Minus } from 'lucide-react';
+import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw, Maximize2, Minimize2, RemoveFormatting, Minus, Code2 } from 'lucide-react';
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import PasswordGate from '@/components/admin/PasswordGate';
 import AboutBackground from '@/components/AboutBackground';
@@ -59,6 +59,7 @@ const alignCenter: ICommand = { name: 'alignCenter', keyCommand: 'alignCenter', 
 const alignRight: ICommand = { name: 'alignRight', keyCommand: 'alignRight', buttonProps: { 'aria-label': 'Align right', title: 'Align right' }, icon: <AlignRight size={14} />, execute: (state, api) => api.replaceSelection(applyDivStyle(state.selectedText, 'text-align: right')) };
 const alignJustify: ICommand = { name: 'alignJustify', keyCommand: 'alignJustify', buttonProps: { 'aria-label': 'Justify', title: 'Justify text' }, icon: <AlignJustify size={14} />, execute: (state, api) => api.replaceSelection(applyDivStyle(state.selectedText, 'text-align: justify')) };
 const underline: ICommand = { name: 'underline', keyCommand: 'underline', buttonProps: { 'aria-label': 'Underline text', title: 'Underline text' }, icon: <Underline size={14} />, execute: (state, api) => api.replaceSelection(`<u>${state.selectedText || 'text'}</u>`) };
+const fontCode: ICommand = { name: 'fontCode', keyCommand: 'fontCode', buttonProps: { 'aria-label': 'Code font (monospace)', title: 'Code font (monospace)' }, icon: <Code2 size={14} />, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'font-family: "Fira Code", monospace')) };
 // clearFormatting is defined inside the component to work reliably with the editor selection
 // Heading commands are defined inside the component to work reliably with the editor selection
 
@@ -438,6 +439,7 @@ export default function BlogsWriter() {
     commands.link,
     commands.quote,
     commands.code,
+    fontCode,
     commands.divider,
     commands.unorderedListCommand,
     commands.orderedListCommand,

@@ -16,8 +16,8 @@ const customSchema = {
 };
 
 // Safe CSS properties allowed for inline styling
-const safeProperties = ['color', 'fontSize', 'textAlign', 'backgroundColor'];
-const safeCssProperties = ['color', 'font-size', 'text-align', 'background-color'];
+const safeProperties = ['color', 'fontSize', 'textAlign', 'backgroundColor', 'fontFamily'];
+const safeCssProperties = ['color', 'font-size', 'text-align', 'background-color', 'font-family'];
 
 // Helper to parse CSS string and apply only safe CSS properties
 const parseSafeStyles = (styleString: string): React.CSSProperties => {
