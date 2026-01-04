@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Plus, Trash2, X, ClipboardPaste } from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Table, Plus, Trash2, X, ClipboardPaste, GripVertical } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -24,6 +24,10 @@ interface CellData {
   content: string;
 }
 
+const DEFAULT_COL_WIDTH = 150;
+const MIN_COL_WIDTH = 80;
+const MAX_COL_WIDTH = 400;
+
 export const TableEditor: React.FC<TableEditorProps> = ({ 
   onInsert, 
   existingTable,
@@ -33,6 +37,12 @@ export const TableEditor: React.FC<TableEditorProps> = ({
   const [tableData, setTableData] = useState<CellData[][]>([]);
   const [includeHeaders, setIncludeHeaders] = useState(true);
   const [pasteInput, setPasteInput] = useState('');
+  const [columnWidths, setColumnWidths] = useState<number[]>([]);
+  
+  // Resize state
+  const resizingColRef = useRef<number | null>(null);
+  const startXRef = useRef<number>(0);
+  const startWidthRef = useRef<number>(0);
 
   // Quote-aware parser for TSV/CSV that preserves newlines inside quoted fields
   const parseDelimitedWithQuotes = (text: string, delimiter: string): CellData[][] => {
@@ -286,6 +296,14 @@ export const TableEditor: React.FC<TableEditorProps> = ({
     setTableData(newData);
   };
 
+  // Initialize/sync column widths when table data changes
+  useEffect(() => {
+    const colCount = tableData[0]?.length || 0;
+    if (colCount > 0 && columnWidths.length !== colCount) {
+      setColumnWidths(Array(colCount).fill(DEFAULT_COL_WIDTH));
+    }
+  }, [tableData, columnWidths.length]);
+
   const addRow = () => {
     const newRow = Array(tableData[0]?.length || 3).fill(null).map(() => ({ content: '' }));
     setTableData([...tableData, newRow]);
@@ -299,12 +317,44 @@ export const TableEditor: React.FC<TableEditorProps> = ({
   const addColumn = () => {
     const newData = tableData.map(row => [...row, { content: '' }]);
     setTableData(newData);
+    setColumnWidths([...columnWidths, DEFAULT_COL_WIDTH]);
   };
 
   const deleteColumn = (colIndex: number) => {
     if (tableData[0]?.length <= 1) return; // Keep at least one column
     setTableData(tableData.map(row => row.filter((_, i) => i !== colIndex)));
+    setColumnWidths(columnWidths.filter((_, i) => i !== colIndex));
   };
+
+  // Column resize handlers
+  const handleResizeStart = useCallback((colIndex: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    resizingColRef.current = colIndex;
+    startXRef.current = e.clientX;
+    startWidthRef.current = columnWidths[colIndex] || DEFAULT_COL_WIDTH;
+    
+    document.addEventListener('mousemove', handleResizeMove);
+    document.addEventListener('mouseup', handleResizeEnd);
+  }, [columnWidths]);
+
+  const handleResizeMove = useCallback((e: MouseEvent) => {
+    if (resizingColRef.current === null) return;
+    
+    const delta = e.clientX - startXRef.current;
+    const newWidth = Math.min(MAX_COL_WIDTH, Math.max(MIN_COL_WIDTH, startWidthRef.current + delta));
+    
+    setColumnWidths(prev => {
+      const updated = [...prev];
+      updated[resizingColRef.current!] = newWidth;
+      return updated;
+    });
+  }, []);
+
+  const handleResizeEnd = useCallback(() => {
+    resizingColRef.current = null;
+    document.removeEventListener('mousemove', handleResizeMove);
+    document.removeEventListener('mouseup', handleResizeEnd);
+  }, [handleResizeMove]);
 
   const generateTableMarkdown = () => {
     if (tableData.length === 0) return '';
@@ -437,27 +487,40 @@ export const TableEditor: React.FC<TableEditorProps> = ({
           {/* Table Editor - constrained width */}
           <div className="border border-border rounded-lg overflow-hidden">
             <div className="overflow-x-auto max-h-[400px] overflow-y-auto">
-              <table className="w-full table-fixed" style={{ minWidth: '400px' }}>
+              <table className="table-fixed" style={{ minWidth: '400px' }}>
                 <colgroup>
                   <col className="w-12" />
                   {tableData[0]?.map((_, colIndex) => (
-                    <col key={colIndex} style={{ minWidth: '120px', maxWidth: '250px' }} />
+                    <col key={colIndex} style={{ width: `${columnWidths[colIndex] || DEFAULT_COL_WIDTH}px` }} />
                   ))}
                 </colgroup>
                 <thead>
                   <tr>
                     <th className="w-12 bg-muted/50 border-r border-b border-border"></th>
                     {tableData[0]?.map((_, colIndex) => (
-                      <th key={colIndex} className="bg-muted/50 border-r border-b border-border p-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => deleteColumn(colIndex)}
-                          className="h-6 w-6 p-0"
-                          title="Delete column"
+                      <th key={colIndex} className="bg-muted/50 border-r border-b border-border p-1 relative">
+                        <div className="flex items-center justify-between gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => deleteColumn(colIndex)}
+                            className="h-6 w-6 p-0"
+                            title="Delete column"
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                          <span className="text-[10px] text-muted-foreground">
+                            {columnWidths[colIndex] || DEFAULT_COL_WIDTH}px
+                          </span>
+                        </div>
+                        {/* Resize handle */}
+                        <div
+                          className="absolute top-0 right-0 h-full w-2 cursor-col-resize hover:bg-primary/30 active:bg-primary/50 z-10 flex items-center justify-center"
+                          onMouseDown={(e) => handleResizeStart(colIndex, e)}
+                          title="Drag to resize column"
                         >
-                          <X className="h-3 w-3" />
-                        </Button>
+                          <GripVertical className="h-3 w-3 text-muted-foreground/50" />
+                        </div>
                       </th>
                     ))}
                   </tr>
