@@ -72,19 +72,6 @@ export default function PromptLibraryDashboard() {
     },
   });
 
-  // Fetch distinct categories for filter dropdown
-  const { data: categories } = useQuery({
-    queryKey: ['prompt-categories'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('prompts')
-        .select('category')
-        .not('category', 'is', null);
-      if (error) throw error;
-      const uniqueCategories = [...new Set(data.map(p => p.category).filter(Boolean))].sort();
-      return uniqueCategories as string[];
-    },
-  });
 
   // Filter prompts based on search and filters
   const filteredPrompts = useMemo(() => {
