@@ -17,6 +17,16 @@ import { ArrowLeft, Save, Send, Trash2, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAutosave } from '@/hooks/useAutosave';
 
+const CATEGORIES = [
+  'General Purpose',
+  'Deep Reasoning',
+  'Search',
+  'Writing',
+  'Coding',
+  'Multi-Modal',
+  'Other'
+];
+
 const promptSchema = z.object({
   title: z.string().min(1, 'Title required').max(200, 'Title must be less than 200 characters'),
   role: z.string().optional(),
@@ -325,12 +335,19 @@ export default function PromptEditor() {
                   </div>
                   <div>
                     <Label htmlFor="category" className="text-cyan-300 font-rajdhani">Category</Label>
-                    <Input
-                      id="category"
-                      {...register('category')}
-                      placeholder="PM"
-                      className="border-cyan-400/30 focus:border-cyan-400"
-                    />
+                    <Select
+                      value={formData.category || ''}
+                      onValueChange={(value) => reset({ ...formData, category: value })}
+                    >
+                      <SelectTrigger id="category" className="border-cyan-400/30 focus:border-cyan-400">
+                        <SelectValue placeholder="Select a category..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {CATEGORIES.map(category => (
+                          <SelectItem key={category} value={category}>{category}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
