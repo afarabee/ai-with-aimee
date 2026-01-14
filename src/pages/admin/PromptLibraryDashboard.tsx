@@ -14,6 +14,16 @@ import { Edit, Eye, Trash2, Plus, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 
+const CATEGORIES = [
+  'General Purpose',
+  'Deep Reasoning',
+  'Search',
+  'Writing',
+  'Coding',
+  'Multi-Modal',
+  'Other'
+];
+
 interface Prompt {
   id: string;
   title: string;
@@ -206,7 +216,7 @@ export default function PromptLibraryDashboard() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Categories</SelectItem>
-                  {categories?.map(category => (
+                  {CATEGORIES.map(category => (
                     <SelectItem key={category} value={category}>{category}</SelectItem>
                   ))}
                 </SelectContent>
