@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigationGuard } from '@/hooks/useNavigationGuard';
 import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -52,10 +53,13 @@ interface Prompt {
 export default function PromptEditor() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const navGuard = useNavigationGuard();
   const promptId = searchParams.get('id');
   const [showClearDialog, setShowClearDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showNavigateAwayDialog, setShowNavigateAwayDialog] = useState(false);
   const [viewMode, setViewMode] = useState<'edit' | 'split' | 'preview'>('split');
+  const [initialFormData, setInitialFormData] = useState<PromptFormData | null>(null);
 
   const {
     register,
@@ -93,19 +97,63 @@ export default function PromptEditor() {
     enabled: !!promptId,
   });
 
-  // Prefill form when prompt loads
+  // Prefill form when prompt loads or initialize for new prompts
   useEffect(() => {
     if (prompt) {
-      reset({
+      const loadedData: PromptFormData = {
         title: prompt.title,
         role: prompt.role || '',
         category: prompt.category || '',
         tags: prompt.tags.join(', '),
         body: prompt.body,
         status: prompt.status as 'Draft' | 'Published',
-      });
+      };
+      reset(loadedData);
+      setInitialFormData(loadedData);
+    } else if (!promptId) {
+      // For new prompts, set initial values so isDirty can detect changes
+      const defaultFormData: PromptFormData = {
+        title: '',
+        role: '',
+        category: '',
+        tags: '',
+        body: '',
+        status: 'Draft',
+      };
+      setInitialFormData(defaultFormData);
     }
-  }, [prompt, reset]);
+  }, [prompt, promptId, reset]);
+
+  // Calculate if form is dirty
+  const isDirty = useMemo(() => {
+    if (!initialFormData) return false;
+    return JSON.stringify(formData) !== JSON.stringify(initialFormData);
+  }, [formData, initialFormData]);
+
+  // Sync dirty state with navigation guard context
+  useEffect(() => {
+    navGuard.setIsDirty(isDirty);
+    return () => navGuard.setIsDirty(false);
+  }, [isDirty]);
+
+  // Show dialog when navigation is blocked by sidebar
+  useEffect(() => {
+    if (navGuard.pendingNavigation) {
+      setShowNavigateAwayDialog(true);
+    }
+  }, [navGuard.pendingNavigation]);
+
+  // Handle browser back/refresh
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isDirty]);
 
   // Save draft function
   const saveDraft = async () => {
@@ -137,8 +185,10 @@ export default function PromptEditor() {
         navigate(`/admin/prompt-editor?id=${newPrompt.id}`, { replace: true });
       }
 
-      // Update form status to reflect saved state
-      reset({ ...data, status: 'Draft' });
+      // Update form status and initial data to reflect saved state
+      const savedData = { ...data, status: 'Draft' as const };
+      reset(savedData);
+      setInitialFormData(savedData);
 
       toast.success('Draft saved', {
         style: {
@@ -183,8 +233,10 @@ export default function PromptEditor() {
         navigate(`/admin/prompt-editor?id=${newPrompt.id}`, { replace: true });
       }
 
-      // Update form status to reflect published state
-      reset({ ...data, status: 'Published' });
+      // Update form status and initial data to reflect published state
+      const savedData = { ...data, status: 'Published' as const };
+      reset(savedData);
+      setInitialFormData(savedData);
 
       toast.success('Prompt published!', {
         style: {
@@ -219,6 +271,9 @@ export default function PromptEditor() {
         .eq('id', promptId);
       if (error) throw error;
 
+      // Update initial data to reflect saved state
+      setInitialFormData(data);
+
       toast.success('Published prompt updated!', {
         style: {
           background: 'rgba(249, 249, 64, 0.1)',
@@ -252,8 +307,10 @@ export default function PromptEditor() {
         .eq('id', promptId);
       if (error) throw error;
 
-      // Update form status to reflect draft state
-      reset({ ...data, status: 'Draft' });
+      // Update form status and initial data to reflect draft state
+      const savedData = { ...data, status: 'Draft' as const };
+      reset(savedData);
+      setInitialFormData(savedData);
 
       toast.success('Prompt unpublished', {
         style: {
@@ -312,6 +369,15 @@ export default function PromptEditor() {
   const parsedTags = formData.tags.split(',').map(t => t.trim()).filter(Boolean);
   const charCount = formData.body?.length || 0;
 
+  // Handle back navigation with dirty check
+  const handleBackClick = () => {
+    if (isDirty) {
+      navGuard.setPendingNavigation('/admin/prompt-library');
+    } else {
+      navigate('/admin/prompt-library');
+    }
+  };
+
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -319,7 +385,7 @@ export default function PromptEditor() {
         <div className="flex items-center justify-between">
           <Button
             variant="ghost"
-            onClick={() => navigate('/admin/prompt-library')}
+            onClick={handleBackClick}
             className="text-cyan-300 hover:text-cyan-400 hover:bg-cyan-400/10"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -676,6 +742,58 @@ export default function PromptEditor() {
                 className="bg-pink-400/20 border-2 border-pink-400 text-pink-400 hover:bg-pink-400/30"
               >
                 Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Navigate Away Dialog */}
+        <AlertDialog 
+          open={showNavigateAwayDialog} 
+          onOpenChange={(open) => { 
+            setShowNavigateAwayDialog(open); 
+            if (!open) navGuard.setPendingNavigation(null); 
+          }}
+        >
+          <AlertDialogContent className="bg-background/95 border-2 border-cyan-400/50">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-cyan-400 font-rajdhani">Unsaved Changes</AlertDialogTitle>
+              <AlertDialogDescription>
+                You have unsaved changes. What would you like to do?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+              <AlertDialogCancel 
+                onClick={() => navGuard.setPendingNavigation(null)}
+                className="border-cyan-400 text-cyan-300"
+              >
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction 
+                onClick={() => { 
+                  const target = navGuard.pendingNavigation; 
+                  navGuard.setPendingNavigation(null); 
+                  if (target) navigate(target); 
+                }} 
+                className="bg-pink-400/20 border-2 border-pink-400 text-pink-400 hover:bg-pink-400/30"
+              >
+                Exit Without Saving
+              </AlertDialogAction>
+              <AlertDialogAction 
+                onClick={async () => { 
+                  await saveDraft(); 
+                  const target = navGuard.pendingNavigation; 
+                  navGuard.setPendingNavigation(null); 
+                  if (target) navigate(target); 
+                }}
+                style={{
+                  background: 'rgba(0, 255, 255, 0.1)',
+                  border: '2px solid hsl(var(--color-cyan))',
+                  color: 'hsl(var(--color-cyan))',
+                }}
+                className="hover:bg-cyan-400/20"
+              >
+                Save Changes
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
