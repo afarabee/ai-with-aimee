@@ -9,10 +9,11 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Plus, Trash2, FlaskConical, Copy, ChevronRight, CheckCircle, Clock } from 'lucide-react';
+import { Plus, Trash2, FlaskConical, Copy, ChevronRight, CheckCircle, Clock, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import TestScoringModal from '@/components/admin/TestScoringModal';
+import { parseMarkdownContent } from '@/utils/markdownParser';
 
 interface Prompt {
   id: string;
@@ -25,6 +26,7 @@ interface Model {
   id: string;
   name: string;
   provider: string;
+  url: string | null;
 }
 
 interface TestResult {
@@ -109,7 +111,7 @@ export default function TestLabDashboard() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('models')
-        .select('id, name, provider')
+        .select('id, name, provider, url')
         .order('name');
       if (error) throw error;
       return data as Model[];
@@ -139,12 +141,24 @@ export default function TestLabDashboard() {
 
       return test;
     },
-    onSuccess: () => {
+    onSuccess: async (createdTest) => {
+      // Fetch the full test with prompt and results data
+      const { data: fullTest } = await supabase
+        .from('tests')
+        .select(`*, prompt:prompts(id, title, category, body), test_results(*)`)
+        .eq('id', createdTest.id)
+        .single();
+
       queryClient.invalidateQueries({ queryKey: ['tests'] });
       toast.success('Test created!');
       setIsNewTestOpen(false);
       setSelectedPromptId('');
       setSelectedModelIds([]);
+
+      // Immediately open in edit mode
+      if (fullTest) {
+        setViewingTest(fullTest as Test);
+      }
     },
     onError: (error) => {
       toast.error('Failed to create test: ' + error.message);
@@ -592,13 +606,13 @@ export default function TestLabDashboard() {
                 </Button>
               </div>
               <div
-                className="p-3 rounded-md text-sm text-[hsl(var(--color-light-text))] max-h-40 overflow-y-auto"
+                className="p-3 rounded-md text-sm max-h-40 overflow-y-auto prose prose-invert prose-sm max-w-none"
                 style={{
                   background: 'rgba(0, 0, 0, 0.3)',
                   border: '1px solid hsl(var(--color-cyan) / 0.2)',
                 }}
               >
-                {viewingTest?.prompt?.body}
+                {viewingTest?.prompt?.body && parseMarkdownContent(viewingTest.prompt.body)}
               </div>
             </div>
 
@@ -630,6 +644,20 @@ export default function TestLabDashboard() {
                           <p className="text-xs text-[hsl(var(--color-pink))]">{model?.provider}</p>
                         </div>
                         <div className="flex items-center gap-2">
+                          {model?.url && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 text-[hsl(var(--color-pink))] hover:bg-pink-500/20"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                window.open(model.url!, '_blank');
+                              }}
+                              title={`Open ${model.name}`}
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                            </Button>
+                          )}
                           {tr.scored_at ? (
                             <CheckCircle className="h-5 w-5 text-green-400" />
                           ) : (
