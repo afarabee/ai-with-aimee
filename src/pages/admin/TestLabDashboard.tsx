@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Plus, Trash2, FlaskConical, Copy, ChevronRight, CheckCircle, Clock, ExternalLink } from 'lucide-react';
+import { Plus, Trash2, FlaskConical, Copy, ChevronRight, CheckCircle, Clock, ExternalLink, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import TestScoringModal from '@/components/admin/TestScoringModal';
@@ -73,6 +73,16 @@ export default function TestLabDashboard() {
   const [viewingTest, setViewingTest] = useState<Test | null>(null);
   const [scoringResult, setScoringResult] = useState<{ testResult: TestResult; model: Model; test: Test } | null>(null);
   const [addModelsTest, setAddModelsTest] = useState<Test | null>(null);
+  const [editedPromptBody, setEditedPromptBody] = useState<string>('');
+
+  // Initialize edited prompt when viewing test changes
+  useEffect(() => {
+    if (viewingTest?.prompt?.body) {
+      setEditedPromptBody(viewingTest.prompt.body);
+    } else {
+      setEditedPromptBody('');
+    }
+  }, [viewingTest]);
 
   // Fetch all tests with related data
   const { data: tests, isLoading: testsLoading } = useQuery({
@@ -563,7 +573,7 @@ export default function TestLabDashboard() {
       {/* Test Detail View */}
       <Dialog open={!!viewingTest} onOpenChange={() => setViewingTest(null)}>
         <DialogContent
-          className="sm:max-w-2xl max-h-[85vh] overflow-y-auto"
+          className="sm:max-w-5xl w-[90vw] max-h-[90vh] overflow-y-auto"
           style={{
             background: 'rgba(26, 11, 46, 0.95)',
             border: '2px solid hsl(var(--color-cyan) / 0.4)',
@@ -594,26 +604,39 @@ export default function TestLabDashboard() {
             {/* Prompt Body */}
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <Label className="text-[hsl(var(--color-pink))]">Prompt</Label>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => viewingTest?.prompt?.body && handleCopyPrompt(viewingTest.prompt.body)}
-                  className="text-xs text-[hsl(var(--color-cyan))] hover:bg-cyan-500/10"
-                >
-                  <Copy className="h-3 w-3 mr-1" />
-                  Copy Prompt
-                </Button>
+                <Label className="text-[hsl(var(--color-pink))]">Prompt (editable for this session)</Label>
+                <div className="flex gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => viewingTest?.prompt?.body && setEditedPromptBody(viewingTest.prompt.body)}
+                    className="text-xs text-[hsl(var(--color-light-text))] hover:bg-white/10"
+                    disabled={editedPromptBody === viewingTest?.prompt?.body}
+                  >
+                    <RotateCcw className="h-3 w-3 mr-1" />
+                    Reset
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editedPromptBody && handleCopyPrompt(editedPromptBody)}
+                    className="text-xs text-[hsl(var(--color-cyan))] hover:bg-cyan-500/10"
+                  >
+                    <Copy className="h-3 w-3 mr-1" />
+                    Copy Prompt
+                  </Button>
+                </div>
               </div>
-              <div
-                className="p-3 rounded-md text-sm max-h-40 overflow-y-auto prose prose-invert prose-sm max-w-none"
+              <textarea
+                value={editedPromptBody}
+                onChange={(e) => setEditedPromptBody(e.target.value)}
+                className="w-full min-h-[200px] max-h-80 p-3 rounded-md text-sm font-mono text-[hsl(var(--color-light-text))] resize-y focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                 style={{
                   background: 'rgba(0, 0, 0, 0.3)',
                   border: '1px solid hsl(var(--color-cyan) / 0.2)',
                 }}
-              >
-                {viewingTest?.prompt?.body && parseMarkdownContent(viewingTest.prompt.body)}
-              </div>
+                placeholder="Prompt content..."
+              />
             </div>
 
             {/* Models to Score */}
