@@ -53,7 +53,7 @@ export default function ModelsDashboard() {
       const { data, error } = await supabase
         .from('models')
         .select('*')
-        .order('date_added', { ascending: false });
+        .order('name', { ascending: true });
       if (error) throw error;
       return data as Model[];
     },
