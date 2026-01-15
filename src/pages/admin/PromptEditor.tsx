@@ -15,7 +15,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { ArrowLeft, Save, Send, Trash2, X } from 'lucide-react';
 import { toast } from 'sonner';
-import { useAutosave } from '@/hooks/useAutosave';
 
 const CATEGORIES = [
   'General Purpose',
@@ -60,10 +59,10 @@ export default function PromptEditor() {
 
   const {
     register,
-    handleSubmit,
     formState: { errors },
     reset,
     watch,
+    getValues,
   } = useForm<PromptFormData>({
     resolver: zodResolver(promptSchema),
     defaultValues: {
@@ -109,7 +108,8 @@ export default function PromptEditor() {
   }, [prompt, reset]);
 
   // Save draft function
-  const saveDraft = async (data: PromptFormData) => {
+  const saveDraft = async () => {
+    const data = getValues();
     try {
       const promptData = {
         title: data.title,
@@ -137,6 +137,9 @@ export default function PromptEditor() {
         navigate(`/admin/prompt-editor?id=${newPrompt.id}`, { replace: true });
       }
 
+      // Update form status to reflect saved state
+      reset({ ...data, status: 'Draft' });
+
       toast.success('Draft saved', {
         style: {
           background: 'rgba(0, 255, 255, 0.1)',
@@ -150,8 +153,9 @@ export default function PromptEditor() {
     }
   };
 
-  // Publish/Update function
-  const onSubmit = async (data: PromptFormData) => {
+  // Publish prompt function
+  const publishPrompt = async () => {
+    const data = getValues();
     try {
       const promptData = {
         title: data.title,
@@ -159,7 +163,7 @@ export default function PromptEditor() {
         category: data.category || null,
         tags: data.tags.split(',').map(t => t.trim()).filter(Boolean),
         body: data.body,
-        status: data.status,
+        status: 'Published',
         last_modified: new Date().toISOString(),
       };
 
@@ -179,26 +183,90 @@ export default function PromptEditor() {
         navigate(`/admin/prompt-editor?id=${newPrompt.id}`, { replace: true });
       }
 
-      toast.success(
-        data.status === 'Published' ? 'Prompt published!' : 'Prompt updated!',
-        {
-          style: {
-            background: 'rgba(249, 249, 64, 0.1)',
-            border: '1px solid hsl(var(--color-yellow))',
-            color: 'hsl(var(--color-yellow))',
-          },
-        }
-      );
+      // Update form status to reflect published state
+      reset({ ...data, status: 'Published' });
 
-      setTimeout(() => navigate('/admin/prompt-library'), 1000);
+      toast.success('Prompt published!', {
+        style: {
+          background: 'rgba(249, 249, 64, 0.1)',
+          border: '1px solid hsl(var(--color-yellow))',
+          color: 'hsl(var(--color-yellow))',
+        },
+      });
     } catch (error) {
-      console.error('Error saving prompt:', error);
-      toast.error('Failed to save prompt');
+      console.error('Error publishing prompt:', error);
+      toast.error('Failed to publish prompt');
     }
   };
 
-  // Auto-save every 30 seconds
-  useAutosave(formData, () => saveDraft(formData), 30000);
+  // Update published prompt function
+  const updatePublished = async () => {
+    const data = getValues();
+    try {
+      const promptData = {
+        title: data.title,
+        role: data.role || null,
+        category: data.category || null,
+        tags: data.tags.split(',').map(t => t.trim()).filter(Boolean),
+        body: data.body,
+        status: 'Published',
+        last_modified: new Date().toISOString(),
+      };
+
+      const { error } = await supabase
+        .from('prompts')
+        .update(promptData)
+        .eq('id', promptId);
+      if (error) throw error;
+
+      toast.success('Published prompt updated!', {
+        style: {
+          background: 'rgba(249, 249, 64, 0.1)',
+          border: '1px solid hsl(var(--color-yellow))',
+          color: 'hsl(var(--color-yellow))',
+        },
+      });
+    } catch (error) {
+      console.error('Error updating prompt:', error);
+      toast.error('Failed to update prompt');
+    }
+  };
+
+  // Unpublish prompt function
+  const unpublishPrompt = async () => {
+    const data = getValues();
+    try {
+      const promptData = {
+        title: data.title,
+        role: data.role || null,
+        category: data.category || null,
+        tags: data.tags.split(',').map(t => t.trim()).filter(Boolean),
+        body: data.body,
+        status: 'Draft',
+        last_modified: new Date().toISOString(),
+      };
+
+      const { error } = await supabase
+        .from('prompts')
+        .update(promptData)
+        .eq('id', promptId);
+      if (error) throw error;
+
+      // Update form status to reflect draft state
+      reset({ ...data, status: 'Draft' });
+
+      toast.success('Prompt unpublished', {
+        style: {
+          background: 'rgba(0, 255, 255, 0.1)',
+          border: '1px solid hsl(var(--color-cyan))',
+          color: 'hsl(var(--color-cyan))',
+        },
+      });
+    } catch (error) {
+      console.error('Error unpublishing prompt:', error);
+      toast.error('Failed to unpublish prompt');
+    }
+  };
 
   // Delete prompt
   const handleDelete = async () => {
@@ -305,7 +373,7 @@ export default function PromptEditor() {
                 {promptId ? 'Edit Prompt' : 'New Prompt'}
               </h2>
 
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <form className="space-y-6">
                 {/* Title */}
                 <div>
                   <Label htmlFor="title" className="text-cyan-300 font-rajdhani">
@@ -351,21 +419,21 @@ export default function PromptEditor() {
                   </div>
                 </div>
 
-                {/* Status */}
+                {/* Status (Read-only) */}
                 <div>
-                  <Label htmlFor="status" className="text-cyan-300 font-rajdhani">Status</Label>
-                  <Select
-                    value={formData.status}
-                    onValueChange={(value) => reset({ ...formData, status: value as 'Draft' | 'Published' })}
-                  >
-                    <SelectTrigger id="status" className="border-cyan-400/30 focus:border-cyan-400">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Draft">Draft</SelectItem>
-                      <SelectItem value="Published">Published</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Label className="text-cyan-300 font-rajdhani">Status</Label>
+                  <div className="mt-2">
+                    {formData.status === 'Draft' && (
+                      <Badge variant="outline" className="bg-muted text-muted-foreground border-muted-foreground/50">
+                        Draft - Not visible to public
+                      </Badge>
+                    )}
+                    {formData.status === 'Published' && (
+                      <Badge className="bg-primary/20 text-primary border-primary border">
+                        Published - Available for use
+                      </Badge>
+                    )}
+                  </div>
                 </div>
 
                 {/* Tags */}
@@ -413,10 +481,11 @@ export default function PromptEditor() {
 
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-3">
+                  {/* Always show Save Draft */}
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => saveDraft(formData)}
+                    onClick={saveDraft}
                     style={{
                       background: 'rgba(0, 255, 255, 0.1)',
                       border: '2px solid hsl(var(--color-cyan))',
@@ -427,19 +496,56 @@ export default function PromptEditor() {
                     <Save className="mr-2 h-4 w-4" />
                     Save Draft
                   </Button>
-                  <Button
-                    type="submit"
-                    variant="outline"
-                    style={{
-                      background: 'rgba(249, 249, 64, 0.1)',
-                      border: '2px solid hsl(var(--color-yellow))',
-                      color: 'hsl(var(--color-yellow))',
-                    }}
-                    className="hover:bg-yellow-400/20"
-                  >
-                    <Send className="mr-2 h-4 w-4" />
-                    {formData.status === 'Published' ? 'Publish' : 'Update'}
-                  </Button>
+
+                  {/* Status-based buttons */}
+                  {formData.status === 'Published' ? (
+                    <>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={updatePublished}
+                        style={{
+                          background: 'rgba(34, 197, 94, 0.1)',
+                          border: '2px solid #22c55e',
+                          color: '#22c55e',
+                        }}
+                        className="hover:bg-green-500/20"
+                      >
+                        <Save className="mr-2 h-4 w-4" />
+                        Update Published
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={unpublishPrompt}
+                        style={{
+                          background: 'rgba(249, 249, 64, 0.1)',
+                          border: '2px solid hsl(var(--color-yellow))',
+                          color: 'hsl(var(--color-yellow))',
+                        }}
+                        className="hover:bg-yellow-400/20"
+                      >
+                        Unpublish
+                      </Button>
+                    </>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={publishPrompt}
+                      style={{
+                        background: 'rgba(249, 249, 64, 0.1)',
+                        border: '2px solid hsl(var(--color-yellow))',
+                        color: 'hsl(var(--color-yellow))',
+                      }}
+                      className="hover:bg-yellow-400/20"
+                    >
+                      <Send className="mr-2 h-4 w-4" />
+                      Publish Now
+                    </Button>
+                  )}
+
+                  {/* Clear button */}
                   <Button
                     type="button"
                     variant="outline"
@@ -454,6 +560,8 @@ export default function PromptEditor() {
                     <X className="mr-2 h-4 w-4" />
                     Clear
                   </Button>
+
+                  {/* Delete button (only for existing prompts) */}
                   {promptId && (
                     <Button
                       type="button"
