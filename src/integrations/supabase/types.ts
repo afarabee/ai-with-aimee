@@ -137,6 +137,7 @@ export type Database = {
           name: string
           provider: string
           tags: string[] | null
+          url: string | null
         }
         Insert: {
           date_added?: string
@@ -146,6 +147,7 @@ export type Database = {
           name: string
           provider: string
           tags?: string[] | null
+          url?: string | null
         }
         Update: {
           date_added?: string
@@ -155,6 +157,7 @@ export type Database = {
           name?: string
           provider?: string
           tags?: string[] | null
+          url?: string | null
         }
         Relationships: []
       }
