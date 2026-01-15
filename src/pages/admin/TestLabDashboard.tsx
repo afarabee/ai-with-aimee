@@ -630,7 +630,7 @@ export default function TestLabDashboard() {
               <textarea
                 value={editedPromptBody}
                 onChange={(e) => setEditedPromptBody(e.target.value)}
-                className="w-full min-h-[200px] max-h-80 p-3 rounded-md text-sm font-mono text-[hsl(var(--color-light-text))] resize-y focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                className="w-full min-h-[400px] max-h-[500px] p-3 rounded-md text-sm font-mono text-[hsl(var(--color-light-text))] resize-y focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                 style={{
                   background: 'rgba(0, 0, 0, 0.3)',
                   border: '1px solid hsl(var(--color-cyan) / 0.2)',
