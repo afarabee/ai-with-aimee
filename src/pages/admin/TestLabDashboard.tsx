@@ -96,7 +96,7 @@ export default function TestLabDashboard() {
       const { data, error } = await supabase
         .from('prompts')
         .select('id, title, category, body')
-        .eq('status', 'Active')
+        .eq('status', 'Published')
         .order('title');
       if (error) throw error;
       return data as Prompt[];
