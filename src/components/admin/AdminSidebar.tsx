@@ -1,4 +1,4 @@
-import { FileText, Image, Brain, Mail, MailOpen, BarChart3, LogOut, ArrowLeft, LayoutDashboard, Rocket } from 'lucide-react';
+import { FileText, Image, Brain, Mail, MailOpen, BarChart3, LogOut, ArrowLeft, LayoutDashboard, Rocket, Map, Bot, FlaskConical, ChevronDown } from 'lucide-react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   Sidebar,
@@ -12,8 +12,10 @@ import {
   SidebarTrigger,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { toast } from 'sonner';
 import { useNavigationGuard } from '@/hooks/useNavigationGuard';
+import { useState } from 'react';
 
 const adminModules = [
   {
@@ -78,18 +80,26 @@ const adminModules = [
   },
 ];
 
+const modelMapModules = [
+  { title: 'My Models', url: '/admin/models', icon: Bot },
+  { title: 'Prompt Library', url: '/admin/prompt-library', icon: Brain },
+  { title: 'Test Lab', url: '/admin/test-lab', icon: FlaskConical },
+  { title: 'My Model Map', url: '/admin/model-map', icon: Map },
+];
+
 export default function AdminSidebar() {
   const { open } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
   const navGuard = useNavigationGuard();
+  const [modelMapOpen, setModelMapOpen] = useState(
+    modelMapModules.some(m => location.pathname.startsWith(m.url))
+  );
   
   const isActive = (path: string) => {
-    // Exact match for dashboard
     if (path === '/admin' && location.pathname === '/admin') {
       return true;
     }
-    // Prefix match for other routes
     return path !== '/admin' && location.pathname.startsWith(path);
   };
 
@@ -98,7 +108,6 @@ export default function AdminSidebar() {
       e.preventDefault();
       return;
     }
-    // If there are unsaved changes, block navigation and show dialog
     if (navGuard.isDirty && url !== location.pathname) {
       e.preventDefault();
       navGuard.setPendingNavigation(url);
@@ -169,7 +178,7 @@ export default function AdminSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {adminModules.map((item) => (
+              {adminModules.filter(m => m.url !== '/admin/prompt-library').map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     asChild
@@ -207,6 +216,51 @@ export default function AdminSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+
+              {/* Model Map Collapsible Section */}
+              <Collapsible open={modelMapOpen} onOpenChange={setModelMapOpen}>
+                <CollapsibleTrigger className="w-full">
+                  <div
+                    className={`flex items-center gap-3 p-3 rounded-md transition-all cursor-pointer ${
+                      modelMapModules.some(m => isActive(m.url))
+                        ? 'bg-pink-500/20 border-l-4 border-pink-400'
+                        : 'hover:bg-pink-500/10'
+                    }`}
+                    style={{
+                      color: modelMapModules.some(m => isActive(m.url))
+                        ? 'hsl(var(--color-pink))'
+                        : 'hsl(var(--color-light-text))',
+                    }}
+                  >
+                    <Map className="h-5 w-5 flex-shrink-0" />
+                    {open && (
+                      <>
+                        <span className="font-rajdhani flex-1 text-left">Model Map</span>
+                        <ChevronDown className={`h-4 w-4 transition-transform ${modelMapOpen ? 'rotate-180' : ''}`} />
+                      </>
+                    )}
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="ml-4 mt-1 space-y-1">
+                    {modelMapModules.map((item) => (
+                      <NavLink
+                        key={item.url}
+                        to={item.url}
+                        onClick={(e) => handleNavClick(e, item.url, false)}
+                        className={`flex items-center gap-3 p-2 rounded-md transition-all ${
+                          isActive(item.url)
+                            ? 'bg-cyan-500/20 text-[hsl(var(--color-cyan))]'
+                            : 'hover:bg-cyan-500/10 text-[hsl(var(--color-light-text))]'
+                        }`}
+                      >
+                        <item.icon className="h-4 w-4 flex-shrink-0" />
+                        {open && <span className="font-rajdhani text-sm">{item.title}</span>}
+                      </NavLink>
+                    ))}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

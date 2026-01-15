@@ -30,6 +30,9 @@ import NewsletterDashboard from "./pages/admin/NewsletterDashboard";
 import NewsletterComposer from "./pages/admin/NewsletterComposer";
 import NewsletterLogs from "./pages/admin/NewsletterLogs";
 import HeadshotEditor from "./pages/admin/HeadshotEditor";
+import ModelsDashboard from "./pages/admin/ModelsDashboard";
+import TestLabDashboard from "./pages/admin/TestLabDashboard";
+import ModelMapDashboard from "./pages/admin/ModelMapDashboard";
 
 
 const queryClient = new QueryClient();
@@ -74,6 +77,9 @@ const App = () => {
               <Route path="newsletter-composer" element={<NewsletterComposer />} />
               <Route path="newsletter-logs" element={<NewsletterLogs />} />
               <Route path="headshot-editor" element={<HeadshotEditor />} />
+              <Route path="models" element={<ModelsDashboard />} />
+              <Route path="test-lab" element={<TestLabDashboard />} />
+              <Route path="model-map" element={<ModelMapDashboard />} />
             </Route>
             {/* Standalone Blog Writer - Full-screen editor without sidebar */}
             <Route path="/admin/blogs/new" element={<BlogsWriter />} />

@@ -68,6 +68,96 @@ export type Database = {
         }
         Relationships: []
       }
+      model_map_insights: {
+        Row: {
+          category: string
+          comparison_data: Json | null
+          heatmap_data: Json | null
+          id: string
+          last_calculated: string
+          pro_tip: string | null
+          runner_up_model_id: string | null
+          runner_up_tagline: string | null
+          strengths: string[] | null
+          weaknesses: string[] | null
+          winner_model_id: string | null
+          winner_tagline: string | null
+        }
+        Insert: {
+          category: string
+          comparison_data?: Json | null
+          heatmap_data?: Json | null
+          id?: string
+          last_calculated?: string
+          pro_tip?: string | null
+          runner_up_model_id?: string | null
+          runner_up_tagline?: string | null
+          strengths?: string[] | null
+          weaknesses?: string[] | null
+          winner_model_id?: string | null
+          winner_tagline?: string | null
+        }
+        Update: {
+          category?: string
+          comparison_data?: Json | null
+          heatmap_data?: Json | null
+          id?: string
+          last_calculated?: string
+          pro_tip?: string | null
+          runner_up_model_id?: string | null
+          runner_up_tagline?: string | null
+          strengths?: string[] | null
+          weaknesses?: string[] | null
+          winner_model_id?: string | null
+          winner_tagline?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "model_map_insights_runner_up_model_id_fkey"
+            columns: ["runner_up_model_id"]
+            isOneToOne: false
+            referencedRelation: "models"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "model_map_insights_winner_model_id_fkey"
+            columns: ["winner_model_id"]
+            isOneToOne: false
+            referencedRelation: "models"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      models: {
+        Row: {
+          date_added: string
+          description: string | null
+          id: string
+          last_modified: string
+          name: string
+          provider: string
+          tags: string[] | null
+        }
+        Insert: {
+          date_added?: string
+          description?: string | null
+          id?: string
+          last_modified?: string
+          name: string
+          provider: string
+          tags?: string[] | null
+        }
+        Update: {
+          date_added?: string
+          description?: string | null
+          id?: string
+          last_modified?: string
+          name?: string
+          provider?: string
+          tags?: string[] | null
+        }
+        Relationships: []
+      }
       newsletter_queue: {
         Row: {
           blocks: Json
@@ -196,6 +286,101 @@ export type Database = {
           title?: string
         }
         Relationships: []
+      }
+      test_results: {
+        Row: {
+          accuracy_score: number | null
+          created_at: string
+          id: string
+          model_id: string
+          notes: string | null
+          practical_guidance_score: number | null
+          scored_at: string | null
+          speed_label: string | null
+          speed_score: number | null
+          style_score: number | null
+          technical_detail_score: number | null
+          test_id: string
+          x_factor_score: number | null
+        }
+        Insert: {
+          accuracy_score?: number | null
+          created_at?: string
+          id?: string
+          model_id: string
+          notes?: string | null
+          practical_guidance_score?: number | null
+          scored_at?: string | null
+          speed_label?: string | null
+          speed_score?: number | null
+          style_score?: number | null
+          technical_detail_score?: number | null
+          test_id: string
+          x_factor_score?: number | null
+        }
+        Update: {
+          accuracy_score?: number | null
+          created_at?: string
+          id?: string
+          model_id?: string
+          notes?: string | null
+          practical_guidance_score?: number | null
+          scored_at?: string | null
+          speed_label?: string | null
+          speed_score?: number | null
+          style_score?: number | null
+          technical_detail_score?: number | null
+          test_id?: string
+          x_factor_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "test_results_model_id_fkey"
+            columns: ["model_id"]
+            isOneToOne: false
+            referencedRelation: "models"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "test_results_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tests: {
+        Row: {
+          created_at: string
+          id: string
+          prompt_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          prompt_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          prompt_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tests_prompt_id_fkey"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "prompts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
