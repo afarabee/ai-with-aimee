@@ -9,7 +9,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Plus, Edit, Trash2, Bot } from 'lucide-react';
+import { Plus, Edit, Trash2, Bot, ExternalLink, Copy, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 
@@ -19,6 +19,7 @@ interface Model {
   provider: string;
   description: string | null;
   tags: string[];
+  url: string | null;
   date_added: string;
   last_modified: string;
 }
@@ -28,6 +29,7 @@ interface ModelFormData {
   provider: string;
   description: string;
   tags: string;
+  url: string;
 }
 
 export default function ModelsDashboard() {
@@ -39,8 +41,10 @@ export default function ModelsDashboard() {
     name: '',
     provider: '',
     description: '',
-    tags: ''
+    tags: '',
+    url: ''
   });
+  const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
 
   // Fetch all models
   const { data: models, isLoading } = useQuery({
@@ -68,6 +72,7 @@ export default function ModelsDashboard() {
         provider: data.provider,
         description: data.description || null,
         tags: tagsArray,
+        url: data.url.trim() || null,
       };
 
       if (editingModel) {
@@ -120,10 +125,11 @@ export default function ModelsDashboard() {
         provider: model.provider,
         description: model.description || '',
         tags: model.tags.join(', '),
+        url: model.url || '',
       });
     } else {
       setEditingModel(null);
-      setFormData({ name: '', provider: '', description: '', tags: '' });
+      setFormData({ name: '', provider: '', description: '', tags: '', url: '' });
     }
     setIsFormOpen(true);
   };
@@ -131,7 +137,14 @@ export default function ModelsDashboard() {
   const handleCloseForm = () => {
     setIsFormOpen(false);
     setEditingModel(null);
-    setFormData({ name: '', provider: '', description: '', tags: '' });
+    setFormData({ name: '', provider: '', description: '', tags: '', url: '' });
+  };
+
+  const handleCopyUrl = async (url: string, modelId: string) => {
+    await navigator.clipboard.writeText(url);
+    setCopiedUrl(modelId);
+    toast.success('URL copied!');
+    setTimeout(() => setCopiedUrl(null), 2000);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -202,6 +215,39 @@ export default function ModelsDashboard() {
                     {model.name}
                   </h3>
                   <p className="text-sm text-[hsl(var(--color-pink))]">{model.provider}</p>
+                  {model.url && (
+                    <div className="flex items-center gap-1 mt-1">
+                      <a
+                        href={model.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-[hsl(var(--color-cyan))] hover:text-[hsl(var(--color-pink))] transition-colors flex items-center gap-1"
+                      >
+                        <ExternalLink className="h-3 w-3" />
+                        <span className="truncate max-w-[120px]">
+                          {(() => {
+                            try {
+                              return new URL(model.url).hostname;
+                            } catch {
+                              return model.url;
+                            }
+                          })()}
+                        </span>
+                      </a>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleCopyUrl(model.url!, model.id)}
+                        className="h-5 w-5 text-[hsl(var(--color-cyan))] hover:bg-cyan-500/20"
+                      >
+                        {copiedUrl === model.id ? (
+                          <Check className="h-3 w-3" />
+                        ) : (
+                          <Copy className="h-3 w-3" />
+                        )}
+                      </Button>
+                    </div>
+                  )}
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -293,6 +339,19 @@ export default function ModelsDashboard() {
                 value={formData.provider}
                 onChange={(e) => setFormData({ ...formData, provider: e.target.value })}
                 placeholder="e.g., Anthropic"
+                className="bg-[hsl(var(--color-violet))] border-cyan-500/30 text-[hsl(var(--color-light-text))]"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="url" className="text-[hsl(var(--color-cyan))]">
+                URL
+              </Label>
+              <Input
+                id="url"
+                type="url"
+                value={formData.url}
+                onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                placeholder="https://..."
                 className="bg-[hsl(var(--color-violet))] border-cyan-500/30 text-[hsl(var(--color-light-text))]"
               />
             </div>
