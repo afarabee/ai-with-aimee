@@ -17,7 +17,7 @@ import { format } from 'date-fns';
 const CATEGORIES = [
   'General Purpose',
   'Deep Reasoning',
-  'Search',
+  'Research',
   'Writing',
   'Coding',
   'Multi-Modal',
