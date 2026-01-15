@@ -234,8 +234,8 @@ export default function TestLabDashboard() {
 
   const getModelById = (modelId: string) => models?.find(m => m.id === modelId);
 
-  const getExistingModelIds = (test: Test) => {
-    return test.test_results?.map(tr => tr.model_id) || [];
+  const getExistingModelIds = (test: Test | null) => {
+    return test?.test_results?.map(tr => tr.model_id) || [];
   };
 
   // Group prompts by category
@@ -503,7 +503,7 @@ export default function TestLabDashboard() {
           <div className="space-y-2">
             <Label className="text-[hsl(var(--color-cyan))]">Select Additional Models</Label>
             <div className="border border-cyan-500/30 rounded-md p-3 max-h-48 overflow-y-auto space-y-2">
-              {models?.filter(m => !getExistingModelIds(addModelsTest!).includes(m.id)).map((model) => (
+              {models?.filter(m => !getExistingModelIds(addModelsTest).includes(m.id)).map((model) => (
                 <div
                   key={model.id}
                   className="flex items-center gap-3 p-2 rounded hover:bg-cyan-500/10 cursor-pointer"
