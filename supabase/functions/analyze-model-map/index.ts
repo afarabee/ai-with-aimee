@@ -172,8 +172,8 @@ Respond in JSON format:
 }
 `;
 
-    // Call Lovable AI
-    const aiResponse = await fetch('https://ai.lovable.dev/api/chat', {
+    // Call Lovable AI via OpenAI-compatible endpoint
+    const aiResponse = await fetch('https://api.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
