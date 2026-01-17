@@ -257,29 +257,27 @@ export default function TestScoringModal({
           </div>
 
           {/* Speed */}
+          {/* Speed */}
           <div className="space-y-2">
             <CriteriaLabel label="Speed" criteriaKey="speed" />
-            <div className="flex items-center gap-4">
-              <StarRating value={scores.speed} onChange={(v) => setScores({ ...scores, speed: v })} />
-              <div className="flex gap-1">
-                {(['slow', 'medium', 'fast'] as const).map((label) => (
-                  <Button
-                    key={label}
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setScores({ ...scores, speedLabel: label })}
-                    className={`text-xs capitalize ${
-                      scores.speedLabel === label
-                        ? 'bg-cyan-500/20 border-cyan-500 text-[hsl(var(--color-cyan))]'
-                        : 'border-cyan-500/30 text-[hsl(var(--color-light-text))]'
-                    }`}
-                  >
-                    {label === 'fast' && <Zap className="h-3 w-3 mr-1" />}
-                    {label}
-                  </Button>
-                ))}
-              </div>
+            <div className="flex gap-2">
+              {(['slow', 'medium', 'fast'] as const).map((label) => (
+                <Button
+                  key={label}
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setScores({ ...scores, speedLabel: label })}
+                  className={`text-xs capitalize ${
+                    scores.speedLabel === label
+                      ? 'bg-cyan-500/20 border-cyan-500 text-[hsl(var(--color-cyan))]'
+                      : 'border-cyan-500/30 text-[hsl(var(--color-light-text))]'
+                  }`}
+                >
+                  {label === 'fast' && <Zap className="h-3 w-3 mr-1" />}
+                  {label}
+                </Button>
+              ))}
             </div>
           </div>
 
