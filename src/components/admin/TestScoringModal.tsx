@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Star, Sparkles, Zap } from 'lucide-react';
+import { Star, Sparkles, Zap, Info } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 
 interface TestResult {
@@ -57,6 +58,39 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string
   'Multi-Modal': { bg: 'hsl(var(--color-yellow) / 0.15)', text: 'hsl(var(--color-yellow))', border: 'hsl(var(--color-yellow) / 0.5)' },
   'Other': { bg: 'hsl(0 0% 50% / 0.15)', text: 'hsl(0 0% 70%)', border: 'hsl(0 0% 50% / 0.5)' },
 };
+
+const CRITERIA_TOOLTIPS: Record<string, string> = {
+  accuracy: "How correct, factual, and error-free is the response?",
+  speed: "How quickly did the model return a response?",
+  style: "How well does the tone, voice, and formatting match the request?",
+  practicalGuidance: "How actionable and immediately usable is the output?",
+  technicalDetail: "How thorough is the explanation of how and why things work?",
+  xFactor: "Did the response surprise you with unexpected quality or creativity?",
+};
+
+interface CriteriaLabelProps {
+  label: string;
+  criteriaKey: string;
+  colorClass?: string;
+}
+
+function CriteriaLabel({ label, criteriaKey, colorClass = 'text-[hsl(var(--color-cyan))]' }: CriteriaLabelProps) {
+  return (
+    <div className="flex items-center gap-1.5">
+      <Label className={colorClass}>{label}</Label>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button type="button" className="opacity-50 hover:opacity-100 transition-opacity">
+            <Info className="h-3.5 w-3.5 text-[hsl(var(--color-light-text))]" />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="right" className="max-w-xs bg-slate-900 border-slate-700">
+          <p className="text-sm">{CRITERIA_TOOLTIPS[criteriaKey]}</p>
+        </TooltipContent>
+      </Tooltip>
+    </div>
+  );
+}
 
 interface StarRatingProps {
   value: number;
@@ -181,6 +215,7 @@ export default function TestScoringModal({
   });
 
   return (
+    <TooltipProvider>
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         className="sm:max-w-lg max-h-[90vh] overflow-y-auto"
@@ -217,13 +252,13 @@ export default function TestScoringModal({
         <div className="space-y-5">
           {/* Accuracy */}
           <div className="space-y-2">
-            <Label className="text-[hsl(var(--color-cyan))]">Accuracy</Label>
+            <CriteriaLabel label="Accuracy" criteriaKey="accuracy" />
             <StarRating value={scores.accuracy} onChange={(v) => setScores({ ...scores, accuracy: v })} />
           </div>
 
           {/* Speed */}
           <div className="space-y-2">
-            <Label className="text-[hsl(var(--color-cyan))]">Speed</Label>
+            <CriteriaLabel label="Speed" criteriaKey="speed" />
             <div className="flex items-center gap-4">
               <StarRating value={scores.speed} onChange={(v) => setScores({ ...scores, speed: v })} />
               <div className="flex gap-1">
@@ -250,25 +285,25 @@ export default function TestScoringModal({
 
           {/* Style */}
           <div className="space-y-2">
-            <Label className="text-[hsl(var(--color-cyan))]">Style</Label>
+            <CriteriaLabel label="Style" criteriaKey="style" />
             <StarRating value={scores.style} onChange={(v) => setScores({ ...scores, style: v })} />
           </div>
 
           {/* Practical Guidance */}
           <div className="space-y-2">
-            <Label className="text-[hsl(var(--color-cyan))]">Practical Guidance</Label>
+            <CriteriaLabel label="Practical Guidance" criteriaKey="practicalGuidance" />
             <StarRating value={scores.practicalGuidance} onChange={(v) => setScores({ ...scores, practicalGuidance: v })} />
           </div>
 
           {/* Technical Detail */}
           <div className="space-y-2">
-            <Label className="text-[hsl(var(--color-cyan))]">Technical Detail</Label>
+            <CriteriaLabel label="Technical Detail" criteriaKey="technicalDetail" />
             <StarRating value={scores.technicalDetail} onChange={(v) => setScores({ ...scores, technicalDetail: v })} />
           </div>
 
           {/* X-Factor */}
           <div className="space-y-2">
-            <Label className="text-[hsl(var(--color-yellow))]">X-Factor (Optional)</Label>
+            <CriteriaLabel label="X-Factor (Optional)" criteriaKey="xFactor" colorClass="text-[hsl(var(--color-yellow))]" />
             <StarRating
               value={scores.xFactor}
               onChange={(v) => setScores({ ...scores, xFactor: v })}
@@ -308,5 +343,6 @@ export default function TestScoringModal({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    </TooltipProvider>
   );
 }
