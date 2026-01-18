@@ -75,14 +75,14 @@ export default function TestLabDashboard() {
   const [addModelsTest, setAddModelsTest] = useState<Test | null>(null);
   const [editedPromptBody, setEditedPromptBody] = useState<string>('');
 
-  // Initialize edited prompt when viewing test changes
+  // Initialize edited prompt only when viewing a DIFFERENT test (not on refetch of same test)
   useEffect(() => {
     if (viewingTest?.prompt?.body) {
       setEditedPromptBody(viewingTest.prompt.body);
     } else {
       setEditedPromptBody('');
     }
-  }, [viewingTest]);
+  }, [viewingTest?.id]);
 
   // Fetch all tests with related data
   const { data: tests, isLoading: testsLoading } = useQuery({
