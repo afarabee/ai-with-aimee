@@ -118,9 +118,14 @@ export default function TestLabDashboard() {
     }
   }, [viewingTest?.id]);
 
-  // Auto-open create modal if promptId is in URL (from Prompt Library)
+  // State for category filter from URL
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+
+  // Auto-open create modal if promptId or category is in URL
   useEffect(() => {
     const promptIdFromUrl = searchParams.get('promptId');
+    const categoryFromUrl = searchParams.get('category');
+    
     if (promptIdFromUrl && prompts) {
       const promptExists = prompts.some(p => p.id === promptIdFromUrl);
       if (promptExists) {
@@ -130,6 +135,13 @@ export default function TestLabDashboard() {
         searchParams.delete('promptId');
         setSearchParams(searchParams, { replace: true });
       }
+    } else if (categoryFromUrl && prompts) {
+      // Set category filter and open create modal
+      setCategoryFilter(categoryFromUrl);
+      setIsNewTestOpen(true);
+      // Clear the URL param so refreshing doesn't re-open
+      searchParams.delete('category');
+      setSearchParams(searchParams, { replace: true });
     }
   }, [prompts, searchParams, setSearchParams]);
 
@@ -338,8 +350,12 @@ export default function TestLabDashboard() {
     return test?.test_results?.map(tr => tr.model_id) || [];
   };
 
-  // Group prompts by category
-  const promptsByCategory = prompts?.reduce((acc, prompt) => {
+  // Group prompts by category (filtered if categoryFilter is set)
+  const filteredPrompts = categoryFilter 
+    ? prompts?.filter(p => p.category === categoryFilter) 
+    : prompts;
+  
+  const promptsByCategory = filteredPrompts?.reduce((acc, prompt) => {
     const cat = prompt.category || 'Other';
     if (!acc[cat]) acc[cat] = [];
     acc[cat].push(prompt);
@@ -503,7 +519,12 @@ export default function TestLabDashboard() {
       )}
 
       {/* New Test Modal */}
-      <Dialog open={isNewTestOpen} onOpenChange={setIsNewTestOpen}>
+      <Dialog open={isNewTestOpen} onOpenChange={(open) => {
+        setIsNewTestOpen(open);
+        if (!open) {
+          setCategoryFilter(null);
+        }
+      }}>
         <DialogContent
           className="sm:max-w-lg max-h-[80vh] overflow-y-auto"
           style={{
@@ -515,6 +536,14 @@ export default function TestLabDashboard() {
           <DialogHeader>
             <DialogTitle className="text-xl font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
               Start a New Test
+              {categoryFilter && (
+                <Badge 
+                  variant="outline" 
+                  className="ml-2 text-xs font-normal border-pink-500/50 text-[hsl(var(--color-pink))]"
+                >
+                  {categoryFilter}
+                </Badge>
+              )}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-6">

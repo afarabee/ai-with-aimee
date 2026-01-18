@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Brain, Zap, Code, Search, Home, Palette, PenTool, Package, Trophy, Medal, Lightbulb, CheckCircle, XCircle, LayoutGrid } from 'lucide-react';
+import { Brain, Zap, Code, Search, Home, Palette, PenTool, Package, Trophy, Medal, Lightbulb, CheckCircle, XCircle, LayoutGrid, FlaskConical } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface Model {
@@ -64,6 +66,7 @@ const CATEGORIES = [
 const CRITERIA = ['Accuracy', 'Speed', 'Style', 'Practical Guidance', 'Technical Detail'];
 
 export default function ModelMapDashboard() {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('Summary');
 
   // Fetch all models
@@ -248,10 +251,23 @@ export default function ModelMapDashboard() {
                     </p>
                   )}
                   
-                  <div className="mt-3 pt-2 border-t border-cyan-500/10">
+                  <div className="mt-3 pt-2 border-t border-cyan-500/10 flex items-center justify-between">
                     <span className="text-xs text-[hsl(var(--color-pink))]">
                       {testCount} test{testCount !== 1 ? 's' : ''} completed
                     </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 px-2 text-[hsl(var(--color-cyan))] hover:bg-cyan-500/20 hover:text-[hsl(var(--color-cyan))]"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/admin/test-lab?category=${encodeURIComponent(cat.id)}`);
+                      }}
+                      title={`Create new test for ${cat.label}`}
+                    >
+                      <FlaskConical className="h-4 w-4 mr-1" />
+                      <span className="text-xs">New Test</span>
+                    </Button>
                   </div>
                 </Card>
               );
