@@ -3,24 +3,21 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
-import ScrollToTop from "@/components/ScrollToTop";
-import PageTransition from "@/components/PageTransition";
-import BackToTop from "@/components/BackToTop";
-import { useSpotlightEffect } from "@/hooks/useSpotlightEffect";
 import Index from "./pages/Index";
 import About from "./pages/About";
-import NotFound from "./pages/NotFound";
 import MyAIJourney from "./pages/MyAIJourney";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
-import BlogEditor from "./pages/admin/BlogEditor";
-import BlogDashboard from "./pages/admin/BlogDashboard";
-import BlogsHub from "./pages/admin/BlogsHub";
-import BlogsWriter from "./pages/admin/BlogsWriter";
+import ModelMap from "./pages/ModelMap";
+import NotFound from "./pages/NotFound";
 import AdminLayout from "./components/admin/AdminLayout";
 import AdminHome from "./pages/admin/AdminHome";
+import BlogDashboard from "./pages/admin/BlogDashboard";
+import BlogEditor from "./pages/admin/BlogEditor";
+import BlogsHub from "./pages/admin/BlogsHub";
+import BlogsWriter from "./pages/admin/BlogsWriter";
 import ProjectDashboard from "./pages/admin/ProjectDashboard";
 import ProjectEditor from "./pages/admin/ProjectEditor";
 import AssetGallery from "./pages/admin/AssetGallery";
@@ -33,7 +30,10 @@ import HeadshotEditor from "./pages/admin/HeadshotEditor";
 import ModelsDashboard from "./pages/admin/ModelsDashboard";
 import TestLabDashboard from "./pages/admin/TestLabDashboard";
 import ModelMapDashboard from "./pages/admin/ModelMapDashboard";
-
+import ScrollToTop from "./components/ScrollToTop";
+import BackToTop from "./components/BackToTop";
+import PageTransition from "./components/PageTransition";
+import { useSpotlightEffect } from "./hooks/useSpotlightEffect";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +57,7 @@ const App = () => {
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:slug" element={<ProjectDetail />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/model-map" element={<ModelMap />} />
             {/* SEO redirect - old slug variation points to canonical URL */}
             <Route path="/blog/agents-arent-the-answer" element={<Navigate to="/blog/agents-arent-always-the-answer" replace />} />
             {/* Dynamic blog post handler - renders all posts via BlogPost.tsx */}
