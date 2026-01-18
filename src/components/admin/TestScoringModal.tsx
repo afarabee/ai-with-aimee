@@ -60,7 +60,7 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string
 };
 
 const CRITERIA_TOOLTIPS: Record<string, string> = {
-  accuracy: "How confident are you that the response is correct and trustworthy?",
+  accuracy: "How well did the model follow instructions?",
   speed: "How quickly did the model return a response?",
   style: "How well does the tone, voice, and formatting match the request?",
   practicalGuidance: "How actionable and immediately usable is the output?",
