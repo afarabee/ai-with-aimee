@@ -333,14 +333,21 @@ export default function TestLabDashboard() {
                     <h3 className="text-lg font-rajdhani font-bold text-[hsl(var(--color-cyan))] mb-1">
                       {test.prompt?.title || 'Untitled'}
                     </h3>
+                    {test.prompt?.body && (
+                      <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70 mb-2 line-clamp-2">
+                        {test.prompt.body.length > 120 
+                          ? test.prompt.body.substring(0, 120) + '...' 
+                          : test.prompt.body}
+                      </p>
+                    )}
                     <Badge
-                      style={{
-                        background: categoryColor.bg,
-                        color: categoryColor.text,
-                        borderColor: categoryColor.border,
-                      }}
                       variant="outline"
                       className="text-xs"
+                      style={{
+                        background: 'hsl(var(--color-pink) / 0.15)',
+                        color: 'hsl(var(--color-pink))',
+                        borderColor: 'hsl(var(--color-pink) / 0.5)',
+                      }}
                     >
                       {test.prompt?.category || 'Other'}
                     </Badge>
