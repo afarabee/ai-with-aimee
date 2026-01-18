@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Edit, Eye, Trash2, Plus, Search } from 'lucide-react';
+import { Edit, Eye, Trash2, Plus, Search, FlaskConical } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 
@@ -130,6 +130,11 @@ export default function PromptLibraryDashboard() {
         color: 'hsl(var(--color-cyan))',
       },
     });
+  };
+
+  // Handle launch test
+  const handleLaunchTest = (promptId: string) => {
+    navigate(`/admin/test-lab?promptId=${promptId}`);
   };
 
   return (
@@ -309,6 +314,15 @@ export default function PromptLibraryDashboard() {
                         <Button
                           size="sm"
                           variant="outline"
+                          onClick={() => handleLaunchTest(prompt.id)}
+                          className="border-green-400 text-green-400 hover:bg-green-400/10"
+                          title="Launch Test"
+                        >
+                          <FlaskConical className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
                           onClick={() => setPreviewPrompt(prompt)}
                           className="border-yellow-400 text-yellow-300 hover:bg-yellow-400/10"
                         >
@@ -388,6 +402,15 @@ export default function PromptLibraryDashboard() {
                   >
                     <Edit className="mr-2 h-4 w-4" />
                     Edit
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleLaunchTest(prompt.id)}
+                    className="border-green-400 text-green-400 hover:bg-green-400/10"
+                    title="Launch Test"
+                  >
+                    <FlaskConical className="h-4 w-4" />
                   </Button>
                   <Button
                     size="sm"
