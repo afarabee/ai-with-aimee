@@ -92,9 +92,7 @@ export default function AdminSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const navGuard = useNavigationGuard();
-  const [modelMapOpen, setModelMapOpen] = useState(
-    modelMapModules.some(m => location.pathname.startsWith(m.url))
-  );
+  const [modelMapOpen, setModelMapOpen] = useState(true);
   
   const isActive = (path: string) => {
     if (path === '/admin' && location.pathname === '/admin') {

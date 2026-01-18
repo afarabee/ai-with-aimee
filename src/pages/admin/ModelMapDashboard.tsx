@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Brain, Zap, Code, Search, Home, Palette, PenTool, Package, Trophy, Medal, Lightbulb, CheckCircle, XCircle } from 'lucide-react';
+import { Brain, Zap, Code, Search, Home, Palette, PenTool, Package, Trophy, Medal, Lightbulb, CheckCircle, XCircle, LayoutGrid } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface Model {
@@ -64,7 +64,7 @@ const CATEGORIES = [
 const CRITERIA = ['Accuracy', 'Speed', 'Style', 'Practical Guidance', 'Technical Detail'];
 
 export default function ModelMapDashboard() {
-  const [selectedCategory, setSelectedCategory] = useState('Deep Reasoning');
+  const [selectedCategory, setSelectedCategory] = useState('Summary');
 
   // Fetch all models
   const { data: models } = useQuery({
@@ -158,7 +158,7 @@ export default function ModelMapDashboard() {
         <p className="text-[hsl(var(--color-light-text))] opacity-70 mt-1">
           Explore model types, strengths, weaknesses, and best practices
         </p>
-        {currentInsight && (
+        {selectedCategory !== 'Summary' && currentInsight && (
           <p className="text-xs text-[hsl(var(--color-pink))] mt-2">
             Last updated: {format(new Date(currentInsight.last_calculated), 'MMM d, yyyy h:mm a')}
           </p>
@@ -168,6 +168,18 @@ export default function ModelMapDashboard() {
       {/* Category Tabs */}
       <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
         <TabsList className="flex flex-wrap gap-2 h-auto bg-transparent p-0">
+          {/* Summary Tab First */}
+          <TabsTrigger
+            value="Summary"
+            className="data-[state=active]:bg-pink-500/20 data-[state=active]:text-[hsl(var(--color-pink))] data-[state=active]:border-pink-500 border border-transparent px-4 py-2 rounded-md transition-all"
+            style={{
+              background: 'rgba(26, 11, 46, 0.4)',
+            }}
+          >
+            <LayoutGrid className="h-4 w-4 mr-2" />
+            Summary
+          </TabsTrigger>
+          
           {CATEGORIES.map((cat) => {
             const Icon = cat.icon;
             return (
@@ -185,6 +197,67 @@ export default function ModelMapDashboard() {
             );
           })}
         </TabsList>
+
+        {/* Summary Tab Content */}
+        <TabsContent value="Summary" className="mt-6 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {CATEGORIES.map((cat) => {
+              const Icon = cat.icon;
+              const insight = insights?.find(i => i.category === cat.id);
+              const winner = getModelById(insight?.winner_model_id || null);
+              const runnerUp = getModelById(insight?.runner_up_model_id || null);
+              const testCount = tests?.filter(t => t.prompt?.category === cat.id).length || 0;
+
+              return (
+                <Card 
+                  key={cat.id}
+                  className="p-4 cursor-pointer hover:border-cyan-400 transition-all hover:shadow-[0_0_20px_rgba(0,255,255,0.2)]"
+                  onClick={() => setSelectedCategory(cat.id)}
+                  style={{
+                    background: 'rgba(26, 11, 46, 0.6)',
+                    border: '1px solid hsl(var(--color-cyan) / 0.2)',
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <Icon className="h-5 w-5 text-[hsl(var(--color-cyan))]" />
+                    <h3 className="font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
+                      {cat.label}
+                    </h3>
+                  </div>
+                  
+                  {winner ? (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Trophy className="h-4 w-4 text-[hsl(var(--color-yellow))]" />
+                        <span className="text-sm text-[hsl(var(--color-light-text))]">
+                          {winner.name}
+                        </span>
+                      </div>
+                      {runnerUp && (
+                        <div className="flex items-center gap-2">
+                          <Medal className="h-4 w-4 text-[hsl(var(--color-pink))]" />
+                          <span className="text-sm text-[hsl(var(--color-light-text))] opacity-70">
+                            {runnerUp.name}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-[hsl(var(--color-light-text))] opacity-50 italic">
+                      No data yet
+                    </p>
+                  )}
+                  
+                  <div className="mt-3 pt-2 border-t border-cyan-500/10">
+                    <span className="text-xs text-[hsl(var(--color-pink))]">
+                      {testCount} test{testCount !== 1 ? 's' : ''} completed
+                    </span>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        </TabsContent>
 
         {CATEGORIES.map((cat) => (
           <TabsContent key={cat.id} value={cat.id} className="mt-6 space-y-6">
