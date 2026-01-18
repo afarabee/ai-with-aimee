@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Star, Sparkles, Zap, Info } from 'lucide-react';
+import { Star, Sparkles, Zap, Info, HelpCircle } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 
@@ -241,9 +242,64 @@ export default function TestScoringModal({
       >
         <DialogHeader>
           <div className="space-y-2">
-            <DialogTitle className="text-xl font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
-              {model.name}
-            </DialogTitle>
+            <div className="flex items-center justify-between">
+              <DialogTitle className="text-xl font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
+                {model.name}
+              </DialogTitle>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 px-2 text-[hsl(var(--color-light-text))] hover:text-[hsl(var(--color-cyan))] hover:bg-cyan-500/10"
+                  >
+                    <HelpCircle className="h-4 w-4 mr-1" />
+                    Help
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  side="left"
+                  align="start"
+                  className="w-80 bg-slate-900 border-cyan-500/30 text-[hsl(var(--color-light-text))]"
+                >
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-[hsl(var(--color-cyan))]">Scoring Methodology</h4>
+                    <p className="text-xs opacity-80">
+                      Rate each model on a 1-5 star scale (except Speed and X-Factor) to evaluate performance across multiple dimensions.
+                    </p>
+                    <div className="space-y-2 text-xs">
+                      <div>
+                        <span className="font-medium text-[hsl(var(--color-cyan))]">Accuracy:</span>{' '}
+                        How well did the model follow your instructions?
+                      </div>
+                      <div>
+                        <span className="font-medium text-[hsl(var(--color-cyan))]">Speed:</span>{' '}
+                        Slow/Medium/Fast categorical rating for response time.
+                      </div>
+                      <div>
+                        <span className="font-medium text-[hsl(var(--color-cyan))]">Style:</span>{' '}
+                        Does the tone, voice, and formatting match your request?
+                      </div>
+                      <div>
+                        <span className="font-medium text-[hsl(var(--color-cyan))]">Practical Guidance:</span>{' '}
+                        Is the output actionable and immediately usable?
+                      </div>
+                      <div>
+                        <span className="font-medium text-[hsl(var(--color-cyan))]">Technical Detail:</span>{' '}
+                        How thorough is the explanation of how/why things work?
+                      </div>
+                      <div>
+                        <span className="font-medium text-[hsl(var(--color-yellow))]">X-Factor:</span>{' '}
+                        Bonus 1-3 stars for unexpected quality or creativity (optional).
+                      </div>
+                    </div>
+                    <p className="text-xs opacity-60 pt-2 border-t border-cyan-500/20">
+                      Completed scores contribute to the Model Map analytics and category insights.
+                    </p>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
             <p className="text-sm text-[hsl(var(--color-pink))]">{model.provider}</p>
             <div className="flex items-center gap-2">
               <Badge
