@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Edit, Eye, Trash2, Plus, Search, FlaskConical } from 'lucide-react';
+import { Edit, Eye, Trash2, Plus, Search, FlaskConical, Copy } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 
@@ -135,6 +135,40 @@ export default function PromptLibraryDashboard() {
   // Handle launch test
   const handleLaunchTest = (promptId: string) => {
     navigate(`/admin/test-lab?promptId=${promptId}`);
+  };
+
+  // Handle duplicate prompt
+  const handleDuplicatePrompt = async (prompt: Prompt) => {
+    try {
+      const { data, error } = await supabase
+        .from('prompts')
+        .insert({
+          title: `Copy of ${prompt.title}`,
+          role: prompt.role,
+          category: prompt.category,
+          tags: prompt.tags,
+          body: prompt.body,
+          status: 'Draft',
+        })
+        .select()
+        .single();
+      
+      if (error) throw error;
+      
+      toast.success(`Duplicated: ${prompt.title}`, {
+        style: {
+          background: 'rgba(0, 255, 255, 0.1)',
+          border: '1px solid hsl(var(--color-cyan))',
+          color: 'hsl(var(--color-cyan))',
+        },
+      });
+      
+      // Navigate to edit the new prompt
+      navigate(`/admin/prompt-editor?id=${data.id}`);
+    } catch (error) {
+      console.error('Duplicate error:', error);
+      toast.error('Failed to duplicate prompt');
+    }
   };
 
   return (
@@ -314,6 +348,15 @@ export default function PromptLibraryDashboard() {
                         <Button
                           size="sm"
                           variant="outline"
+                          onClick={() => handleDuplicatePrompt(prompt)}
+                          className="border-purple-400 text-purple-400 hover:bg-purple-400/10"
+                          title="Duplicate Prompt"
+                        >
+                          <Copy className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
                           onClick={() => handleLaunchTest(prompt.id)}
                           className="border-green-400 text-green-400 hover:bg-green-400/10"
                           title="Launch Test"
@@ -402,6 +445,15 @@ export default function PromptLibraryDashboard() {
                   >
                     <Edit className="mr-2 h-4 w-4" />
                     Edit
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleDuplicatePrompt(prompt)}
+                    className="border-purple-400 text-purple-400 hover:bg-purple-400/10"
+                    title="Duplicate Prompt"
+                  >
+                    <Copy className="h-4 w-4" />
                   </Button>
                   <Button
                     size="sm"
