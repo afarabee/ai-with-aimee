@@ -245,7 +245,32 @@ export default function TestLabDashboard() {
           .maybeSingle();
         
         if (freshTest) {
-          setViewingTest(freshTest as Test);
+          // Recalculate test status based on remaining models
+          const testResults = freshTest.test_results || [];
+          const allScored = testResults.length > 0 && 
+            testResults.every((tr: TestResult) => tr.scored_at !== null);
+          
+          // Update test status if needed
+          const newStatus = allScored ? 'complete' : 'pending';
+          if (freshTest.status !== newStatus) {
+            await supabase
+              .from('tests')
+              .update({ status: newStatus, updated_at: new Date().toISOString() })
+              .eq('id', freshTest.id);
+            
+            // Refetch with updated status
+            const { data: updatedTest } = await supabase
+              .from('tests')
+              .select(`*, prompt:prompts(id, title, category, body), test_results(*)`)
+              .eq('id', viewingTest.id)
+              .maybeSingle();
+            
+            if (updatedTest) {
+              setViewingTest(updatedTest as Test);
+            }
+          } else {
+            setViewingTest(freshTest as Test);
+          }
         }
       }
       
