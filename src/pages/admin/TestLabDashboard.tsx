@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -66,6 +67,7 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string
 
 export default function TestLabDashboard() {
   const queryClient = useQueryClient();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isNewTestOpen, setIsNewTestOpen] = useState(false);
   const [selectedPromptId, setSelectedPromptId] = useState<string>('');
   const [selectedModelIds, setSelectedModelIds] = useState<string[]>([]);
@@ -75,15 +77,6 @@ export default function TestLabDashboard() {
   const [addModelsTest, setAddModelsTest] = useState<Test | null>(null);
   const [editedPromptBody, setEditedPromptBody] = useState<string>('');
   const [deleteTestResult, setDeleteTestResult] = useState<{ id: string; modelName: string } | null>(null);
-
-  // Initialize edited prompt only when viewing a DIFFERENT test (not on refetch of same test)
-  useEffect(() => {
-    if (viewingTest?.prompt?.body) {
-      setEditedPromptBody(viewingTest.prompt.body);
-    } else {
-      setEditedPromptBody('');
-    }
-  }, [viewingTest?.id]);
 
   // Fetch all tests with related data
   const { data: tests, isLoading: testsLoading } = useQuery({
@@ -115,6 +108,30 @@ export default function TestLabDashboard() {
       return data as Prompt[];
     },
   });
+
+  // Initialize edited prompt only when viewing a DIFFERENT test (not on refetch of same test)
+  useEffect(() => {
+    if (viewingTest?.prompt?.body) {
+      setEditedPromptBody(viewingTest.prompt.body);
+    } else {
+      setEditedPromptBody('');
+    }
+  }, [viewingTest?.id]);
+
+  // Auto-open create modal if promptId is in URL (from Prompt Library)
+  useEffect(() => {
+    const promptIdFromUrl = searchParams.get('promptId');
+    if (promptIdFromUrl && prompts) {
+      const promptExists = prompts.some(p => p.id === promptIdFromUrl);
+      if (promptExists) {
+        setSelectedPromptId(promptIdFromUrl);
+        setIsNewTestOpen(true);
+        // Clear the URL param so refreshing doesn't re-open
+        searchParams.delete('promptId');
+        setSearchParams(searchParams, { replace: true });
+      }
+    }
+  }, [prompts, searchParams, setSearchParams]);
 
   // Fetch all models
   const { data: models } = useQuery({
