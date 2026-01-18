@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
@@ -147,6 +147,20 @@ export default function TestScoringModal({
     xFactor: testResult.x_factor_score || 0,
     notes: testResult.notes || '',
   });
+
+  // Sync form state when testResult prop changes (e.g., reopening modal with fresh data)
+  useEffect(() => {
+    setScores({
+      accuracy: testResult.accuracy_score || 0,
+      speed: testResult.speed_score || 0,
+      speedLabel: testResult.speed_label || 'medium',
+      style: testResult.style_score || 0,
+      practicalGuidance: testResult.practical_guidance_score || 0,
+      technicalDetail: testResult.technical_detail_score || 0,
+      xFactor: testResult.x_factor_score || 0,
+      notes: testResult.notes || '',
+    });
+  }, [testResult.id]);
 
   const categoryColor = CATEGORY_COLORS[promptCategory || 'Other'] || CATEGORY_COLORS['Other'];
 

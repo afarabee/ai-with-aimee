@@ -703,6 +703,43 @@ export default function TestLabDashboard() {
                 })}
               </div>
             </div>
+
+            {/* Footer with Save Test Button */}
+            <div className="flex justify-end pt-4 border-t border-cyan-500/20 mt-4">
+              <Button
+                onClick={async () => {
+                  if (!viewingTest) return;
+                  try {
+                    // Touch the test's updated_at timestamp to confirm save
+                    const { error } = await supabase
+                      .from('tests')
+                      .update({ updated_at: new Date().toISOString() })
+                      .eq('id', viewingTest.id);
+                    if (error) throw error;
+                    
+                    await queryClient.invalidateQueries({ queryKey: ['tests'] });
+                    
+                    // Refetch fresh data
+                    const { data: freshTest } = await supabase
+                      .from('tests')
+                      .select(`*, prompt:prompts(id, title, category, body), test_results(*)`)
+                      .eq('id', viewingTest.id)
+                      .maybeSingle();
+                    
+                    if (freshTest) {
+                      setViewingTest(freshTest as Test);
+                    }
+                    
+                    toast.success('Test saved successfully!');
+                  } catch (error: any) {
+                    toast.error('Failed to save test: ' + error.message);
+                  }
+                }}
+                className="btn-hero gap-2"
+              >
+                Save Test
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
@@ -717,13 +754,24 @@ export default function TestLabDashboard() {
           test={scoringResult.test}
           promptTitle={scoringResult.test.prompt?.title || ''}
           promptCategory={scoringResult.test.prompt?.category || null}
-          onSaved={() => {
-            queryClient.invalidateQueries({ queryKey: ['tests'] });
-            setScoringResult(null);
-            // Refresh viewing test data
+          onSaved={async () => {
+            // Invalidate the query cache
+            await queryClient.invalidateQueries({ queryKey: ['tests'] });
+            
+            // Refetch the current viewing test to get fresh data
             if (viewingTest) {
-              queryClient.invalidateQueries({ queryKey: ['tests'] });
+              const { data: freshTest } = await supabase
+                .from('tests')
+                .select(`*, prompt:prompts(id, title, category, body), test_results(*)`)
+                .eq('id', viewingTest.id)
+                .maybeSingle();
+              
+              if (freshTest) {
+                setViewingTest(freshTest as Test);
+              }
             }
+            
+            setScoringResult(null);
           }}
         />
       )}
