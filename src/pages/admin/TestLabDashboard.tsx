@@ -74,6 +74,7 @@ export default function TestLabDashboard() {
   const [scoringResult, setScoringResult] = useState<{ testResult: TestResult; model: Model; test: Test } | null>(null);
   const [addModelsTest, setAddModelsTest] = useState<Test | null>(null);
   const [editedPromptBody, setEditedPromptBody] = useState<string>('');
+  const [deleteTestResult, setDeleteTestResult] = useState<{ id: string; modelName: string } | null>(null);
 
   // Initialize edited prompt only when viewing a DIFFERENT test (not on refetch of same test)
   useEffect(() => {
@@ -220,6 +221,39 @@ export default function TestLabDashboard() {
     },
     onError: (error) => {
       toast.error('Failed to delete test: ' + error.message);
+    },
+  });
+
+  // Delete model from test (delete test_result)
+  const deleteTestResultMutation = useMutation({
+    mutationFn: async (testResultId: string) => {
+      const { error } = await supabase
+        .from('test_results')
+        .delete()
+        .eq('id', testResultId);
+      if (error) throw error;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['tests'] });
+      
+      // Refresh viewingTest with updated data (preserve editedPromptBody by not triggering useEffect)
+      if (viewingTest) {
+        const { data: freshTest } = await supabase
+          .from('tests')
+          .select(`*, prompt:prompts(id, title, category, body), test_results(*)`)
+          .eq('id', viewingTest.id)
+          .maybeSingle();
+        
+        if (freshTest) {
+          setViewingTest(freshTest as Test);
+        }
+      }
+      
+      toast.success('Model removed from test');
+      setDeleteTestResult(null);
+    },
+    onError: (error) => {
+      toast.error('Failed to remove model: ' + error.message);
     },
   });
 
@@ -674,6 +708,18 @@ export default function TestLabDashboard() {
                           <p className="text-xs text-[hsl(var(--color-pink))]">{model?.provider}</p>
                         </div>
                         <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-red-400 hover:bg-red-500/20 hover:text-red-300"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setDeleteTestResult({ id: tr.id, modelName: model?.name || 'Unknown' });
+                            }}
+                            title={`Remove ${model?.name} from test`}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                           {model?.url && (
                             <Button
                               variant="ghost"
@@ -802,6 +848,36 @@ export default function TestLabDashboard() {
               className="bg-pink-500/20 border border-pink-500 text-[hsl(var(--color-pink))] hover:bg-pink-500/30"
             >
               {deleteTestMutation.isPending ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete Model from Test Confirmation */}
+      <AlertDialog open={!!deleteTestResult} onOpenChange={() => setDeleteTestResult(null)}>
+        <AlertDialogContent
+          style={{
+            background: 'rgba(26, 11, 46, 0.95)',
+            border: '2px solid hsl(var(--color-pink) / 0.5)',
+          }}
+        >
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-[hsl(var(--color-pink))]">
+              Remove Model from Test?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-[hsl(var(--color-light-text))]">
+              This will remove <strong className="text-[hsl(var(--color-cyan))]">{deleteTestResult?.modelName}</strong> and any scores from this test. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-cyan-500/50 text-[hsl(var(--color-cyan))] hover:bg-cyan-500/10">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => deleteTestResult && deleteTestResultMutation.mutate(deleteTestResult.id)}
+              className="bg-red-600 text-white hover:bg-red-700"
+            >
+              {deleteTestResultMutation.isPending ? 'Removing...' : 'Remove'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
