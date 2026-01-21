@@ -385,6 +385,106 @@ export type Database = {
           },
         ]
       }
+      tool_test_results: {
+        Row: {
+          created_at: string
+          extra_capabilities_score: number | null
+          id: string
+          iteration_quality_score: number | null
+          model_used_id: string | null
+          notes: string | null
+          output_fidelity_score: number | null
+          scored_at: string | null
+          test_id: string
+          tool_id: string
+          workflow_efficiency_score: number | null
+          x_factor_score: number | null
+        }
+        Insert: {
+          created_at?: string
+          extra_capabilities_score?: number | null
+          id?: string
+          iteration_quality_score?: number | null
+          model_used_id?: string | null
+          notes?: string | null
+          output_fidelity_score?: number | null
+          scored_at?: string | null
+          test_id: string
+          tool_id: string
+          workflow_efficiency_score?: number | null
+          x_factor_score?: number | null
+        }
+        Update: {
+          created_at?: string
+          extra_capabilities_score?: number | null
+          id?: string
+          iteration_quality_score?: number | null
+          model_used_id?: string | null
+          notes?: string | null
+          output_fidelity_score?: number | null
+          scored_at?: string | null
+          test_id?: string
+          tool_id?: string
+          workflow_efficiency_score?: number | null
+          x_factor_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tool_test_results_model_used_id_fkey"
+            columns: ["model_used_id"]
+            isOneToOne: false
+            referencedRelation: "models"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tool_test_results_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "tests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tool_test_results_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tools: {
+        Row: {
+          date_added: string
+          description: string | null
+          id: string
+          last_modified: string
+          name: string
+          provider: string
+          tags: string[] | null
+          url: string | null
+        }
+        Insert: {
+          date_added?: string
+          description?: string | null
+          id?: string
+          last_modified?: string
+          name: string
+          provider: string
+          tags?: string[] | null
+          url?: string | null
+        }
+        Update: {
+          date_added?: string
+          description?: string | null
+          id?: string
+          last_modified?: string
+          name?: string
+          provider?: string
+          tags?: string[] | null
+          url?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

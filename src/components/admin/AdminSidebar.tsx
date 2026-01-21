@@ -81,7 +81,7 @@ const adminModules = [
 ];
 
 const modelMapModules = [
-  { title: 'My Models', url: '/admin/models', icon: Bot },
+  { title: 'Models & Tools', url: '/admin/models-tools', icon: Bot },
   { title: 'Prompt Library', url: '/admin/prompt-library', icon: Brain },
   { title: 'Test Lab', url: '/admin/test-lab', icon: FlaskConical },
   { title: 'My Model Map', url: '/admin/model-map', icon: Map },
