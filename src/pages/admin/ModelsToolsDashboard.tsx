@@ -342,9 +342,11 @@ export default function ModelsToolsDashboard() {
           </div>
         )}
 
-        <p className="text-xs text-[hsl(var(--color-light-text))] opacity-50">
-          Added {format(new Date(item.date_added), 'MMM d, yyyy')}
-        </p>
+        {item.date_added && (
+          <p className="text-xs text-[hsl(var(--color-light-text))] opacity-50">
+            Added {format(new Date(item.date_added), 'MMM d, yyyy')}
+          </p>
+        )}
       </Card>
     );
   };
