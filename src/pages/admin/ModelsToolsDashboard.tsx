@@ -323,7 +323,7 @@ export default function ModelsToolsDashboard() {
           </p>
         )}
 
-        {item.tags.length > 0 && (
+        {item.tags && item.tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-3">
             {item.tags.map((tag, idx) => (
               <Badge
