@@ -422,6 +422,7 @@ export default function TestLabDashboard() {
     },
   });
 
+  const handleCreateTest = () => {
     if (!selectedPromptId || (selectedModelIds.length === 0 && selectedToolIds.length === 0)) {
       toast.error('Please select a prompt and at least one model or tool');
       return;
