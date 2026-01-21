@@ -10,10 +10,11 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Plus, Trash2, FlaskConical, Copy, ChevronRight, CheckCircle, Clock, ExternalLink, RotateCcw } from 'lucide-react';
+import { Plus, Trash2, FlaskConical, Copy, ChevronRight, CheckCircle, Clock, ExternalLink, RotateCcw, Wrench } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import TestScoringModal from '@/components/admin/TestScoringModal';
+import ToolScoringModal from '@/components/admin/ToolScoringModal';
 import { parseMarkdownContent } from '@/utils/markdownParser';
 
 interface Prompt {
@@ -24,6 +25,13 @@ interface Prompt {
 }
 
 interface Model {
+  id: string;
+  name: string;
+  provider: string;
+  url: string | null;
+}
+
+interface Tool {
   id: string;
   name: string;
   provider: string;
@@ -45,6 +53,20 @@ interface TestResult {
   scored_at: string | null;
 }
 
+interface ToolTestResult {
+  id: string;
+  test_id: string;
+  tool_id: string;
+  model_used_id: string | null;
+  workflow_efficiency_score: number | null;
+  output_fidelity_score: number | null;
+  iteration_quality_score: number | null;
+  extra_capabilities_score: number | null;
+  x_factor_score: number | null;
+  notes: string | null;
+  scored_at: string | null;
+}
+
 interface Test {
   id: string;
   prompt_id: string;
@@ -53,6 +75,7 @@ interface Test {
   updated_at: string;
   prompt?: Prompt;
   test_results?: TestResult[];
+  tool_test_results?: ToolTestResult[];
 }
 
 const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
@@ -71,12 +94,15 @@ export default function TestLabDashboard() {
   const [isNewTestOpen, setIsNewTestOpen] = useState(false);
   const [selectedPromptId, setSelectedPromptId] = useState<string>('');
   const [selectedModelIds, setSelectedModelIds] = useState<string[]>([]);
+  const [selectedToolIds, setSelectedToolIds] = useState<string[]>([]);
   const [deleteTest, setDeleteTest] = useState<{ id: string; title: string } | null>(null);
   const [viewingTest, setViewingTest] = useState<Test | null>(null);
   const [scoringResult, setScoringResult] = useState<{ testResult: TestResult; model: Model; test: Test } | null>(null);
+  const [scoringToolResult, setScoringToolResult] = useState<{ toolResult: ToolTestResult; tool: Tool; test: Test } | null>(null);
   const [addModelsTest, setAddModelsTest] = useState<Test | null>(null);
   const [editedPromptBody, setEditedPromptBody] = useState<string>('');
   const [deleteTestResult, setDeleteTestResult] = useState<{ id: string; modelName: string } | null>(null);
+  const [deleteToolTestResult, setDeleteToolTestResult] = useState<{ id: string; toolName: string } | null>(null);
 
   // Fetch all tests with related data
   const { data: tests, isLoading: testsLoading } = useQuery({
@@ -91,7 +117,19 @@ export default function TestLabDashboard() {
         `)
         .order('created_at', { ascending: false });
       if (error) throw error;
-      return data as Test[];
+      
+      // Fetch tool_test_results separately
+      const testsWithToolResults = await Promise.all(
+        (data || []).map(async (test) => {
+          const { data: toolResults } = await supabase
+            .from('tool_test_results')
+            .select('*')
+            .eq('test_id', test.id);
+          return { ...test, tool_test_results: toolResults || [] };
+        })
+      );
+      
+      return testsWithToolResults as Test[];
     },
   });
 
@@ -106,6 +144,19 @@ export default function TestLabDashboard() {
         .order('title');
       if (error) throw error;
       return data as Prompt[];
+    },
+  });
+
+  // Fetch all tools
+  const { data: tools } = useQuery({
+    queryKey: ['tools'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('tools')
+        .select('id, name, provider, url')
+        .order('name');
+      if (error) throw error;
+      return data as Tool[];
     },
   });
 
@@ -160,7 +211,7 @@ export default function TestLabDashboard() {
 
   // Create test mutation
   const createTestMutation = useMutation({
-    mutationFn: async ({ promptId, modelIds }: { promptId: string; modelIds: string[] }) => {
+    mutationFn: async ({ promptId, modelIds, toolIds }: { promptId: string; modelIds: string[]; toolIds: string[] }) => {
       // Create test
       const { data: test, error: testError } = await supabase
         .from('tests')
@@ -170,14 +221,28 @@ export default function TestLabDashboard() {
       if (testError) throw testError;
 
       // Create test_results for each model
-      const testResults = modelIds.map(modelId => ({
-        test_id: test.id,
-        model_id: modelId,
-      }));
-      const { error: resultsError } = await supabase
-        .from('test_results')
-        .insert(testResults);
-      if (resultsError) throw resultsError;
+      if (modelIds.length > 0) {
+        const testResults = modelIds.map(modelId => ({
+          test_id: test.id,
+          model_id: modelId,
+        }));
+        const { error: resultsError } = await supabase
+          .from('test_results')
+          .insert(testResults);
+        if (resultsError) throw resultsError;
+      }
+
+      // Create tool_test_results for each tool
+      if (toolIds.length > 0) {
+        const toolResults = toolIds.map(toolId => ({
+          test_id: test.id,
+          tool_id: toolId,
+        }));
+        const { error: toolResultsError } = await supabase
+          .from('tool_test_results')
+          .insert(toolResults);
+        if (toolResultsError) throw toolResultsError;
+      }
 
       return test;
     },
@@ -189,15 +254,22 @@ export default function TestLabDashboard() {
         .eq('id', createdTest.id)
         .single();
 
+      // Also fetch tool results
+      const { data: toolResults } = await supabase
+        .from('tool_test_results')
+        .select('*')
+        .eq('test_id', createdTest.id);
+
       queryClient.invalidateQueries({ queryKey: ['tests'] });
       toast.success('Test created!');
       setIsNewTestOpen(false);
       setSelectedPromptId('');
       setSelectedModelIds([]);
+      setSelectedToolIds([]);
 
       // Immediately open in edit mode
       if (fullTest) {
-        setViewingTest(fullTest as Test);
+        setViewingTest({ ...fullTest, tool_test_results: toolResults || [] } as Test);
       }
     },
     onError: (error) => {
@@ -312,11 +384,11 @@ export default function TestLabDashboard() {
   });
 
   const handleCreateTest = () => {
-    if (!selectedPromptId || selectedModelIds.length === 0) {
-      toast.error('Please select a prompt and at least one model');
+    if (!selectedPromptId || (selectedModelIds.length === 0 && selectedToolIds.length === 0)) {
+      toast.error('Please select a prompt and at least one model or tool');
       return;
     }
-    createTestMutation.mutate({ promptId: selectedPromptId, modelIds: selectedModelIds });
+    createTestMutation.mutate({ promptId: selectedPromptId, modelIds: selectedModelIds, toolIds: selectedToolIds });
   };
 
   const handleAddModels = () => {
@@ -339,6 +411,16 @@ export default function TestLabDashboard() {
         : [...prev, modelId]
     );
   };
+
+  const toggleToolSelection = (toolId: string) => {
+    setSelectedToolIds(prev =>
+      prev.includes(toolId)
+        ? prev.filter(id => id !== toolId)
+        : [...prev, toolId]
+    );
+  };
+
+  const getToolById = (toolId: string) => tools?.find(t => t.id === toolId);
 
   const getCategoryColor = (category: string | null) => {
     return CATEGORY_COLORS[category || 'Other'] || CATEGORY_COLORS['Other'];
