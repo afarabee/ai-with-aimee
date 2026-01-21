@@ -383,7 +383,45 @@ export default function TestLabDashboard() {
     },
   });
 
-  const handleCreateTest = () => {
+  // Delete tool from test (delete tool_test_result)
+  const deleteToolTestResultMutation = useMutation({
+    mutationFn: async (toolTestResultId: string) => {
+      const { error } = await supabase
+        .from('tool_test_results')
+        .delete()
+        .eq('id', toolTestResultId);
+      if (error) throw error;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['tests'] });
+      
+      // Refresh viewingTest with updated data
+      if (viewingTest) {
+        const { data: freshTest } = await supabase
+          .from('tests')
+          .select(`*, prompt:prompts(id, title, category, body), test_results(*)`)
+          .eq('id', viewingTest.id)
+          .maybeSingle();
+        
+        if (freshTest) {
+          // Also fetch tool results
+          const { data: toolResults } = await supabase
+            .from('tool_test_results')
+            .select('*')
+            .eq('test_id', freshTest.id);
+          
+          setViewingTest({ ...freshTest, tool_test_results: toolResults || [] } as Test);
+        }
+      }
+      
+      toast.success('Tool removed from test');
+      setDeleteToolTestResult(null);
+    },
+    onError: (error) => {
+      toast.error('Failed to remove tool: ' + error.message);
+    },
+  });
+
     if (!selectedPromptId || (selectedModelIds.length === 0 && selectedToolIds.length === 0)) {
       toast.error('Please select a prompt and at least one model or tool');
       return;
@@ -658,7 +696,7 @@ export default function TestLabDashboard() {
 
             <div className="space-y-2">
               <Label className="text-[hsl(var(--color-cyan))]">Select Models</Label>
-              <div className="border border-cyan-500/30 rounded-md p-3 max-h-48 overflow-y-auto space-y-2">
+              <div className="border border-cyan-500/30 rounded-md p-3 max-h-40 overflow-y-auto space-y-2">
                 {models?.map((model) => (
                   <div
                     key={model.id}
@@ -678,7 +716,38 @@ export default function TestLabDashboard() {
                 ))}
                 {models?.length === 0 && (
                   <p className="text-sm text-[hsl(var(--color-light-text))] opacity-50 text-center py-4">
-                    No models yet. Add some in My Models first.
+                    No models yet. Add some in Models & Tools first.
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-[hsl(var(--color-pink))] flex items-center gap-2">
+                <Wrench className="h-4 w-4" />
+                Select Tools (Optional)
+              </Label>
+              <div className="border border-pink-500/30 rounded-md p-3 max-h-40 overflow-y-auto space-y-2">
+                {tools?.map((tool) => (
+                  <div
+                    key={tool.id}
+                    className="flex items-center gap-3 p-2 rounded hover:bg-pink-500/10 cursor-pointer"
+                    onClick={() => toggleToolSelection(tool.id)}
+                  >
+                    <Checkbox
+                      checked={selectedToolIds.includes(tool.id)}
+                      onCheckedChange={() => toggleToolSelection(tool.id)}
+                      className="border-pink-500/50 data-[state=checked]:bg-pink-500 data-[state=checked]:border-pink-500"
+                    />
+                    <div>
+                      <p className="text-sm text-[hsl(var(--color-light-text))]">{tool.name}</p>
+                      <p className="text-xs text-[hsl(var(--color-cyan))]">{tool.provider}</p>
+                    </div>
+                  </div>
+                ))}
+                {tools?.length === 0 && (
+                  <p className="text-sm text-[hsl(var(--color-light-text))] opacity-50 text-center py-4">
+                    No tools yet. Add some in Models & Tools first.
                   </p>
                 )}
               </div>
@@ -903,6 +972,87 @@ export default function TestLabDashboard() {
               </div>
             </div>
 
+            {/* Tool Results */}
+            {viewingTest?.tool_test_results && viewingTest.tool_test_results.length > 0 && (
+              <div className="space-y-2">
+                <Label className="text-[hsl(var(--color-pink))] flex items-center gap-2">
+                  <Wrench className="h-4 w-4" />
+                  Tool Results
+                </Label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {viewingTest.tool_test_results.map((tr) => {
+                    const tool = getToolById(tr.tool_id);
+                    const modelUsed = tr.model_used_id ? getModelById(tr.model_used_id) : null;
+                    return (
+                      <Card
+                        key={tr.id}
+                        className="p-4 cursor-pointer transition-all hover:shadow-[0_0_15px_rgba(245,12,160,0.3)]"
+                        style={{
+                          background: tr.scored_at
+                            ? 'rgba(245, 12, 160, 0.05)'
+                            : 'rgba(26, 11, 46, 0.4)',
+                          border: tr.scored_at
+                            ? '1px solid hsl(var(--color-pink) / 0.5)'
+                            : '1px solid hsl(var(--color-light-text) / 0.2)',
+                        }}
+                        onClick={() => tool && viewingTest && setScoringToolResult({ toolResult: tr, tool, test: viewingTest })}
+                      >
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <p className="font-rajdhani font-bold text-[hsl(var(--color-pink))]">
+                              {tool?.name || 'Unknown'}
+                            </p>
+                            <p className="text-xs text-[hsl(var(--color-cyan))]">{tool?.provider}</p>
+                            {modelUsed && (
+                              <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70 mt-1">
+                                Model: {modelUsed.name}
+                              </p>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 text-red-400 hover:bg-red-500/20 hover:text-red-300"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setDeleteToolTestResult({ id: tr.id, toolName: tool?.name || 'Unknown' });
+                              }}
+                              title={`Remove ${tool?.name} from test`}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                            {tool?.url && (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7 text-[hsl(var(--color-cyan))] hover:bg-cyan-500/20"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  window.open(tool.url!, '_blank');
+                                }}
+                                title={`Open ${tool.name}`}
+                              >
+                                <ExternalLink className="h-4 w-4" />
+                              </Button>
+                            )}
+                            {tr.scored_at ? (
+                              <CheckCircle className="h-5 w-5 text-green-400" />
+                            ) : (
+                              <span className="text-xs text-[hsl(var(--color-light-text))] opacity-50">
+                                Click to score
+                              </span>
+                            )}
+                            <ChevronRight className="h-4 w-4 text-[hsl(var(--color-pink))]" />
+                          </div>
+                        </div>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Footer with Save Test Button */}
             <div className="flex justify-end pt-4 border-t border-cyan-500/20 mt-4">
               <Button
@@ -975,6 +1125,43 @@ export default function TestLabDashboard() {
         />
       )}
 
+      {/* Tool Scoring Modal */}
+      {scoringToolResult && (
+        <ToolScoringModal
+          isOpen={!!scoringToolResult}
+          onClose={() => setScoringToolResult(null)}
+          toolResult={scoringToolResult.toolResult}
+          tool={scoringToolResult.tool}
+          promptTitle={scoringToolResult.test.prompt?.title || ''}
+          promptCategory={scoringToolResult.test.prompt?.category || null}
+          onSaved={async () => {
+            // Invalidate the query cache
+            await queryClient.invalidateQueries({ queryKey: ['tests'] });
+            
+            // Refetch the current viewing test to get fresh data
+            if (viewingTest) {
+              const { data: freshTest } = await supabase
+                .from('tests')
+                .select(`*, prompt:prompts(id, title, category, body), test_results(*)`)
+                .eq('id', viewingTest.id)
+                .maybeSingle();
+              
+              if (freshTest) {
+                // Also fetch tool results
+                const { data: toolResults } = await supabase
+                  .from('tool_test_results')
+                  .select('*')
+                  .eq('test_id', freshTest.id);
+                
+                setViewingTest({ ...freshTest, tool_test_results: toolResults || [] } as Test);
+              }
+            }
+            
+            setScoringToolResult(null);
+          }}
+        />
+      )}
+
       {/* Delete Confirmation */}
       <AlertDialog open={!!deleteTest} onOpenChange={() => setDeleteTest(null)}>
         <AlertDialogContent
@@ -1031,6 +1218,36 @@ export default function TestLabDashboard() {
               className="bg-red-600 text-white hover:bg-red-700"
             >
               {deleteTestResultMutation.isPending ? 'Removing...' : 'Remove'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete Tool from Test Confirmation */}
+      <AlertDialog open={!!deleteToolTestResult} onOpenChange={() => setDeleteToolTestResult(null)}>
+        <AlertDialogContent
+          style={{
+            background: 'rgba(26, 11, 46, 0.95)',
+            border: '2px solid hsl(var(--color-pink) / 0.5)',
+          }}
+        >
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-[hsl(var(--color-pink))]">
+              Remove Tool from Test?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-[hsl(var(--color-light-text))]">
+              This will remove <strong className="text-[hsl(var(--color-pink))]">{deleteToolTestResult?.toolName}</strong> and any scores from this test. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-cyan-500/50 text-[hsl(var(--color-cyan))] hover:bg-cyan-500/10">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => deleteToolTestResult && deleteToolTestResultMutation.mutate(deleteToolTestResult.id)}
+              className="bg-red-600 text-white hover:bg-red-700"
+            >
+              {deleteToolTestResultMutation.isPending ? 'Removing...' : 'Remove'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
