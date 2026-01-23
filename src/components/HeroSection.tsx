@@ -60,13 +60,13 @@ const HeroSection = () => {
             </h1>
             
             <p className="text-xl md:text-3xl font-josefin italic mb-6 neon-text-pink">
-              Healthcare products that scale. AI transformation that delivers. Results that matter.
+              Turning AI curiosity into real-world capability—one product practitioner at a time.
             </p>
             
             <p className="text-base mb-8 font-ibm" style={{
             color: '#e6e6e6',
             lineHeight: '1.6em'
-          }}>Healthcare product leader with 15+ years and 7 zero-to-one deliveries across regulated environments. I've launched consumer mobile apps, remote patient monitoring platforms, and AI-powered clinical workflows—delivering 98% faster reporting, 80% reduction in story creation time, and 50% faster refinement cycles. Currently leading enterprise AI transformation, I establish governance frameworks for GxP/HIPAA/GDPR compliance, direct Copilot and ChatGPT rollouts, and build agentic workflows that scale across 20+ product teams. I translate complex technology into products that improve access to care and deliver measurable business outcomes.</p>
+          }}>My mission is to build the next generation of AI-fluent product leaders. By combining product management discipline with AI fluency, I help teams move from strategy to implementation through clear frameworks, responsible governance, and practical tools. I believe AI works best when it's ethical, actionable, and designed to amplify human intelligence, not replace it.</p>
             
             <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <button
