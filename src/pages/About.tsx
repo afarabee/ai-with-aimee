@@ -63,9 +63,7 @@ const About = () => {
             color: '#e6e6e6',
             lineHeight: '1.6'
           }}>
-              <p>
-                I'm Aimee Farabee, a Product Director turned enthusiastic AI builder. I turn messy, ambiguous problems into governed, scalable, genuinely human solutions.
-              </p>
+              <p>I'm Aimee Farabee, a Product Director turned AI enablement nerd and active AI builder. I turn messy, ambiguous problems into governed, scalable, genuinely human solutions.</p>
               
               <p>
                 For more than 15 years, I've lived inside the machinery of large, complex enterprises, including Express Scripts, Cigna, American Express, and now Charles River Laboratories.
