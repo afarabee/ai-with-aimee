@@ -62,6 +62,9 @@ const CATEGORIES = [
   { id: 'Other', label: 'Other', icon: Package },
 ];
 
+// Filter out private categories for public display
+const PUBLIC_CATEGORIES = CATEGORIES.filter(cat => cat.id !== 'Local / Private');
+
 const CRITERIA = ['Accuracy', 'Speed', 'Style', 'Practical Guidance', 'Technical Detail'];
 
 export default function ModelMap() {
@@ -197,7 +200,7 @@ export default function ModelMap() {
           {!selectedCategory ? (
             /* Summary Grid */
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {CATEGORIES.map((cat) => {
+              {PUBLIC_CATEGORIES.map((cat) => {
                 const Icon = cat.icon;
                 const insight = insights?.find(i => i.category === cat.id);
                 const winner = getModelById(insight?.winner_model_id || null);
