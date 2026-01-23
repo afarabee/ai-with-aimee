@@ -56,7 +56,7 @@ const HeroSection = () => {
           <div>
             <h1 className="text-2xl md:text-4xl mb-4 font-rajdhani font-semibold uppercase tracking-wide neon-text-cyan">
               <div>Product Manager turned</div>
-              <div className="typing-animation neon-text-yellow">{displayText}</div>
+              <div className="typing-animation neon-text-yellow min-w-0 overflow-visible">{displayText}</div>
             </h1>
             
             <p className="text-xl md:text-3xl font-josefin italic mb-6 neon-text-pink">
