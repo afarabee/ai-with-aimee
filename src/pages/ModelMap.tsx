@@ -63,12 +63,12 @@ const CATEGORIES = [
 ];
 
 // Filter out private categories for public display
-const PUBLIC_CATEGORIES = CATEGORIES.filter(cat => cat.id !== 'Local / Private');
+const PUBLIC_CATEGORIES = CATEGORIES.filter(cat => !['Local / Private', 'Other'].includes(cat.id));
 
 const CRITERIA = ['Accuracy', 'Speed', 'Style', 'Practical Guidance', 'Technical Detail'];
 
 // Private categories that should not be accessible on public page
-const PRIVATE_CATEGORY_IDS = ['Local / Private'];
+const PRIVATE_CATEGORY_IDS = ['Local / Private', 'Other'];
 
 export default function ModelMap() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
