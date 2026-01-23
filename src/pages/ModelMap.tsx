@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card } from '@/components/ui/card';
-import { Brain, Zap, Code, Search, Home, Palette, PenTool, Package, Trophy, Medal, Lightbulb, CheckCircle, XCircle, LayoutGrid, ArrowLeft } from 'lucide-react';
+import { Brain, Zap, Code, Search, Home, Palette, PenTool, Package, Trophy, Medal, Lightbulb, CheckCircle, XCircle, LayoutGrid, ArrowLeft, BookOpen, Target, Sparkles, BarChart3 } from 'lucide-react';
 import { format } from 'date-fns';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -212,8 +212,9 @@ export default function ModelMap() {
       <section className="pb-20 px-6">
         <div className="max-w-6xl mx-auto">
           {!safeSelectedCategory ? (
-            /* Summary Grid */
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <>
+              {/* Summary Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {PUBLIC_CATEGORIES.map((cat) => {
                 const Icon = cat.icon;
                 const insight = insights?.find(i => i.category === cat.id);
@@ -270,6 +271,143 @@ export default function ModelMap() {
                 );
               })}
             </div>
+
+            {/* Methodology Section */}
+            <div className="mt-12">
+              <div className="flex items-center gap-3 mb-6">
+                <BookOpen className="h-6 w-6 text-[hsl(var(--color-cyan))]" />
+                <h2 className="text-2xl font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
+                  Testing Methodology
+                </h2>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* Step 1: Prompt Design */}
+                <Card
+                  className="p-4"
+                  style={{
+                    background: 'rgba(26, 11, 46, 0.6)',
+                    border: '1px solid hsl(var(--color-cyan) / 0.2)',
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center">
+                      <span className="text-xs font-bold text-[hsl(var(--color-cyan))]">1</span>
+                    </div>
+                    <h3 className="font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
+                      Prompt Design
+                    </h3>
+                  </div>
+                  <p className="text-sm text-[hsl(var(--color-light-text))] opacity-80">
+                    Each test uses real prompts from my daily workflow, categorized by use case (coding, writing, research, etc.).
+                  </p>
+                </Card>
+
+                {/* Step 2: Multi-Model Testing */}
+                <Card
+                  className="p-4"
+                  style={{
+                    background: 'rgba(26, 11, 46, 0.6)',
+                    border: '1px solid hsl(var(--color-cyan) / 0.2)',
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center">
+                      <span className="text-xs font-bold text-[hsl(var(--color-cyan))]">2</span>
+                    </div>
+                    <h3 className="font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
+                      Multi-Model Testing
+                    </h3>
+                  </div>
+                  <p className="text-sm text-[hsl(var(--color-light-text))] opacity-80">
+                    The same prompt is run across multiple AI models to ensure fair, apples-to-apples comparison.
+                  </p>
+                </Card>
+
+                {/* Step 3: Scoring */}
+                <Card
+                  className="p-4"
+                  style={{
+                    background: 'rgba(26, 11, 46, 0.6)',
+                    border: '1px solid hsl(var(--color-cyan) / 0.2)',
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center">
+                      <span className="text-xs font-bold text-[hsl(var(--color-cyan))]">3</span>
+                    </div>
+                    <h3 className="font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
+                      Criteria Scoring
+                    </h3>
+                  </div>
+                  <p className="text-sm text-[hsl(var(--color-light-text))] opacity-80">
+                    Models are rated 1-5 on: Accuracy, Speed, Style, Practical Guidance, Technical Detail, and X-Factor.
+                  </p>
+                </Card>
+
+                {/* Step 4: AI Analysis */}
+                <Card
+                  className="p-4"
+                  style={{
+                    background: 'rgba(26, 11, 46, 0.6)',
+                    border: '1px solid hsl(var(--color-cyan) / 0.2)',
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center">
+                      <span className="text-xs font-bold text-[hsl(var(--color-cyan))]">4</span>
+                    </div>
+                    <h3 className="font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
+                      AI Analysis
+                    </h3>
+                  </div>
+                  <p className="text-sm text-[hsl(var(--color-light-text))] opacity-80">
+                    Aggregate scores are analyzed to generate rankings, insights, and practical recommendations.
+                  </p>
+                </Card>
+              </div>
+
+              {/* Scoring Criteria Detail */}
+              <Card
+                className="p-6 mt-4"
+                style={{
+                  background: 'rgba(26, 11, 46, 0.6)',
+                  border: '1px solid hsl(var(--color-cyan) / 0.2)',
+                }}
+              >
+                <h3 className="text-sm font-rajdhani font-bold text-[hsl(var(--color-pink))] uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <BarChart3 className="h-4 w-4" />
+                  Scoring Criteria
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                  <div>
+                    <p className="text-xs font-bold text-[hsl(var(--color-cyan))] mb-1">Accuracy</p>
+                    <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Did it follow instructions?</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-[hsl(var(--color-cyan))] mb-1">Speed</p>
+                    <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Response time</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-[hsl(var(--color-cyan))] mb-1">Style</p>
+                    <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Tone & formatting</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-[hsl(var(--color-cyan))] mb-1">Practical Guidance</p>
+                    <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Actionable output</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-[hsl(var(--color-cyan))] mb-1">Technical Detail</p>
+                    <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Depth of explanation</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-[hsl(var(--color-cyan))] mb-1">X-Factor</p>
+                    <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Unexpected quality</p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+            </>
           ) : (
             /* Category Detail View */
             <div className="space-y-6">
