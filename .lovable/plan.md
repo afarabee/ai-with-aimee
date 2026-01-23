@@ -1,56 +1,53 @@
 
-# Plan: Adjust Methodology Section to 2-Column, 3-Row Layout
+# Plan: Remove 'Other' Category from Public Model Map
 
 ## Overview
-Restructure the Testing Methodology section on the public Model Map page from a 4-column single-row layout to a 2-column, 3-row grid (6 items total) for better visual balance and symmetry with the category cards above.
+Hide the 'Other' category box from the public Model Map page summary grid, similar to how 'Local / Private' is already hidden.
 
 ## What Will Change
 
-The methodology section will display 6 cards in a 2x3 grid layout:
-- Row 1: Prompt Design, Multi-Model Testing
-- Row 2: Criteria Scoring, AI Analysis  
-- Row 3: Two new cards combining the scoring criteria details
+The 'Other' category card will no longer appear in the category summary grid on the public Model Map page. Users also won't be able to access it via URL manipulation.
 
 ## Implementation
 
 ### File: `src/pages/ModelMap.tsx`
 
-1. **Change grid class from 4 columns to 2 columns**
-   - Update line 284 from `lg:grid-cols-4` to `lg:grid-cols-2`
-   - New class: `grid grid-cols-1 md:grid-cols-2 gap-4`
+1. **Update the PUBLIC_CATEGORIES filter** (line 66)
+   - Current: Filters out only 'Local / Private'
+   - New: Filter out both 'Local / Private' and 'Other'
 
-2. **Add two new cards to complete the 6-item grid**
-   - Card 5: "Model Criteria" - covers Accuracy, Speed, Style
-   - Card 6: "Output Criteria" - covers Practical Guidance, Technical Detail, X-Factor
+2. **Update the PRIVATE_CATEGORY_IDS array** (line 71)
+   - Current: Only includes 'Local / Private'
+   - New: Include both 'Local / Private' and 'Other' to prevent URL manipulation access
 
-3. **Remove the separate full-width Scoring Criteria card**
-   - Delete the standalone scoring criteria card (lines 370-410) since its content is now integrated into the grid
+### Code Changes
 
-### Visual Layout
+**Line 66 - Update PUBLIC_CATEGORIES:**
+```typescript
+// Before
+const PUBLIC_CATEGORIES = CATEGORIES.filter(cat => cat.id !== 'Local / Private');
 
-```text
-+---------------------+---------------------+
-|  1. Prompt Design   | 2. Multi-Model Test |
-+---------------------+---------------------+
-| 3. Criteria Scoring |   4. AI Analysis    |
-+---------------------+---------------------+
-|  5. Model Criteria  |  6. Output Criteria |
-+---------------------+---------------------+
+// After
+const PUBLIC_CATEGORIES = CATEGORIES.filter(cat => !['Local / Private', 'Other'].includes(cat.id));
 ```
 
-### New Cards Content
+**Line 71 - Update PRIVATE_CATEGORY_IDS:**
+```typescript
+// Before
+const PRIVATE_CATEGORY_IDS = ['Local / Private'];
 
-**Card 5 - Model Criteria:**
-- Icon: Target
-- Lists: Accuracy, Speed, Style with brief descriptions
+// After
+const PRIVATE_CATEGORY_IDS = ['Local / Private', 'Other'];
+```
 
-**Card 6 - Output Criteria:**
-- Icon: Sparkles  
-- Lists: Practical Guidance, Technical Detail, X-Factor with descriptions
+## What Stays the Same
+
+- The admin Model Map Dashboard continues to show all categories including 'Other'
+- Existing test data for 'Other' prompts remains in the database
+- The Prompt Library and Test Lab can still use 'Other' as a category
 
 ## Technical Details
 
 - **Files modified:** 1 file (`src/pages/ModelMap.tsx`)
-- **Changes:** Update grid class, add 2 new cards, remove standalone scoring card
-- **Styling:** Matches existing card styling with cyan borders and dark purple background
-- **Risk level:** Low - visual restructuring only, no logic changes
+- **Lines changed:** 2 lines
+- **Risk level:** Low - simple filter update with no side effects
