@@ -67,8 +67,22 @@ const PUBLIC_CATEGORIES = CATEGORIES.filter(cat => cat.id !== 'Local / Private')
 
 const CRITERIA = ['Accuracy', 'Speed', 'Style', 'Practical Guidance', 'Technical Detail'];
 
+// Private categories that should not be accessible on public page
+const PRIVATE_CATEGORY_IDS = ['Local / Private'];
+
 export default function ModelMap() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  // Guard against URL manipulation - reset to summary if private category is selected
+  const safeSelectedCategory = selectedCategory && PRIVATE_CATEGORY_IDS.includes(selectedCategory) 
+    ? null 
+    : selectedCategory;
+  
+  const handleCategorySelect = (categoryId: string) => {
+    // Prevent selecting private categories
+    if (PRIVATE_CATEGORY_IDS.includes(categoryId)) return;
+    setSelectedCategory(categoryId);
+  };
 
   // Fetch all models
   const { data: models } = useQuery({
@@ -113,7 +127,7 @@ export default function ModelMap() {
 
   const getModelById = (id: string | null) => models?.find(m => m.id === id);
 
-  const currentInsight = insights?.find(i => i.category === selectedCategory);
+  const currentInsight = insights?.find(i => i.category === safeSelectedCategory);
   const winnerModel = getModelById(currentInsight?.winner_model_id || null);
   const runnerUpModel = getModelById(currentInsight?.runner_up_model_id || null);
 
@@ -124,7 +138,7 @@ export default function ModelMap() {
   }, new Date(0));
 
   // Calculate aggregated scores per model per category
-  const categoryTests = tests?.filter(t => t.prompt?.category === selectedCategory) || [];
+  const categoryTests = tests?.filter(t => t.prompt?.category === safeSelectedCategory) || [];
   const modelScores: Record<string, { scores: number[]; count: number; model: Model }> = {};
 
   categoryTests.forEach(test => {
@@ -197,7 +211,7 @@ export default function ModelMap() {
       {/* Main Content */}
       <section className="pb-20 px-6">
         <div className="max-w-6xl mx-auto">
-          {!selectedCategory ? (
+          {!safeSelectedCategory ? (
             /* Summary Grid */
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {PUBLIC_CATEGORIES.map((cat) => {
@@ -211,7 +225,7 @@ export default function ModelMap() {
                   <Card 
                     key={cat.id}
                     className="p-4 cursor-pointer hover:border-cyan-400 transition-all hover:shadow-[0_0_20px_rgba(0,255,255,0.2)]"
-                    onClick={() => setSelectedCategory(cat.id)}
+                    onClick={() => handleCategorySelect(cat.id)}
                     style={{
                       background: 'rgba(26, 11, 46, 0.6)',
                       border: '1px solid hsl(var(--color-cyan) / 0.2)',
@@ -271,8 +285,8 @@ export default function ModelMap() {
 
               {/* Category Header */}
               <div className="flex items-center gap-3">
-                {(() => {
-                  const cat = CATEGORIES.find(c => c.id === selectedCategory);
+              {(() => {
+                const cat = CATEGORIES.find(c => c.id === safeSelectedCategory);
                   const Icon = cat?.icon || LayoutGrid;
                   return (
                     <>
