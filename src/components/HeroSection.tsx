@@ -7,7 +7,7 @@ const HeroSection = () => {
   const [displayText, setDisplayText] = useState("");
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const phrases = ["AI Strategist", "ML Enthusiast", "Tech Innovator", "AI Explorer"];
+  const phrases = ["AI Architect", "ML Enthusiast", "Tech Innovator", "AI Explorer"];
   useEffect(() => {
     const currentPhrase = phrases[currentPhraseIndex];
     let timeout: NodeJS.Timeout;
