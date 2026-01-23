@@ -7,7 +7,7 @@ const HeroSection = () => {
   const [displayText, setDisplayText] = useState("");
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const phrases = ["ML Enthusiast", "Tech Innovator", "AI Explorer"];
+  const phrases = ["ML Enthusiast", "Tech Innovator", "AI Strategist"];
   useEffect(() => {
     const currentPhrase = phrases[currentPhraseIndex];
     let timeout: NodeJS.Timeout;
@@ -55,12 +55,12 @@ const HeroSection = () => {
           </div>
           <div>
             <h1 className="text-2xl md:text-4xl mb-4 font-rajdhani font-semibold uppercase tracking-wide neon-text-cyan">
-              <div>Product Manager turned</div>
+              <div>Product Leader & AI Strategist</div>
               <div className="typing-animation neon-text-yellow min-w-0 overflow-visible">{displayText}</div>
             </h1>
             
             <p className="text-xl md:text-3xl font-josefin italic mb-6 neon-text-pink">
-              Turning AI curiosity into real-world capability.
+              Driving measurable AI adoption in enterprise environments.
             </p>
             
             <p className="text-lg mb-8 font-ibm" style={{
