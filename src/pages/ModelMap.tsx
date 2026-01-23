@@ -281,7 +281,7 @@ export default function ModelMap() {
                 </h2>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Step 1: Prompt Design */}
                 <Card
                   className="p-4"
@@ -341,7 +341,7 @@ export default function ModelMap() {
                     </h3>
                   </div>
                   <p className="text-sm text-[hsl(var(--color-light-text))] opacity-80">
-                    Models are rated 1-5 on: Accuracy, Speed, Style, Practical Guidance, Technical Detail, and X-Factor.
+                    Models are rated 1-5 on six criteria covering accuracy, performance, and output quality.
                   </p>
                 </Card>
 
@@ -365,47 +365,67 @@ export default function ModelMap() {
                     Aggregate scores are analyzed to generate rankings, insights, and practical recommendations.
                   </p>
                 </Card>
-              </div>
 
-              {/* Scoring Criteria Detail */}
-              <Card
-                className="p-6 mt-4"
-                style={{
-                  background: 'rgba(26, 11, 46, 0.6)',
-                  border: '1px solid hsl(var(--color-cyan) / 0.2)',
-                }}
-              >
-                <h3 className="text-sm font-rajdhani font-bold text-[hsl(var(--color-pink))] uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4" />
-                  Scoring Criteria
-                </h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                  <div>
-                    <p className="text-xs font-bold text-[hsl(var(--color-cyan))] mb-1">Accuracy</p>
-                    <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Did it follow instructions?</p>
+                {/* Card 5: Model Criteria */}
+                <Card
+                  className="p-4"
+                  style={{
+                    background: 'rgba(26, 11, 46, 0.6)',
+                    border: '1px solid hsl(var(--color-cyan) / 0.2)',
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <Target className="h-5 w-5 text-[hsl(var(--color-pink))]" />
+                    <h3 className="font-rajdhani font-bold text-[hsl(var(--color-pink))]">
+                      Model Criteria
+                    </h3>
                   </div>
-                  <div>
-                    <p className="text-xs font-bold text-[hsl(var(--color-cyan))] mb-1">Speed</p>
-                    <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Response time</p>
+                  <div className="space-y-2">
+                    <div>
+                      <p className="text-xs font-bold text-[hsl(var(--color-cyan))]">Accuracy</p>
+                      <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Did it follow instructions?</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-[hsl(var(--color-cyan))]">Speed</p>
+                      <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Response time performance</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-[hsl(var(--color-cyan))]">Style</p>
+                      <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Tone & formatting quality</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs font-bold text-[hsl(var(--color-cyan))] mb-1">Style</p>
-                    <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Tone & formatting</p>
+                </Card>
+
+                {/* Card 6: Output Criteria */}
+                <Card
+                  className="p-4"
+                  style={{
+                    background: 'rgba(26, 11, 46, 0.6)',
+                    border: '1px solid hsl(var(--color-cyan) / 0.2)',
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <Sparkles className="h-5 w-5 text-[hsl(var(--color-pink))]" />
+                    <h3 className="font-rajdhani font-bold text-[hsl(var(--color-pink))]">
+                      Output Criteria
+                    </h3>
                   </div>
-                  <div>
-                    <p className="text-xs font-bold text-[hsl(var(--color-cyan))] mb-1">Practical Guidance</p>
-                    <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Actionable output</p>
+                  <div className="space-y-2">
+                    <div>
+                      <p className="text-xs font-bold text-[hsl(var(--color-cyan))]">Practical Guidance</p>
+                      <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Actionable, usable output</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-[hsl(var(--color-cyan))]">Technical Detail</p>
+                      <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Depth of explanation</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-[hsl(var(--color-cyan))]">X-Factor</p>
+                      <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Unexpected quality or insight</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs font-bold text-[hsl(var(--color-cyan))] mb-1">Technical Detail</p>
-                    <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Depth of explanation</p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-[hsl(var(--color-cyan))] mb-1">X-Factor</p>
-                    <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Unexpected quality</p>
-                  </div>
-                </div>
-              </Card>
+                </Card>
+              </div>
             </div>
             </>
           ) : (
