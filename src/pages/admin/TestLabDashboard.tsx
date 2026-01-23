@@ -591,7 +591,8 @@ export default function TestLabDashboard() {
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-1 mb-3">
+                {/* Model Badges */}
+                <div className="flex flex-wrap gap-1 mb-2">
                   {test.test_results?.slice(0, 5).map((tr) => {
                     const model = getModelById(tr.model_id);
                     return (
@@ -615,6 +616,35 @@ export default function TestLabDashboard() {
                     </Badge>
                   )}
                 </div>
+
+                {/* Tool Badges */}
+                {test.tool_test_results && test.tool_test_results.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {test.tool_test_results.slice(0, 5).map((ttr) => {
+                      const tool = getToolById(ttr.tool_id);
+                      return (
+                        <Badge
+                          key={ttr.id}
+                          variant="outline"
+                          className="text-xs gap-1"
+                          style={{
+                            borderColor: ttr.scored_at ? 'hsl(var(--color-pink) / 0.7)' : 'hsl(var(--color-light-text) / 0.3)',
+                            color: ttr.scored_at ? 'hsl(var(--color-pink))' : 'hsl(var(--color-light-text))',
+                            background: ttr.scored_at ? 'hsl(var(--color-pink) / 0.1)' : 'transparent',
+                          }}
+                        >
+                          <Wrench className="h-2.5 w-2.5" />
+                          {tool?.name || 'Unknown'}
+                        </Badge>
+                      );
+                    })}
+                    {test.tool_test_results.length > 5 && (
+                      <Badge variant="outline" className="text-xs opacity-50">
+                        +{test.tool_test_results.length - 5} more
+                      </Badge>
+                    )}
+                  </div>
+                )}
 
                 <div className="flex justify-between items-center">
                   <p className="text-xs text-[hsl(var(--color-light-text))] opacity-50">
