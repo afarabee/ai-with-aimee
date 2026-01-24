@@ -5,6 +5,7 @@ import ProjectsSection from "@/components/ProjectsSection";
 import BlogSection from "@/components/BlogSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
+import SectionDivider from "@/components/SectionDivider";
 
 const Index = () => {
   return (
@@ -13,6 +14,9 @@ const Index = () => {
       <HeroSection />
       <ProvenImpactSection />
       <BlogSection />
+      <div className="relative">
+        <SectionDivider variant="wave" color="hsl(var(--background))" />
+      </div>
       <ProjectsSection />
       
       {/* Dual CTA Buttons */}
