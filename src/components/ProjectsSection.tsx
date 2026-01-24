@@ -68,7 +68,7 @@ const ProjectsSection = () => {
     return () => observer.disconnect();
   }, [projects.length]);
   return <section id="projects" className="relative min-h-screen" style={{
-    paddingTop: '100px',
+    paddingTop: '40px',
     paddingBottom: '100px'
   }}>
       {/* Background - same as About page */}
