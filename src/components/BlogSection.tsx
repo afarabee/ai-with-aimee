@@ -96,7 +96,7 @@ const BlogSection = () => {
         ref={sectionRef}
         id="blog"
         className="blog-carousel-wrapper relative bg-background overflow-hidden"
-        style={{ paddingTop: '100px', paddingBottom: '100px' }}
+        style={{ paddingTop: '100px', paddingBottom: '40px' }}
       >
         {/* Cyan-to-Violet gradient overlay at top */}
         <div
