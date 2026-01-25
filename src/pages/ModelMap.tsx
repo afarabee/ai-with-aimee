@@ -7,13 +7,11 @@ import { format } from 'date-fns';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
-
 interface Model {
   id: string;
   name: string;
   provider: string;
 }
-
 interface ModelMapInsight {
   id: string;
   category: string;
@@ -28,7 +26,6 @@ interface ModelMapInsight {
   heatmap_data: Record<string, unknown>;
   last_calculated: string;
 }
-
 interface TestResult {
   id: string;
   test_id: string;
@@ -40,7 +37,6 @@ interface TestResult {
   technical_detail_score: number | null;
   x_factor_score: number | null;
 }
-
 interface Test {
   id: string;
   prompt_id: string;
@@ -50,34 +46,51 @@ interface Test {
   };
   test_results?: TestResult[];
 }
-
-const CATEGORIES = [
-  { id: 'Deep Reasoning', label: 'Deep Reasoning', icon: Brain },
-  { id: 'General Purpose', label: 'General Purpose', icon: Zap },
-  { id: 'Coding', label: 'Coding', icon: Code },
-  { id: 'Research', label: 'Research', icon: Search },
-  { id: 'Local / Private', label: 'Local / Private', icon: Home },
-  { id: 'Multi-Modal', label: 'Multi-Modal', icon: Palette },
-  { id: 'Writing', label: 'Writing', icon: PenTool },
-  { id: 'Other', label: 'Other', icon: Package },
-];
+const CATEGORIES = [{
+  id: 'Deep Reasoning',
+  label: 'Deep Reasoning',
+  icon: Brain
+}, {
+  id: 'General Purpose',
+  label: 'General Purpose',
+  icon: Zap
+}, {
+  id: 'Coding',
+  label: 'Coding',
+  icon: Code
+}, {
+  id: 'Research',
+  label: 'Research',
+  icon: Search
+}, {
+  id: 'Local / Private',
+  label: 'Local / Private',
+  icon: Home
+}, {
+  id: 'Multi-Modal',
+  label: 'Multi-Modal',
+  icon: Palette
+}, {
+  id: 'Writing',
+  label: 'Writing',
+  icon: PenTool
+}, {
+  id: 'Other',
+  label: 'Other',
+  icon: Package
+}];
 
 // Filter out private categories for public display
 const PUBLIC_CATEGORIES = CATEGORIES.filter(cat => !['Local / Private', 'Other'].includes(cat.id));
-
 const CRITERIA = ['Accuracy', 'Speed', 'Style', 'Practical Guidance', 'Technical Detail'];
 
 // Private categories that should not be accessible on public page
 const PRIVATE_CATEGORY_IDS = ['Local / Private', 'Other'];
-
 export default function ModelMap() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   // Guard against URL manipulation - reset to summary if private category is selected
-  const safeSelectedCategory = selectedCategory && PRIVATE_CATEGORY_IDS.includes(selectedCategory) 
-    ? null 
-    : selectedCategory;
-  
+  const safeSelectedCategory = selectedCategory && PRIVATE_CATEGORY_IDS.includes(selectedCategory) ? null : selectedCategory;
   const handleCategorySelect = (categoryId: string) => {
     // Prevent selecting private categories
     if (PRIVATE_CATEGORY_IDS.includes(categoryId)) return;
@@ -85,48 +98,54 @@ export default function ModelMap() {
   };
 
   // Fetch all models
-  const { data: models } = useQuery({
+  const {
+    data: models
+  } = useQuery({
     queryKey: ['public-models'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('models')
-        .select('id, name, provider');
+      const {
+        data,
+        error
+      } = await supabase.from('models').select('id, name, provider');
       if (error) throw error;
       return data as Model[];
-    },
+    }
   });
 
   // Fetch insights
-  const { data: insights } = useQuery({
+  const {
+    data: insights
+  } = useQuery({
     queryKey: ['public-model-map-insights'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('model_map_insights')
-        .select('*');
+      const {
+        data,
+        error
+      } = await supabase.from('model_map_insights').select('*');
       if (error) throw error;
       return data as ModelMapInsight[];
-    },
+    }
   });
 
   // Fetch completed tests with results
-  const { data: tests } = useQuery({
+  const {
+    data: tests
+  } = useQuery({
     queryKey: ['public-completed-tests'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('tests')
-        .select(`
+      const {
+        data,
+        error
+      } = await supabase.from('tests').select(`
           *,
           prompt:prompts(category),
           test_results(*)
-        `)
-        .eq('status', 'complete');
+        `).eq('status', 'complete');
       if (error) throw error;
       return data as Test[];
-    },
+    }
   });
-
   const getModelById = (id: string | null) => models?.find(m => m.id === id);
-
   const currentInsight = insights?.find(i => i.category === safeSelectedCategory);
   const winnerModel = getModelById(currentInsight?.winner_model_id || null);
   const runnerUpModel = getModelById(currentInsight?.runner_up_model_id || null);
@@ -139,17 +158,22 @@ export default function ModelMap() {
 
   // Calculate aggregated scores per model per category
   const categoryTests = tests?.filter(t => t.prompt?.category === safeSelectedCategory) || [];
-  const modelScores: Record<string, { scores: number[]; count: number; model: Model }> = {};
-
+  const modelScores: Record<string, {
+    scores: number[];
+    count: number;
+    model: Model;
+  }> = {};
   categoryTests.forEach(test => {
     test.test_results?.forEach(tr => {
       const model = getModelById(tr.model_id);
       if (!model) return;
-
       if (!modelScores[tr.model_id]) {
-        modelScores[tr.model_id] = { scores: [0, 0, 0, 0, 0], count: 0, model };
+        modelScores[tr.model_id] = {
+          scores: [0, 0, 0, 0, 0],
+          count: 0,
+          model
+        };
       }
-
       const ms = modelScores[tr.model_id];
       ms.count++;
       ms.scores[0] += tr.accuracy_score || 0;
@@ -165,20 +189,29 @@ export default function ModelMap() {
     modelId,
     model: data.model,
     averages: data.scores.map(s => data.count > 0 ? s / data.count : 0),
-    overall: data.count > 0 ? data.scores.reduce((a, b) => a + b, 0) / (data.count * 5) : 0,
+    overall: data.count > 0 ? data.scores.reduce((a, b) => a + b, 0) / (data.count * 5) : 0
   })).sort((a, b) => b.overall - a.overall);
-
   const getHeatmapColor = (score: number) => {
-    if (score >= 4) return { bg: 'bg-green-500/30', text: 'text-green-400', label: 'Strong' };
-    if (score >= 2.5) return { bg: 'bg-orange-500/30', text: 'text-orange-400', label: 'Moderate' };
-    return { bg: 'bg-red-500/30', text: 'text-red-400', label: 'Low' };
+    if (score >= 4) return {
+      bg: 'bg-green-500/30',
+      text: 'text-green-400',
+      label: 'Strong'
+    };
+    if (score >= 2.5) return {
+      bg: 'bg-orange-500/30',
+      text: 'text-orange-400',
+      label: 'Moderate'
+    };
+    return {
+      bg: 'bg-red-500/30',
+      text: 'text-red-400',
+      label: 'Low'
+    };
   };
 
   // Total tests completed
   const totalTests = tests?.length || 0;
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       <Navigation />
       
       {/* Hero Section */}
@@ -195,14 +228,12 @@ export default function ModelMap() {
               <span className="text-[hsl(var(--color-pink))]">
                 {totalTests} test{totalTests !== 1 ? 's' : ''} completed
               </span>
-              {latestUpdate && latestUpdate.getTime() > 0 && (
-                <>
+              {latestUpdate && latestUpdate.getTime() > 0 && <>
                   <span className="text-[hsl(var(--color-light-text))] opacity-50">•</span>
                   <span className="text-[hsl(var(--color-light-text))] opacity-70">
                     Last updated: {format(latestUpdate, 'MMM d, yyyy')}
                   </span>
-                </>
-              )}
+                </>}
             </div>
           </div>
         </div>
@@ -211,27 +242,19 @@ export default function ModelMap() {
       {/* Main Content */}
       <section className="pb-20 px-6">
         <div className="max-w-6xl mx-auto">
-          {!safeSelectedCategory ? (
-            <>
+          {!safeSelectedCategory ? <>
               {/* Summary Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {PUBLIC_CATEGORIES.map((cat) => {
-                const Icon = cat.icon;
-                const insight = insights?.find(i => i.category === cat.id);
-                const winner = getModelById(insight?.winner_model_id || null);
-                const runnerUp = getModelById(insight?.runner_up_model_id || null);
-                const testCount = tests?.filter(t => t.prompt?.category === cat.id).length || 0;
-
-                return (
-                  <Card 
-                    key={cat.id}
-                    className="p-4 cursor-pointer hover:border-cyan-400 transition-all hover:shadow-[0_0_20px_rgba(0,255,255,0.2)]"
-                    onClick={() => handleCategorySelect(cat.id)}
-                    style={{
-                      background: 'rgba(26, 11, 46, 0.6)',
-                      border: '1px solid hsl(var(--color-cyan) / 0.2)',
-                    }}
-                  >
+              {PUBLIC_CATEGORIES.map(cat => {
+              const Icon = cat.icon;
+              const insight = insights?.find(i => i.category === cat.id);
+              const winner = getModelById(insight?.winner_model_id || null);
+              const runnerUp = getModelById(insight?.runner_up_model_id || null);
+              const testCount = tests?.filter(t => t.prompt?.category === cat.id).length || 0;
+              return <Card key={cat.id} className="p-4 cursor-pointer hover:border-cyan-400 transition-all hover:shadow-[0_0_20px_rgba(0,255,255,0.2)]" onClick={() => handleCategorySelect(cat.id)} style={{
+                background: 'rgba(26, 11, 46, 0.6)',
+                border: '1px solid hsl(var(--color-cyan) / 0.2)'
+              }}>
                     <div className="flex items-center gap-2 mb-3">
                       <Icon className="h-5 w-5 text-[hsl(var(--color-cyan))]" />
                       <h3 className="font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
@@ -239,37 +262,30 @@ export default function ModelMap() {
                       </h3>
                     </div>
                     
-                    {winner ? (
-                      <div className="space-y-2">
+                    {winner ? <div className="space-y-2">
                         <div className="flex items-center gap-2">
                           <Trophy className="h-4 w-4 text-[hsl(var(--color-yellow))]" />
                           <span className="text-sm text-[hsl(var(--color-light-text))]">
                             {winner.name}
                           </span>
                         </div>
-                        {runnerUp && (
-                          <div className="flex items-center gap-2">
+                        {runnerUp && <div className="flex items-center gap-2">
                             <Medal className="h-4 w-4 text-[hsl(var(--color-pink))]" />
                             <span className="text-sm text-[hsl(var(--color-light-text))] opacity-70">
                               {runnerUp.name}
                             </span>
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-[hsl(var(--color-light-text))] opacity-50 italic">
+                          </div>}
+                      </div> : <p className="text-xs text-[hsl(var(--color-light-text))] opacity-50 italic">
                         No data yet
-                      </p>
-                    )}
+                      </p>}
                     
                     <div className="mt-3 pt-2 border-t border-cyan-500/10">
                       <span className="text-xs text-[hsl(var(--color-pink))]">
                         {testCount} test{testCount !== 1 ? 's' : ''} completed
                       </span>
                     </div>
-                  </Card>
-                );
-              })}
+                  </Card>;
+            })}
             </div>
 
             {/* Methodology Section */}
@@ -283,13 +299,10 @@ export default function ModelMap() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Step 1: Prompt Design */}
-                <Card
-                  className="p-4"
-                  style={{
-                    background: 'rgba(26, 11, 46, 0.6)',
-                    border: '1px solid hsl(var(--color-cyan) / 0.2)',
-                  }}
-                >
+                <Card className="p-4" style={{
+                background: 'rgba(26, 11, 46, 0.6)',
+                border: '1px solid hsl(var(--color-cyan) / 0.2)'
+              }}>
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center">
                       <span className="text-xs font-bold text-[hsl(var(--color-cyan))]">1</span>
@@ -298,19 +311,14 @@ export default function ModelMap() {
                       Prompt Design
                     </h3>
                   </div>
-                  <p className="text-sm text-[hsl(var(--color-light-text))] opacity-80">
-                    Each test uses real prompts from my daily workflow, categorized by use case (coding, writing, research, etc.).
-                  </p>
+                  <p className="text-sm text-[hsl(var(--color-light-text))] opacity-80">Each test uses real prompts, categorized by use case (coding, writing, research, etc.).</p>
                 </Card>
 
                 {/* Step 2: Multi-Model Testing */}
-                <Card
-                  className="p-4"
-                  style={{
-                    background: 'rgba(26, 11, 46, 0.6)',
-                    border: '1px solid hsl(var(--color-cyan) / 0.2)',
-                  }}
-                >
+                <Card className="p-4" style={{
+                background: 'rgba(26, 11, 46, 0.6)',
+                border: '1px solid hsl(var(--color-cyan) / 0.2)'
+              }}>
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center">
                       <span className="text-xs font-bold text-[hsl(var(--color-cyan))]">2</span>
@@ -325,13 +333,10 @@ export default function ModelMap() {
                 </Card>
 
                 {/* Step 3: Scoring */}
-                <Card
-                  className="p-4"
-                  style={{
-                    background: 'rgba(26, 11, 46, 0.6)',
-                    border: '1px solid hsl(var(--color-cyan) / 0.2)',
-                  }}
-                >
+                <Card className="p-4" style={{
+                background: 'rgba(26, 11, 46, 0.6)',
+                border: '1px solid hsl(var(--color-cyan) / 0.2)'
+              }}>
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center">
                       <span className="text-xs font-bold text-[hsl(var(--color-cyan))]">3</span>
@@ -346,13 +351,10 @@ export default function ModelMap() {
                 </Card>
 
                 {/* Step 4: AI Analysis */}
-                <Card
-                  className="p-4"
-                  style={{
-                    background: 'rgba(26, 11, 46, 0.6)',
-                    border: '1px solid hsl(var(--color-cyan) / 0.2)',
-                  }}
-                >
+                <Card className="p-4" style={{
+                background: 'rgba(26, 11, 46, 0.6)',
+                border: '1px solid hsl(var(--color-cyan) / 0.2)'
+              }}>
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center">
                       <span className="text-xs font-bold text-[hsl(var(--color-cyan))]">4</span>
@@ -367,13 +369,10 @@ export default function ModelMap() {
                 </Card>
 
                 {/* Card 5: Model Criteria */}
-                <Card
-                  className="p-4"
-                  style={{
-                    background: 'rgba(26, 11, 46, 0.6)',
-                    border: '1px solid hsl(var(--color-cyan) / 0.2)',
-                  }}
-                >
+                <Card className="p-4" style={{
+                background: 'rgba(26, 11, 46, 0.6)',
+                border: '1px solid hsl(var(--color-cyan) / 0.2)'
+              }}>
                   <div className="flex items-center gap-2 mb-3">
                     <Target className="h-5 w-5 text-[hsl(var(--color-pink))]" />
                     <h3 className="font-rajdhani font-bold text-[hsl(var(--color-pink))]">
@@ -397,13 +396,10 @@ export default function ModelMap() {
                 </Card>
 
                 {/* Card 6: Output Criteria */}
-                <Card
-                  className="p-4"
-                  style={{
-                    background: 'rgba(26, 11, 46, 0.6)',
-                    border: '1px solid hsl(var(--color-cyan) / 0.2)',
-                  }}
-                >
+                <Card className="p-4" style={{
+                background: 'rgba(26, 11, 46, 0.6)',
+                border: '1px solid hsl(var(--color-cyan) / 0.2)'
+              }}>
                   <div className="flex items-center gap-2 mb-3">
                     <Sparkles className="h-5 w-5 text-[hsl(var(--color-pink))]" />
                     <h3 className="font-rajdhani font-bold text-[hsl(var(--color-pink))]">
@@ -427,16 +423,10 @@ export default function ModelMap() {
                 </Card>
               </div>
             </div>
-            </>
-          ) : (
-            /* Category Detail View */
-            <div className="space-y-6">
+            </> : (/* Category Detail View */
+        <div className="space-y-6">
               {/* Back Button */}
-              <Button
-                variant="ghost"
-                onClick={() => setSelectedCategory(null)}
-                className="text-[hsl(var(--color-cyan))] hover:bg-cyan-500/10"
-              >
+              <Button variant="ghost" onClick={() => setSelectedCategory(null)} className="text-[hsl(var(--color-cyan))] hover:bg-cyan-500/10">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Summary
               </Button>
@@ -444,40 +434,32 @@ export default function ModelMap() {
               {/* Category Header */}
               <div className="flex items-center gap-3">
               {(() => {
-                const cat = CATEGORIES.find(c => c.id === safeSelectedCategory);
-                  const Icon = cat?.icon || LayoutGrid;
-                  return (
-                    <>
+              const cat = CATEGORIES.find(c => c.id === safeSelectedCategory);
+              const Icon = cat?.icon || LayoutGrid;
+              return <>
                       <Icon className="h-8 w-8 text-[hsl(var(--color-cyan))]" />
                       <h2 className="text-2xl font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
                         {cat?.label}
                       </h2>
-                    </>
-                  );
-                })()}
-                {currentInsight && (
-                  <span className="text-xs text-[hsl(var(--color-pink))] ml-auto">
+                    </>;
+            })()}
+                {currentInsight && <span className="text-xs text-[hsl(var(--color-pink))] ml-auto">
                     Last updated: {format(new Date(currentInsight.last_calculated), 'MMM d, yyyy h:mm a')}
-                  </span>
-                )}
+                  </span>}
               </div>
 
               {/* Top Picks & Best Practices */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Current Top Picks */}
-                <Card
-                  className="p-6"
-                  style={{
-                    background: 'rgba(26, 11, 46, 0.6)',
-                    border: '1px solid hsl(var(--color-cyan) / 0.3)',
-                  }}
-                >
+                <Card className="p-6" style={{
+              background: 'rgba(26, 11, 46, 0.6)',
+              border: '1px solid hsl(var(--color-cyan) / 0.3)'
+            }}>
                   <h3 className="text-sm font-rajdhani font-bold text-[hsl(var(--color-pink))] uppercase tracking-wider mb-4">
                     Current Top Picks
                   </h3>
                   <div className="space-y-4">
-                    {winnerModel ? (
-                      <div className="flex items-start gap-3 p-4 rounded-lg bg-cyan-500/10 border border-cyan-500/30">
+                    {winnerModel ? <div className="flex items-start gap-3 p-4 rounded-lg bg-cyan-500/10 border border-cyan-500/30">
                         <Trophy className="h-6 w-6 text-[hsl(var(--color-yellow))] flex-shrink-0 mt-1" />
                         <div>
                           <p className="font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
@@ -487,15 +469,11 @@ export default function ModelMap() {
                             {currentInsight?.winner_tagline || winnerModel.provider}
                           </p>
                         </div>
-                      </div>
-                    ) : (
-                      <p className="text-sm text-[hsl(var(--color-light-text))] opacity-50 italic">
+                      </div> : <p className="text-sm text-[hsl(var(--color-light-text))] opacity-50 italic">
                         No winner determined yet.
-                      </p>
-                    )}
+                      </p>}
 
-                    {runnerUpModel && (
-                      <div className="flex items-start gap-3 p-4 rounded-lg bg-pink-500/10 border border-pink-500/30">
+                    {runnerUpModel && <div className="flex items-start gap-3 p-4 rounded-lg bg-pink-500/10 border border-pink-500/30">
                         <Medal className="h-6 w-6 text-[hsl(var(--color-pink))] flex-shrink-0 mt-1" />
                         <div>
                           <p className="font-rajdhani font-bold text-[hsl(var(--color-pink))]">
@@ -505,101 +483,74 @@ export default function ModelMap() {
                             {currentInsight?.runner_up_tagline || runnerUpModel.provider}
                           </p>
                         </div>
-                      </div>
-                    )}
+                      </div>}
                   </div>
                 </Card>
 
                 {/* Best Practices */}
-                <Card
-                  className="p-6"
-                  style={{
-                    background: 'rgba(26, 11, 46, 0.6)',
-                    border: '1px solid hsl(var(--color-cyan) / 0.3)',
-                  }}
-                >
+                <Card className="p-6" style={{
+              background: 'rgba(26, 11, 46, 0.6)',
+              border: '1px solid hsl(var(--color-cyan) / 0.3)'
+            }}>
                   <h3 className="text-sm font-rajdhani font-bold text-[hsl(var(--color-pink))] uppercase tracking-wider mb-4">
                     Best Practices
                   </h3>
-                  {currentInsight?.pro_tip ? (
-                    <div
-                      className="p-4 rounded-lg flex gap-3"
-                      style={{
-                        background: 'hsl(var(--color-yellow) / 0.1)',
-                        border: '1px solid hsl(var(--color-yellow) / 0.3)',
-                      }}
-                    >
+                  {currentInsight?.pro_tip ? <div className="p-4 rounded-lg flex gap-3" style={{
+                background: 'hsl(var(--color-yellow) / 0.1)',
+                border: '1px solid hsl(var(--color-yellow) / 0.3)'
+              }}>
                       <Lightbulb className="h-5 w-5 text-[hsl(var(--color-yellow))] flex-shrink-0 mt-0.5" />
                       <p className="text-sm text-[hsl(var(--color-yellow))]">
                         <strong>Pro-Tip:</strong> {currentInsight.pro_tip}
                       </p>
-                    </div>
-                  ) : (
-                    <p className="text-sm text-[hsl(var(--color-light-text))] opacity-50 italic">
+                    </div> : <p className="text-sm text-[hsl(var(--color-light-text))] opacity-50 italic">
                       No insights generated yet.
-                    </p>
-                  )}
+                    </p>}
                 </Card>
               </div>
 
               {/* Strengths & Weaknesses */}
-              {currentInsight && (currentInsight.strengths?.length > 0 || currentInsight.weaknesses?.length > 0) && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {currentInsight && (currentInsight.strengths?.length > 0 || currentInsight.weaknesses?.length > 0) && <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Strengths */}
-                  <Card
-                    className="p-6"
-                    style={{
-                      background: 'rgba(26, 11, 46, 0.6)',
-                      border: '1px solid hsl(120 100% 40% / 0.3)',
-                    }}
-                  >
+                  <Card className="p-6" style={{
+              background: 'rgba(26, 11, 46, 0.6)',
+              border: '1px solid hsl(120 100% 40% / 0.3)'
+            }}>
                     <h3 className="text-sm font-rajdhani font-bold text-green-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                       <CheckCircle className="h-4 w-4" />
                       Strengths
                     </h3>
                     <ul className="space-y-2">
-                      {currentInsight.strengths?.map((strength, idx) => (
-                        <li key={idx} className="text-sm text-[hsl(var(--color-light-text))] flex items-start gap-2">
+                      {currentInsight.strengths?.map((strength, idx) => <li key={idx} className="text-sm text-[hsl(var(--color-light-text))] flex items-start gap-2">
                           <span className="text-green-400 mt-1">•</span>
                           {strength}
-                        </li>
-                      ))}
+                        </li>)}
                     </ul>
                   </Card>
 
                   {/* Weaknesses */}
-                  <Card
-                    className="p-6"
-                    style={{
-                      background: 'rgba(26, 11, 46, 0.6)',
-                      border: '1px solid hsl(var(--color-pink) / 0.3)',
-                    }}
-                  >
+                  <Card className="p-6" style={{
+              background: 'rgba(26, 11, 46, 0.6)',
+              border: '1px solid hsl(var(--color-pink) / 0.3)'
+            }}>
                     <h3 className="text-sm font-rajdhani font-bold text-[hsl(var(--color-pink))] uppercase tracking-wider mb-4 flex items-center gap-2">
                       <XCircle className="h-4 w-4" />
                       Weaknesses
                     </h3>
                     <ul className="space-y-2">
-                      {currentInsight.weaknesses?.map((weakness, idx) => (
-                        <li key={idx} className="text-sm text-[hsl(var(--color-light-text))] flex items-start gap-2">
+                      {currentInsight.weaknesses?.map((weakness, idx) => <li key={idx} className="text-sm text-[hsl(var(--color-light-text))] flex items-start gap-2">
                           <span className="text-[hsl(var(--color-pink))] mt-1">•</span>
                           {weakness}
-                        </li>
-                      ))}
+                        </li>)}
                     </ul>
                   </Card>
-                </div>
-              )}
+                </div>}
 
               {/* Visual Heatmap */}
-              {modelAverages.length > 0 && (
-                <Card
-                  className="p-6"
-                  style={{
-                    background: 'rgba(26, 11, 46, 0.6)',
-                    border: '1px solid hsl(var(--color-cyan) / 0.3)',
-                  }}
-                >
+              {modelAverages.length > 0 && <Card className="p-6" style={{
+            background: 'rgba(26, 11, 46, 0.6)',
+            border: '1px solid hsl(var(--color-cyan) / 0.3)'
+          }}>
                   <h3 className="text-sm font-rajdhani font-bold text-[hsl(var(--color-pink))] uppercase tracking-wider mb-4">
                     Visual Heatmap: Strengths by Criteria
                   </h3>
@@ -610,16 +561,17 @@ export default function ModelMap() {
                           <th className="text-left text-xs text-[hsl(var(--color-cyan))] font-rajdhani p-2">
                             Model
                           </th>
-                          {CRITERIA.map((criterion) => (
-                            <th key={criterion} className="text-center text-xs text-[hsl(var(--color-cyan))] font-rajdhani p-2">
+                          {CRITERIA.map(criterion => <th key={criterion} className="text-center text-xs text-[hsl(var(--color-cyan))] font-rajdhani p-2">
                               {criterion}
-                            </th>
-                          ))}
+                            </th>)}
                         </tr>
                       </thead>
                       <tbody>
-                        {modelAverages.map(({ modelId, model, averages }) => (
-                          <tr key={modelId} className="border-t border-cyan-500/10">
+                        {modelAverages.map(({
+                    modelId,
+                    model,
+                    averages
+                  }) => <tr key={modelId} className="border-t border-cyan-500/10">
                             <td className="p-2">
                               <p className="text-sm font-rajdhani text-[hsl(var(--color-light-text))]">
                                 {model.name}
@@ -627,19 +579,14 @@ export default function ModelMap() {
                               <p className="text-xs text-[hsl(var(--color-pink))]">{model.provider}</p>
                             </td>
                             {averages.map((avg, idx) => {
-                              const heatmap = getHeatmapColor(avg);
-                              return (
-                                <td key={idx} className="p-2 text-center">
-                                  <div
-                                    className={`inline-block px-3 py-1 rounded text-xs font-medium ${heatmap.bg} ${heatmap.text}`}
-                                  >
+                      const heatmap = getHeatmapColor(avg);
+                      return <td key={idx} className="p-2 text-center">
+                                  <div className={`inline-block px-3 py-1 rounded text-xs font-medium ${heatmap.bg} ${heatmap.text}`}>
                                     {heatmap.label}
                                   </div>
-                                </td>
-                              );
-                            })}
-                          </tr>
-                        ))}
+                                </td>;
+                    })}
+                          </tr>)}
                       </tbody>
                     </table>
                   </div>
@@ -659,17 +606,12 @@ export default function ModelMap() {
                       <span className="text-xs text-red-400">Low (&lt;2.5)</span>
                     </div>
                   </div>
-                </Card>
-              )}
+                </Card>}
 
-              {modelAverages.length === 0 && !currentInsight && (
-                <Card
-                  className="p-12 text-center"
-                  style={{
-                    background: 'rgba(26, 11, 46, 0.6)',
-                    border: '1px solid hsl(var(--color-cyan) / 0.2)',
-                  }}
-                >
+              {modelAverages.length === 0 && !currentInsight && <Card className="p-12 text-center" style={{
+            background: 'rgba(26, 11, 46, 0.6)',
+            border: '1px solid hsl(var(--color-cyan) / 0.2)'
+          }}>
                   <Brain className="h-16 w-16 mx-auto mb-4 text-[hsl(var(--color-cyan))] opacity-50" />
                   <h3 className="text-xl font-rajdhani font-bold text-[hsl(var(--color-cyan))] mb-2">
                     No Data Yet
@@ -677,14 +619,11 @@ export default function ModelMap() {
                   <p className="text-[hsl(var(--color-light-text))] opacity-70">
                     Check back soon for insights on this category.
                   </p>
-                </Card>
-              )}
-            </div>
-          )}
+                </Card>}
+            </div>)}
         </div>
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 }
