@@ -30,6 +30,7 @@ interface Prompt {
   role: string | null;
   category: string | null;
   tags: string[];
+  testing_focus: string | null;
   body: string;
   date_created: string;
   last_modified: string;
@@ -147,6 +148,7 @@ export default function PromptLibraryDashboard() {
           role: prompt.role,
           category: prompt.category,
           tags: prompt.tags,
+          testing_focus: prompt.testing_focus,
           body: prompt.body,
           status: 'Draft',
         })
