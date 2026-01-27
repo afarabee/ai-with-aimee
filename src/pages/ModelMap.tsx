@@ -43,6 +43,8 @@ interface Test {
   status: string;
   prompt?: {
     category: string | null;
+    testing_focus: string | null;
+    title: string | null;
   };
   test_results?: TestResult[];
 }
@@ -138,7 +140,7 @@ export default function ModelMap() {
         error
       } = await supabase.from('tests').select(`
           *,
-          prompt:prompts(category),
+          prompt:prompts(category, testing_focus, title),
           test_results(*)
         `).eq('status', 'complete');
       if (error) throw error;
@@ -545,6 +547,35 @@ export default function ModelMap() {
                     </ul>
                   </Card>
                 </div>}
+
+              {/* Tests in this Category */}
+              {categoryTests.length > 0 && (
+                <Card className="p-6" style={{
+                  background: 'rgba(26, 11, 46, 0.6)',
+                  border: '1px solid hsl(var(--color-cyan) / 0.3)'
+                }}>
+                  <h3 className="text-sm font-rajdhani font-bold text-[hsl(var(--color-pink))] uppercase tracking-wider mb-4">
+                    Tests Completed
+                  </h3>
+                  <div className="space-y-3">
+                    {categoryTests.map((test) => (
+                      <div 
+                        key={test.id} 
+                        className="p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/20"
+                      >
+                        <p className="text-sm font-rajdhani text-[hsl(var(--color-cyan))]">
+                          {test.prompt?.title || 'Untitled Prompt'}
+                        </p>
+                        {test.prompt?.testing_focus && (
+                          <p className="text-xs text-[hsl(var(--color-pink))] mt-1">
+                            Testing: {test.prompt.testing_focus}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+              )}
 
               {/* Visual Heatmap */}
               {modelAverages.length > 0 && <Card className="p-6" style={{

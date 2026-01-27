@@ -32,6 +32,7 @@ const promptSchema = z.object({
   role: z.string().optional(),
   category: z.string().optional(),
   tags: z.string(),
+  testing_focus: z.string().max(200, 'Must be less than 200 characters').optional(),
   body: z.string().min(1, 'Prompt body required'),
   status: z.enum(['Draft', 'Published']).default('Draft'),
 });
@@ -44,6 +45,7 @@ interface Prompt {
   role: string | null;
   category: string | null;
   tags: string[];
+  testing_focus: string | null;
   body: string;
   date_created: string;
   last_modified: string;
@@ -74,6 +76,7 @@ export default function PromptEditor() {
       role: '',
       category: '',
       tags: '',
+      testing_focus: '',
       body: '',
       status: 'Draft',
     },
@@ -105,6 +108,7 @@ export default function PromptEditor() {
         role: prompt.role || '',
         category: prompt.category || '',
         tags: prompt.tags.join(', '),
+        testing_focus: prompt.testing_focus || '',
         body: prompt.body,
         status: prompt.status as 'Draft' | 'Published',
       };
@@ -117,6 +121,7 @@ export default function PromptEditor() {
         role: '',
         category: '',
         tags: '',
+        testing_focus: '',
         body: '',
         status: 'Draft',
       };
@@ -164,6 +169,7 @@ export default function PromptEditor() {
         role: data.role || null,
         category: data.category || null,
         tags: data.tags.split(',').map(t => t.trim()).filter(Boolean),
+        testing_focus: data.testing_focus || null,
         body: data.body,
         status: 'Draft',
         last_modified: new Date().toISOString(),
@@ -212,6 +218,7 @@ export default function PromptEditor() {
         role: data.role || null,
         category: data.category || null,
         tags: data.tags.split(',').map(t => t.trim()).filter(Boolean),
+        testing_focus: data.testing_focus || null,
         body: data.body,
         status: 'Published',
         last_modified: new Date().toISOString(),
@@ -260,6 +267,7 @@ export default function PromptEditor() {
         role: data.role || null,
         category: data.category || null,
         tags: data.tags.split(',').map(t => t.trim()).filter(Boolean),
+        testing_focus: data.testing_focus || null,
         body: data.body,
         status: 'Published',
         last_modified: new Date().toISOString(),
@@ -296,6 +304,7 @@ export default function PromptEditor() {
         role: data.role || null,
         category: data.category || null,
         tags: data.tags.split(',').map(t => t.trim()).filter(Boolean),
+        testing_focus: data.testing_focus || null,
         body: data.body,
         status: 'Draft',
         last_modified: new Date().toISOString(),
@@ -359,6 +368,7 @@ export default function PromptEditor() {
       role: '',
       category: '',
       tags: '',
+      testing_focus: '',
       body: '',
       status: 'Draft',
     });
@@ -525,6 +535,21 @@ export default function PromptEditor() {
                   )}
                 </div>
 
+                {/* What You're Testing */}
+                <div>
+                  <Label htmlFor="testing_focus" className="text-cyan-300 font-rajdhani">What You're Testing</Label>
+                  <Input
+                    id="testing_focus"
+                    {...register('testing_focus')}
+                    placeholder="e.g., Reasoning accuracy, code generation, summarization..."
+                    className="border-cyan-400/30 focus:border-cyan-400"
+                    maxLength={200}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {formData.testing_focus?.length || 0}/200 characters (optional)
+                  </p>
+                </div>
+
                 {/* Body */}
                 <div>
                   <Label htmlFor="body" className="text-cyan-300 font-rajdhani">
@@ -688,6 +713,14 @@ export default function PromptEditor() {
                         {tag}
                       </span>
                     ))}
+                  </div>
+                )}
+
+                {/* What You're Testing */}
+                {formData.testing_focus && (
+                  <div className="p-3 rounded-lg bg-pink-400/10 border border-pink-400/30">
+                    <p className="text-xs text-pink-400 font-rajdhani font-bold uppercase mb-1">What You're Testing</p>
+                    <p className="text-sm text-[hsl(var(--color-light-text))]">{formData.testing_focus}</p>
                   </div>
                 )}
 

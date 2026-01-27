@@ -264,6 +264,7 @@ export type Database = {
           role: string | null
           status: string
           tags: string[] | null
+          testing_focus: string | null
           title: string
         }
         Insert: {
@@ -275,6 +276,7 @@ export type Database = {
           role?: string | null
           status?: string
           tags?: string[] | null
+          testing_focus?: string | null
           title: string
         }
         Update: {
@@ -286,6 +288,7 @@ export type Database = {
           role?: string | null
           status?: string
           tags?: string[] | null
+          testing_focus?: string | null
           title?: string
         }
         Relationships: []
