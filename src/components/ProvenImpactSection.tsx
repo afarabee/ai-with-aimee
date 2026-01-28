@@ -95,7 +95,7 @@ const ProvenImpactSection = () => {
                 </div>
                 <ul className="space-y-2">
                   {category.items.map((item, itemIndex) => (
-                    <li key={itemIndex} className="flex items-start gap-2 text-sm font-ibm text-gray-300">
+                    <li key={itemIndex} className="flex items-start gap-2 text-base font-ibm text-gray-300" style={{ lineHeight: '1.6' }}>
                       <span className="text-pink-400 mt-1 flex-shrink-0">▹</span>
                       <span>{item}</span>
                     </li>

@@ -210,12 +210,12 @@ const Blog = () => {
                         </h2>
 
                         {/* Excerpt */}
-                        <p className="font-ibm text-sm mb-4 leading-relaxed neon-text-cyan line-clamp-3">
+                        <p className="font-ibm text-base mb-4 neon-text-cyan line-clamp-3" style={{ lineHeight: '1.7' }}>
                           {post.excerpt}
                         </p>
 
                         {/* Meta Info */}
-                        <div className="flex items-center gap-4 mb-4 text-xs" style={{ color: 'hsl(var(--color-pink))', textShadow: '0 0 8px hsl(var(--color-pink) / 0.4)' }}>
+                        <div className="flex items-center gap-4 mb-4" style={{ color: 'hsl(var(--color-pink))', textShadow: '0 0 8px hsl(var(--color-pink) / 0.4)', fontSize: '15px' }}>
                           <span className="flex items-center gap-1">
                             <Calendar size={14} style={{ color: 'hsl(var(--color-pink))' }} />
                             {new Date(post.date_published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}

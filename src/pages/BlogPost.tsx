@@ -135,10 +135,11 @@ const BlogPost = () => {
           </div>
           
           {/* Date with Icon */}
-          <div className="flex items-center justify-center gap-2 text-sm animate-fade-in" style={{
+          <div className="flex items-center justify-center gap-2 animate-fade-in" style={{
           color: 'hsl(var(--color-pink))',
           textShadow: '0 0 10px hsl(var(--color-pink) / 0.5)',
-          animationDelay: '0.6s'
+          animationDelay: '0.6s',
+          fontSize: '15px'
         }}>
             <Calendar size={16} style={{ color: 'hsl(var(--color-pink))' }} />
             <span>

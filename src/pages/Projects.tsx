@@ -137,7 +137,7 @@ const Projects = () => {
                       </p>
 
                       {/* Excerpt */}
-                      <div className="mb-6 font-ibm text-sm" style={{ color: '#e6e6e6', lineHeight: '1.6em' }}>
+                      <div className="mb-6 font-ibm text-base" style={{ color: '#e6e6e6', lineHeight: '1.7', fontSize: '18px' }}>
                         <p>{project.excerpt || project.body.slice(0, 200) + '...'}</p>
                       </div>
 
@@ -146,10 +146,11 @@ const Projects = () => {
                         {project.tags.map((tag, idx) => (
                           <span
                             key={idx}
-                            className="px-3 py-1 rounded text-xs font-titillium font-semibold neon-text-cyan transition-all duration-300 hover:scale-110"
+                            className="px-3 py-1 rounded font-titillium font-semibold neon-text-cyan transition-all duration-300 hover:scale-110"
                             style={{ 
                               background: 'rgba(0, 0, 0, 0.3)',
-                              border: '1px solid rgba(0, 255, 255, 0.3)'
+                              border: '1px solid rgba(0, 255, 255, 0.3)',
+                              fontSize: '15px'
                             }}
                           >
                             {tag}
@@ -208,7 +209,7 @@ const Projects = () => {
                     </p>
 
                     {/* Excerpt */}
-                    <div className="mb-6 font-ibm text-sm" style={{ color: '#e6e6e6', lineHeight: '1.6em' }}>
+                    <div className="mb-6 font-ibm text-base" style={{ color: '#e6e6e6', lineHeight: '1.7', fontSize: '18px' }}>
                       <p>{project.excerpt || project.body.slice(0, 200) + '...'}</p>
                     </div>
 
@@ -217,10 +218,11 @@ const Projects = () => {
                       {project.tags.map((tag, idx) => (
                         <span
                           key={idx}
-                          className="px-3 py-1 rounded text-xs font-titillium font-semibold neon-text-cyan transition-all duration-300 hover:scale-110"
+                          className="px-3 py-1 rounded font-titillium font-semibold neon-text-cyan transition-all duration-300 hover:scale-110"
                           style={{ 
                             background: 'rgba(0, 0, 0, 0.3)',
-                            border: '1px solid rgba(0, 255, 255, 0.3)'
+                            border: '1px solid rgba(0, 255, 255, 0.3)',
+                            fontSize: '15px'
                           }}
                         >
                           {tag}
