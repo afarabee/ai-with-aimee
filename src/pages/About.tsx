@@ -61,7 +61,8 @@ const About = () => {
             {/* Right: Bio Text */}
             <div className="space-y-6 font-ibm" style={{
             color: '#e6e6e6',
-            lineHeight: '1.6'
+            fontSize: '18px',
+            lineHeight: '1.7'
           }}>
               <p>I'm Aimee Farabee, a Product Director turned AI enablement nerd and active AI builder. I turn messy, ambiguous problems into governed, scalable, genuinely human solutions.</p>
               

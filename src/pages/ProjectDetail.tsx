@@ -155,7 +155,7 @@ const ProjectDetail = () => {
           )}
 
           {/* Metadata */}
-          <div className="flex items-center justify-center gap-4 text-sm font-ibm mb-6">
+          <div className="flex items-center justify-center gap-4 font-ibm mb-6" style={{ fontSize: '15px' }}>
             <div className="flex items-center gap-2">
               <Calendar size={16} style={{ color: 'hsl(var(--color-pink))' }} />
               <time style={{ 
@@ -173,8 +173,9 @@ const ProjectDetail = () => {
               {project.technologies.map((tech: string, index: number) => (
                 <span
                   key={index}
-                  className="px-3 py-1 rounded-full text-sm font-montserrat"
+                  className="px-3 py-1 rounded-full font-montserrat"
                   style={{
+                    fontSize: '15px',
                     backgroundColor: 'hsl(var(--color-violet) / 0.3)',
                     border: '1px solid hsl(var(--color-cyan) / 0.4)',
                     color: 'hsl(var(--color-cyan))',

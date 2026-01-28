@@ -223,10 +223,10 @@ export default function ModelMap() {
             <h1 className="text-4xl md:text-5xl font-rajdhani font-bold neon-text-cyan mb-4">
               AI Model Map
             </h1>
-            <p className="text-xl text-[hsl(var(--color-light-text))] opacity-80 max-w-2xl mx-auto mb-4">
+            <p className="text-[22px] text-[hsl(var(--color-light-text))] opacity-80 max-w-2xl mx-auto mb-4">
               Real-world model rankings based on hands-on testing with prompts I use daily.
             </p>
-            <div className="flex items-center justify-center gap-4 text-sm">
+            <div className="flex items-center justify-center gap-4" style={{ fontSize: '15px' }}>
               <span className="text-[hsl(var(--color-pink))]">
                 {totalTests} test{totalTests !== 1 ? 's' : ''} completed
               </span>
@@ -277,12 +277,12 @@ export default function ModelMap() {
                               {runnerUp.name}
                             </span>
                           </div>}
-                      </div> : <p className="text-xs text-[hsl(var(--color-light-text))] opacity-50 italic">
+                      </div> : <p className="text-sm text-[hsl(var(--color-light-text))] opacity-50 italic">
                         No data yet
                       </p>}
                     
                     <div className="mt-3 pt-2 border-t border-cyan-500/10">
-                      <span className="text-xs text-[hsl(var(--color-pink))]">
+                      <span className="text-sm text-[hsl(var(--color-pink))]">
                         {testCount} test{testCount !== 1 ? 's' : ''} completed
                       </span>
                     </div>
@@ -313,7 +313,7 @@ export default function ModelMap() {
                       Prompt Design
                     </h3>
                   </div>
-                  <p className="text-sm text-[hsl(var(--color-light-text))] opacity-80">Each test uses real prompts, categorized by use case (coding, writing, research, etc.).</p>
+                  <p className="text-base text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>Each test uses real prompts, categorized by use case (coding, writing, research, etc.).</p>
                 </Card>
 
                 {/* Step 2: Multi-Model Testing */}
@@ -329,7 +329,7 @@ export default function ModelMap() {
                       Multi-Model Testing
                     </h3>
                   </div>
-                  <p className="text-sm text-[hsl(var(--color-light-text))] opacity-80">
+                  <p className="text-base text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
                     The same prompt is run across multiple AI models to ensure fair, apples-to-apples comparison.
                   </p>
                 </Card>
@@ -347,7 +347,7 @@ export default function ModelMap() {
                       Criteria Scoring
                     </h3>
                   </div>
-                  <p className="text-sm text-[hsl(var(--color-light-text))] opacity-80">
+                  <p className="text-base text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
                     Models are rated 1-5 on six criteria covering accuracy, performance, and output quality.
                   </p>
                 </Card>
@@ -365,7 +365,7 @@ export default function ModelMap() {
                       AI Analysis
                     </h3>
                   </div>
-                  <p className="text-sm text-[hsl(var(--color-light-text))] opacity-80">
+                  <p className="text-base text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
                     Aggregate scores are analyzed to generate rankings, insights, and practical recommendations.
                   </p>
                 </Card>
@@ -383,16 +383,16 @@ export default function ModelMap() {
                   </div>
                   <div className="space-y-2">
                     <div>
-                      <p className="text-xs font-bold text-[hsl(var(--color-cyan))]">Accuracy</p>
-                      <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Did it follow instructions?</p>
+                      <p className="text-sm font-bold text-[hsl(var(--color-cyan))]">Accuracy</p>
+                      <p className="text-sm text-[hsl(var(--color-light-text))] opacity-70">Did it follow instructions?</p>
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-[hsl(var(--color-cyan))]">Speed</p>
-                      <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Response time performance</p>
+                      <p className="text-sm font-bold text-[hsl(var(--color-cyan))]">Speed</p>
+                      <p className="text-sm text-[hsl(var(--color-light-text))] opacity-70">Response time performance</p>
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-[hsl(var(--color-cyan))]">Style</p>
-                      <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Tone & formatting quality</p>
+                      <p className="text-sm font-bold text-[hsl(var(--color-cyan))]">Style</p>
+                      <p className="text-sm text-[hsl(var(--color-light-text))] opacity-70">Tone & formatting quality</p>
                     </div>
                   </div>
                 </Card>
@@ -410,16 +410,16 @@ export default function ModelMap() {
                   </div>
                   <div className="space-y-2">
                     <div>
-                      <p className="text-xs font-bold text-[hsl(var(--color-cyan))]">Practical Guidance</p>
-                      <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Actionable, usable output</p>
+                      <p className="text-sm font-bold text-[hsl(var(--color-cyan))]">Practical Guidance</p>
+                      <p className="text-sm text-[hsl(var(--color-light-text))] opacity-70">Actionable, usable output</p>
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-[hsl(var(--color-cyan))]">Technical Detail</p>
-                      <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Depth of explanation</p>
+                      <p className="text-sm font-bold text-[hsl(var(--color-cyan))]">Technical Detail</p>
+                      <p className="text-sm text-[hsl(var(--color-light-text))] opacity-70">Depth of explanation</p>
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-[hsl(var(--color-cyan))]">X-Factor</p>
-                      <p className="text-xs text-[hsl(var(--color-light-text))] opacity-70">Unexpected quality or insight</p>
+                      <p className="text-sm font-bold text-[hsl(var(--color-cyan))]">X-Factor</p>
+                      <p className="text-sm text-[hsl(var(--color-light-text))] opacity-70">Unexpected quality or insight</p>
                     </div>
                   </div>
                 </Card>
@@ -554,20 +554,20 @@ export default function ModelMap() {
                   background: 'rgba(26, 11, 46, 0.6)',
                   border: '1px solid hsl(var(--color-cyan) / 0.3)'
                 }}>
-                  <h3 className="text-sm font-rajdhani font-bold text-[hsl(var(--color-pink))] uppercase tracking-wider mb-4">
+                  <h3 className="text-base font-rajdhani font-bold text-[hsl(var(--color-pink))] uppercase tracking-wider mb-4">
                     Tests Completed
                   </h3>
                   <div className="space-y-3">
                     {categoryTests.map((test) => (
                       <div 
                         key={test.id} 
-                        className="p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/20"
+                        className="p-4 rounded-lg bg-cyan-500/5 border border-cyan-500/20"
                       >
-                        <p className="text-sm font-rajdhani text-[hsl(var(--color-cyan))]">
+                        <p className="text-base font-rajdhani text-[hsl(var(--color-cyan))]">
                           {test.prompt?.title || 'Untitled Prompt'}
                         </p>
                         {test.prompt?.testing_focus && (
-                          <p className="text-xs text-[hsl(var(--color-pink))] mt-1">
+                          <p className="text-sm text-[hsl(var(--color-pink))] mt-1">
                             Testing: {test.prompt.testing_focus}
                           </p>
                         )}
@@ -582,17 +582,17 @@ export default function ModelMap() {
             background: 'rgba(26, 11, 46, 0.6)',
             border: '1px solid hsl(var(--color-cyan) / 0.3)'
           }}>
-                  <h3 className="text-sm font-rajdhani font-bold text-[hsl(var(--color-pink))] uppercase tracking-wider mb-4">
+                  <h3 className="text-base font-rajdhani font-bold text-[hsl(var(--color-pink))] uppercase tracking-wider mb-4">
                     Visual Heatmap: Strengths by Criteria
                   </h3>
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
                         <tr>
-                          <th className="text-left text-xs text-[hsl(var(--color-cyan))] font-rajdhani p-2">
+                          <th className="text-left text-sm text-[hsl(var(--color-cyan))] font-rajdhani p-3">
                             Model
                           </th>
-                          {CRITERIA.map(criterion => <th key={criterion} className="text-center text-xs text-[hsl(var(--color-cyan))] font-rajdhani p-2">
+                          {CRITERIA.map(criterion => <th key={criterion} className="text-center text-sm text-[hsl(var(--color-cyan))] font-rajdhani p-3">
                               {criterion}
                             </th>)}
                         </tr>
@@ -603,16 +603,16 @@ export default function ModelMap() {
                     model,
                     averages
                   }) => <tr key={modelId} className="border-t border-cyan-500/10">
-                            <td className="p-2">
-                              <p className="text-sm font-rajdhani text-[hsl(var(--color-light-text))]">
+                            <td className="p-3">
+                              <p className="text-base font-rajdhani text-[hsl(var(--color-light-text))]">
                                 {model.name}
                               </p>
-                              <p className="text-xs text-[hsl(var(--color-pink))]">{model.provider}</p>
+                              <p className="text-sm text-[hsl(var(--color-pink))]">{model.provider}</p>
                             </td>
                             {averages.map((avg, idx) => {
                       const heatmap = getHeatmapColor(avg);
-                      return <td key={idx} className="p-2 text-center">
-                                  <div className={`inline-block px-3 py-1 rounded text-xs font-medium ${heatmap.bg} ${heatmap.text}`}>
+                      return <td key={idx} className="p-3 text-center">
+                                  <div className={`inline-block px-3 py-1.5 rounded text-sm font-medium ${heatmap.bg} ${heatmap.text}`}>
                                     {heatmap.label}
                                   </div>
                                 </td>;
@@ -623,18 +623,18 @@ export default function ModelMap() {
                   </div>
 
                   {/* Legend */}
-                  <div className="flex gap-4 mt-4 pt-4 border-t border-cyan-500/20">
+                  <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-cyan-500/20">
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 rounded bg-green-500/30"></div>
-                      <span className="text-xs text-green-400">Strong (4-5)</span>
+                      <span className="text-sm text-green-400">Strong (4-5)</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 rounded bg-orange-500/30"></div>
-                      <span className="text-xs text-orange-400">Moderate (2.5-4)</span>
+                      <span className="text-sm text-orange-400">Moderate (2.5-4)</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 rounded bg-red-500/30"></div>
-                      <span className="text-xs text-red-400">Low (&lt;2.5)</span>
+                      <span className="text-sm text-red-400">Low (&lt;2.5)</span>
                     </div>
                   </div>
                 </Card>}

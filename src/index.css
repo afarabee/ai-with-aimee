@@ -150,7 +150,8 @@ All colors MUST be HSL.
   body {
     @apply bg-background font-ibm;
     color: #e6e6e6;
-    line-height: 1.5em;
+    font-size: 18px;
+    line-height: 1.7;
   }
 
   /* Custom animations and styles */
@@ -602,7 +603,7 @@ All colors MUST be HSL.
 
   .blog-author {
     font-family: "Titillium Web", sans-serif;
-    font-size: 0.875rem;
+    font-size: 0.9375rem; /* 15px minimum */
     font-weight: 400;
     color: hsl(var(--color-yellow));
     text-shadow: 0 0 10px hsl(var(--color-yellow) / 0.6);
@@ -611,9 +612,9 @@ All colors MUST be HSL.
 
   .blog-body {
     font-family: var(--font-body);
-    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    font-size: clamp(1.125rem, 1.5vw, 1.25rem); /* 18px minimum */
     color: hsl(var(--color-light-text));
-    line-height: 1.5;
+    line-height: 1.7;
   }
 
   .blog-blockquote {
