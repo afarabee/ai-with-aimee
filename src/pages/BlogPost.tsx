@@ -155,7 +155,7 @@ const BlogPost = () => {
 
       {/* Banner Image (if exists) */}
       {(post as any).banner_image && <section className="relative py-8">
-          <div className="max-w-[740px] mx-auto px-6">
+          <div className="max-w-[900px] mx-auto px-6">
             <img src={(post as any).banner_image} alt={post.title} loading="lazy" className="w-full rounded-xl" style={{
           border: '2px solid hsl(var(--color-cyan) / 0.5)',
           boxShadow: '0 0 25px hsl(var(--color-cyan) / 0.4), 0 0 35px hsl(var(--color-pink) / 0.2)'
@@ -165,14 +165,14 @@ const BlogPost = () => {
 
       {/* Gradient Color Bar Divider */}
       <section className="relative py-2">
-        <div className="max-w-[740px] mx-auto px-6">
+        <div className="max-w-[900px] mx-auto px-6">
           <div className="blog-divider" />
         </div>
       </section>
 
       {/* Article Content */}
       <article className="relative pt-2 pb-16">
-        <div className="max-w-[740px] mx-auto px-6">
+        <div className="max-w-[900px] mx-auto px-6">
           {/* Body Content with Markdown Support */}
           <div className="blog-body space-y-6">
             {parseMarkdownContent(post.body)}
@@ -182,7 +182,7 @@ const BlogPost = () => {
 
       {/* Footer Signature */}
       <section className="pt-8 pb-16">
-        <div className="max-w-[740px] mx-auto px-6">
+        <div className="max-w-[900px] mx-auto px-6">
           {/* Cyan divider line */}
           <div className="blog-divider mb-8" />
           
