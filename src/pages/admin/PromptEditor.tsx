@@ -449,6 +449,103 @@ export default function PromptEditor() {
                 {promptId ? 'Edit Prompt' : 'New Prompt'}
               </h2>
 
+              {/* Top Action Buttons */}
+              <div className="flex flex-wrap gap-3 mb-6">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={saveDraft}
+                  style={{
+                    background: 'rgba(0, 255, 255, 0.1)',
+                    border: '2px solid hsl(var(--color-cyan))',
+                    color: 'hsl(var(--color-cyan))',
+                  }}
+                  className="hover:bg-cyan-400/20"
+                >
+                  <Save className="mr-2 h-4 w-4" />
+                  Save Draft
+                </Button>
+
+                {formData.status === 'Published' ? (
+                  <>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={updatePublished}
+                      style={{
+                        background: 'rgba(34, 197, 94, 0.1)',
+                        border: '2px solid #22c55e',
+                        color: '#22c55e',
+                      }}
+                      className="hover:bg-green-500/20"
+                    >
+                      <Save className="mr-2 h-4 w-4" />
+                      Update Published
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={unpublishPrompt}
+                      style={{
+                        background: 'rgba(249, 249, 64, 0.1)',
+                        border: '2px solid hsl(var(--color-yellow))',
+                        color: 'hsl(var(--color-yellow))',
+                      }}
+                      className="hover:bg-yellow-400/20"
+                    >
+                      Unpublish
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={publishPrompt}
+                    style={{
+                      background: 'rgba(249, 249, 64, 0.1)',
+                      border: '2px solid hsl(var(--color-yellow))',
+                      color: 'hsl(var(--color-yellow))',
+                    }}
+                    className="hover:bg-yellow-400/20"
+                  >
+                    <Send className="mr-2 h-4 w-4" />
+                    Publish Now
+                  </Button>
+                )}
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowClearDialog(true)}
+                  style={{
+                    background: 'rgba(245, 12, 160, 0.1)',
+                    border: '2px solid hsl(var(--color-pink))',
+                    color: 'hsl(var(--color-pink))',
+                  }}
+                  className="hover:bg-pink-400/20"
+                >
+                  <X className="mr-2 h-4 w-4" />
+                  Clear
+                </Button>
+
+                {promptId && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowDeleteDialog(true)}
+                    style={{
+                      background: 'rgba(239, 68, 68, 0.1)',
+                      border: '2px solid #ef4444',
+                      color: '#ef4444',
+                    }}
+                    className="hover:bg-red-400/20"
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Delete
+                  </Button>
+                )}
+              </div>
+
               <form className="space-y-6">
                 {/* Title */}
                 <div>
