@@ -267,22 +267,22 @@ export default function ModelMap() {
                     {winner ? <div className="space-y-2">
                         <div className="flex items-center gap-2">
                           <Trophy className="h-4 w-4 text-[hsl(var(--color-yellow))]" />
-                          <span className="text-sm text-[hsl(var(--color-light-text))]">
+                          <span className="text-base text-[hsl(var(--color-light-text))]">
                             {winner.name}
                           </span>
                         </div>
                         {runnerUp && <div className="flex items-center gap-2">
                             <Medal className="h-4 w-4 text-[hsl(var(--color-pink))]" />
-                            <span className="text-sm text-[hsl(var(--color-light-text))] opacity-70">
+                            <span className="text-base text-[hsl(var(--color-light-text))] opacity-70">
                               {runnerUp.name}
                             </span>
                           </div>}
-                      </div> : <p className="text-sm text-[hsl(var(--color-light-text))] opacity-50 italic">
+                      </div> : <p className="text-base text-[hsl(var(--color-light-text))] opacity-50 italic">
                         No data yet
                       </p>}
                     
                     <div className="mt-3 pt-2 border-t border-cyan-500/10">
-                      <span className="text-sm text-[hsl(var(--color-pink))]">
+                      <span className="text-base text-[hsl(var(--color-pink))]">
                         {testCount} test{testCount !== 1 ? 's' : ''} completed
                       </span>
                     </div>
@@ -313,7 +313,7 @@ export default function ModelMap() {
                       Prompt Design
                     </h3>
                   </div>
-                  <p className="text-base text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>Each test uses real prompts, categorized by use case (coding, writing, research, etc.).</p>
+                  <p className="text-lg text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>Each test uses real prompts, categorized by use case (coding, writing, research, etc.).</p>
                 </Card>
 
                 {/* Step 2: Multi-Model Testing */}
@@ -329,7 +329,7 @@ export default function ModelMap() {
                       Multi-Model Testing
                     </h3>
                   </div>
-                  <p className="text-base text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
+                  <p className="text-lg text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
                     The same prompt is run across multiple AI models to ensure fair, apples-to-apples comparison.
                   </p>
                 </Card>
@@ -347,7 +347,7 @@ export default function ModelMap() {
                       Criteria Scoring
                     </h3>
                   </div>
-                  <p className="text-base text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
+                  <p className="text-lg text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
                     Models are rated 1-5 on six criteria covering accuracy, performance, and output quality.
                   </p>
                 </Card>
@@ -365,7 +365,7 @@ export default function ModelMap() {
                       AI Analysis
                     </h3>
                   </div>
-                  <p className="text-base text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
+                  <p className="text-lg text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
                     Aggregate scores are analyzed to generate rankings, insights, and practical recommendations.
                   </p>
                 </Card>
@@ -383,16 +383,16 @@ export default function ModelMap() {
                   </div>
                   <div className="space-y-2">
                     <div>
-                      <p className="text-sm font-bold text-[hsl(var(--color-cyan))]">Accuracy</p>
-                      <p className="text-sm text-[hsl(var(--color-light-text))] opacity-70">Did it follow instructions?</p>
+                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Accuracy</p>
+                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Did it follow instructions?</p>
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-[hsl(var(--color-cyan))]">Speed</p>
-                      <p className="text-sm text-[hsl(var(--color-light-text))] opacity-70">Response time performance</p>
+                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Speed</p>
+                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Response time performance</p>
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-[hsl(var(--color-cyan))]">Style</p>
-                      <p className="text-sm text-[hsl(var(--color-light-text))] opacity-70">Tone & formatting quality</p>
+                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Style</p>
+                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Tone & formatting quality</p>
                     </div>
                   </div>
                 </Card>
@@ -410,16 +410,16 @@ export default function ModelMap() {
                   </div>
                   <div className="space-y-2">
                     <div>
-                      <p className="text-sm font-bold text-[hsl(var(--color-cyan))]">Practical Guidance</p>
-                      <p className="text-sm text-[hsl(var(--color-light-text))] opacity-70">Actionable, usable output</p>
+                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Practical Guidance</p>
+                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Actionable, usable output</p>
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-[hsl(var(--color-cyan))]">Technical Detail</p>
-                      <p className="text-sm text-[hsl(var(--color-light-text))] opacity-70">Depth of explanation</p>
+                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Technical Detail</p>
+                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Depth of explanation</p>
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-[hsl(var(--color-cyan))]">X-Factor</p>
-                      <p className="text-sm text-[hsl(var(--color-light-text))] opacity-70">Unexpected quality or insight</p>
+                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">X-Factor</p>
+                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Unexpected quality or insight</p>
                     </div>
                   </div>
                 </Card>
@@ -467,11 +467,11 @@ export default function ModelMap() {
                           <p className="font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
                             {winnerModel.name}
                           </p>
-                          <p className="text-sm text-[hsl(var(--color-light-text))] opacity-80">
+                          <p className="text-lg text-[hsl(var(--color-light-text))] opacity-80">
                             {currentInsight?.winner_tagline || winnerModel.provider}
                           </p>
                         </div>
-                      </div> : <p className="text-sm text-[hsl(var(--color-light-text))] opacity-50 italic">
+                      </div> : <p className="text-lg text-[hsl(var(--color-light-text))] opacity-50 italic">
                         No winner determined yet.
                       </p>}
 
@@ -481,7 +481,7 @@ export default function ModelMap() {
                           <p className="font-rajdhani font-bold text-[hsl(var(--color-pink))]">
                             {runnerUpModel.name}
                           </p>
-                          <p className="text-sm text-[hsl(var(--color-light-text))] opacity-80">
+                          <p className="text-lg text-[hsl(var(--color-light-text))] opacity-80">
                             {currentInsight?.runner_up_tagline || runnerUpModel.provider}
                           </p>
                         </div>
@@ -502,10 +502,10 @@ export default function ModelMap() {
                 border: '1px solid hsl(var(--color-yellow) / 0.3)'
               }}>
                       <Lightbulb className="h-5 w-5 text-[hsl(var(--color-yellow))] flex-shrink-0 mt-0.5" />
-                      <p className="text-sm text-[hsl(var(--color-yellow))]">
+                      <p className="text-lg text-[hsl(var(--color-yellow))]">
                         <strong>Pro-Tip:</strong> {currentInsight.pro_tip}
                       </p>
-                    </div> : <p className="text-sm text-[hsl(var(--color-light-text))] opacity-50 italic">
+                    </div> : <p className="text-lg text-[hsl(var(--color-light-text))] opacity-50 italic">
                       No insights generated yet.
                     </p>}
                 </Card>
@@ -523,7 +523,7 @@ export default function ModelMap() {
                       Strengths
                     </h3>
                     <ul className="space-y-2">
-                      {currentInsight.strengths?.map((strength, idx) => <li key={idx} className="text-sm text-[hsl(var(--color-light-text))] flex items-start gap-2">
+                      {currentInsight.strengths?.map((strength, idx) => <li key={idx} className="text-lg text-[hsl(var(--color-light-text))] flex items-start gap-2">
                           <span className="text-green-400 mt-1">•</span>
                           {strength}
                         </li>)}
@@ -540,7 +540,7 @@ export default function ModelMap() {
                       Weaknesses
                     </h3>
                     <ul className="space-y-2">
-                      {currentInsight.weaknesses?.map((weakness, idx) => <li key={idx} className="text-sm text-[hsl(var(--color-light-text))] flex items-start gap-2">
+                      {currentInsight.weaknesses?.map((weakness, idx) => <li key={idx} className="text-lg text-[hsl(var(--color-light-text))] flex items-start gap-2">
                           <span className="text-[hsl(var(--color-pink))] mt-1">•</span>
                           {weakness}
                         </li>)}
@@ -567,7 +567,7 @@ export default function ModelMap() {
                           {test.prompt?.title || 'Untitled Prompt'}
                         </p>
                         {test.prompt?.testing_focus && (
-                          <p className="text-sm text-[hsl(var(--color-pink))] mt-1">
+                          <p className="text-base text-[hsl(var(--color-pink))] mt-1">
                             Testing: {test.prompt.testing_focus}
                           </p>
                         )}
@@ -589,10 +589,10 @@ export default function ModelMap() {
                     <table className="w-full">
                       <thead>
                         <tr>
-                          <th className="text-left text-sm text-[hsl(var(--color-cyan))] font-rajdhani p-3">
+                          <th className="text-left text-base text-[hsl(var(--color-cyan))] font-rajdhani p-4">
                             Model
                           </th>
-                          {CRITERIA.map(criterion => <th key={criterion} className="text-center text-sm text-[hsl(var(--color-cyan))] font-rajdhani p-3">
+                          {CRITERIA.map(criterion => <th key={criterion} className="text-center text-base text-[hsl(var(--color-cyan))] font-rajdhani p-4">
                               {criterion}
                             </th>)}
                         </tr>
@@ -604,15 +604,15 @@ export default function ModelMap() {
                     averages
                   }) => <tr key={modelId} className="border-t border-cyan-500/10">
                             <td className="p-3">
-                              <p className="text-base font-rajdhani text-[hsl(var(--color-light-text))]">
+                              <p className="text-lg font-rajdhani text-[hsl(var(--color-light-text))]">
                                 {model.name}
                               </p>
-                              <p className="text-sm text-[hsl(var(--color-pink))]">{model.provider}</p>
+                              <p className="text-base text-[hsl(var(--color-pink))]">{model.provider}</p>
                             </td>
                             {averages.map((avg, idx) => {
                       const heatmap = getHeatmapColor(avg);
-                      return <td key={idx} className="p-3 text-center">
-                                  <div className={`inline-block px-3 py-1.5 rounded text-sm font-medium ${heatmap.bg} ${heatmap.text}`}>
+                      return <td key={idx} className="p-4 text-center">
+                                  <div className={`inline-block px-4 py-2 rounded text-base font-medium ${heatmap.bg} ${heatmap.text}`}>
                                     {heatmap.label}
                                   </div>
                                 </td>;
@@ -626,15 +626,15 @@ export default function ModelMap() {
                   <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-cyan-500/20">
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 rounded bg-green-500/30"></div>
-                      <span className="text-sm text-green-400">Strong (4-5)</span>
+                      <span className="text-base text-green-400">Strong (4-5)</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 rounded bg-orange-500/30"></div>
-                      <span className="text-sm text-orange-400">Moderate (2.5-4)</span>
+                      <span className="text-base text-orange-400">Moderate (2.5-4)</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 rounded bg-red-500/30"></div>
-                      <span className="text-sm text-red-400">Low (&lt;2.5)</span>
+                      <span className="text-base text-red-400">Low (&lt;2.5)</span>
                     </div>
                   </div>
                 </Card>}
