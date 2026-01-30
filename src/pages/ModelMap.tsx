@@ -421,7 +421,7 @@ export default function ModelMap() {
                     </h3>
                   </div>
                   <p className="text-lg text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
-                    Models are rated 1-5 on six criteria covering accuracy, performance, and output quality.
+                    Models and tools are rated 1-5 on tailored criteria covering accuracy, performance, and output quality.
                   </p>
                 </Card>
 
