@@ -12,6 +12,11 @@ interface Model {
   name: string;
   provider: string;
 }
+interface Tool {
+  id: string;
+  name: string;
+  provider: string;
+}
 interface ModelMapInsight {
   id: string;
   category: string;
@@ -111,6 +116,21 @@ export default function ModelMap() {
       } = await supabase.from('models').select('id, name, provider');
       if (error) throw error;
       return data as Model[];
+    }
+  });
+
+  // Fetch all tools
+  const {
+    data: tools
+  } = useQuery({
+    queryKey: ['public-tools'],
+    queryFn: async () => {
+      const {
+        data,
+        error
+      } = await supabase.from('tools').select('id, name, provider').order('name');
+      if (error) throw error;
+      return data as Tool[];
     }
   });
 
@@ -260,60 +280,41 @@ export default function ModelMap() {
                     AI Coding Tools
                   </h2>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {/* Lovable */}
-                  <Card className="p-4" style={{
-                    background: 'rgba(26, 11, 46, 0.6)',
-                    border: '1px solid hsl(270 70% 50% / 0.4)'
-                  }}>
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-5 h-5 rounded bg-purple-500/30 flex items-center justify-center">
-                        <Code className="h-3 w-3 text-purple-400" />
-                      </div>
-                      <h3 className="font-rajdhani font-bold text-purple-400">
-                        Lovable
-                      </h3>
-                    </div>
-                    <p className="text-base text-[hsl(var(--color-light-text))] opacity-60 italic">
-                      Testing in progress...
-                    </p>
-                  </Card>
-
-                  {/* Cursor */}
-                  <Card className="p-4" style={{
-                    background: 'rgba(26, 11, 46, 0.6)',
-                    border: '1px solid hsl(45 100% 50% / 0.4)'
-                  }}>
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-5 h-5 rounded bg-amber-500/30 flex items-center justify-center">
-                        <Code className="h-3 w-3 text-amber-400" />
-                      </div>
-                      <h3 className="font-rajdhani font-bold text-amber-400">
-                        Cursor
-                      </h3>
-                    </div>
-                    <p className="text-base text-[hsl(var(--color-light-text))] opacity-60 italic">
-                      Testing in progress...
-                    </p>
-                  </Card>
-
-                  {/* Windsurf */}
-                  <Card className="p-4" style={{
-                    background: 'rgba(26, 11, 46, 0.6)',
-                    border: '1px solid hsl(var(--color-cyan) / 0.4)'
-                  }}>
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-5 h-5 rounded bg-cyan-500/30 flex items-center justify-center">
-                        <Code className="h-3 w-3 text-cyan-400" />
-                      </div>
-                      <h3 className="font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
-                        Windsurf
-                      </h3>
-                    </div>
-                    <p className="text-base text-[hsl(var(--color-light-text))] opacity-60 italic">
-                      Testing in progress...
-                    </p>
-                  </Card>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {tools?.map((tool, index) => {
+                    // Cycle through colors for visual variety
+                    const colors = [
+                      { bg: 'bg-purple-500/30', text: 'text-purple-400', border: 'hsl(270 70% 50% / 0.4)' },
+                      { bg: 'bg-cyan-500/30', text: 'text-cyan-400', border: 'hsl(var(--color-cyan) / 0.4)' },
+                      { bg: 'bg-amber-500/30', text: 'text-amber-400', border: 'hsl(45 100% 50% / 0.4)' },
+                      { bg: 'bg-pink-500/30', text: 'text-pink-400', border: 'hsl(var(--color-pink) / 0.4)' },
+                      { bg: 'bg-green-500/30', text: 'text-green-400', border: 'hsl(142 70% 45% / 0.4)' },
+                      { bg: 'bg-blue-500/30', text: 'text-blue-400', border: 'hsl(217 91% 60% / 0.4)' },
+                    ];
+                    const color = colors[index % colors.length];
+                    
+                    return (
+                      <Card key={tool.id} className="p-4" style={{
+                        background: 'rgba(26, 11, 46, 0.6)',
+                        border: `1px solid ${color.border}`
+                      }}>
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className={`w-5 h-5 rounded ${color.bg} flex items-center justify-center`}>
+                            <Code className={`h-3 w-3 ${color.text}`} />
+                          </div>
+                          <h3 className={`font-rajdhani font-bold ${color.text}`}>
+                            {tool.name}
+                          </h3>
+                        </div>
+                        <p className="text-sm text-[hsl(var(--color-light-text))] opacity-60">
+                          {tool.provider}
+                        </p>
+                        <p className="text-base text-[hsl(var(--color-light-text))] opacity-60 italic mt-2">
+                          Testing in progress...
+                        </p>
+                      </Card>
+                    );
+                  })}
                 </div>
               </div>
 
