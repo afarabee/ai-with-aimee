@@ -217,13 +217,13 @@ export default function ModelMap() {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="pt-28 pb-12 px-6">
+      <section className="pt-28 pb-8 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-rajdhani font-bold neon-text-cyan mb-4">
               My AI Benchmarks
             </h1>
-            <p className="text-[22px] text-[hsl(var(--color-light-text))] opacity-80 max-w-2xl mx-auto mb-4">
+            <p className="text-[22px] text-[hsl(var(--color-light-text))] opacity-80 mx-auto mb-4" style={{ maxWidth: '580px' }}>
               Real-world model and tool rankings based on hands-on testing with prompts I use daily.
             </p>
             <div className="flex items-center justify-center gap-4" style={{ fontSize: '15px' }}>
@@ -246,10 +246,17 @@ export default function ModelMap() {
         <div className="max-w-6xl mx-auto">
           {!safeSelectedCategory ? <>
               {/* AI Coding Tools Section */}
-              <div className="mb-8">
-                <div className="flex items-center gap-3 mb-4">
-                  <Wrench className="h-6 w-6 text-[hsl(var(--color-cyan))]" />
-                  <h2 className="text-2xl font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
+              <div 
+                className="rounded-2xl py-10 px-6 md:px-8"
+                style={{
+                  background: 'rgba(245, 12, 160, 0.03)',
+                  border: '1px solid hsl(var(--color-pink) / 0.15)',
+                  backdropFilter: 'blur(10px)'
+                }}
+              >
+                <div className="flex items-center gap-3 mb-6">
+                  <Wrench className="h-6 w-6 text-[hsl(var(--color-pink))]" />
+                  <h2 className="text-2xl font-rajdhani font-bold text-[hsl(var(--color-pink))]">
                     AI Coding Tools
                   </h2>
                 </div>
@@ -310,9 +317,26 @@ export default function ModelMap() {
                 </div>
               </div>
 
+              {/* Neon Divider */}
+              <div className="my-10 flex justify-center">
+                <div 
+                  className="h-px w-full max-w-3xl"
+                  style={{
+                    background: 'linear-gradient(90deg, transparent 0%, hsl(180 100% 56%) 30%, hsl(320 95% 50%) 70%, transparent 100%)'
+                  }}
+                />
+              </div>
+
               {/* AI Models Section */}
-              <div className="mt-24">
-                <div className="flex items-center gap-3 mb-4">
+              <div 
+                className="rounded-2xl py-10 px-6 md:px-8"
+                style={{
+                  background: 'rgba(0, 255, 255, 0.02)',
+                  border: '1px solid hsl(var(--color-cyan) / 0.12)',
+                  backdropFilter: 'blur(10px)'
+                }}
+              >
+                <div className="flex items-center gap-3 mb-6">
                   <Brain className="h-6 w-6 text-[hsl(var(--color-cyan))]" />
                   <h2 className="text-2xl font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
                     AI Models
@@ -364,169 +388,191 @@ export default function ModelMap() {
               </div>
 
             {/* Methodology Section */}
-            <div className="mt-12">
-              <div className="flex items-center gap-3 mb-6">
-                <BookOpen className="h-6 w-6 text-[hsl(var(--color-cyan))]" />
-                <h2 className="text-2xl font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
+            <div 
+              className="mt-16 rounded-2xl py-10 px-6 md:px-8"
+              style={{
+                background: 'rgba(249, 249, 64, 0.02)',
+                border: '1px solid hsl(var(--color-yellow) / 0.1)',
+                backdropFilter: 'blur(10px)'
+              }}
+            >
+              <div className="flex items-center gap-3 mb-8">
+                <BookOpen className="h-6 w-6 text-[hsl(var(--color-yellow))]" />
+                <h2 className="text-2xl font-rajdhani font-bold text-[hsl(var(--color-yellow))]">
                   Testing Methodology
                 </h2>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Step 1: Prompt Design */}
-                <Card className="p-4" style={{
-                background: 'rgba(26, 11, 46, 0.6)',
-                border: '1px solid hsl(var(--color-cyan) / 0.2)'
-              }}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                      <span className="text-xs font-bold text-[hsl(var(--color-cyan))]">1</span>
+              {/* How It Works - Vertical List */}
+              <div className="mb-10">
+                <h3 className="text-lg font-rajdhani font-bold text-[hsl(var(--color-cyan))] mb-6">
+                  How It Works
+                </h3>
+                
+                <div className="space-y-0">
+                  {/* Step 1 */}
+                  <div className="flex gap-4 py-5">
+                    <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-sm font-bold text-[hsl(var(--color-cyan))]">1</span>
                     </div>
-                    <h3 className="font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
-                      Prompt Design
-                    </h3>
+                    <div className="flex-1">
+                      <h4 className="font-rajdhani font-bold text-[hsl(var(--color-cyan))] mb-1">
+                        Prompt Design
+                      </h4>
+                      <p className="text-lg text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
+                        Each test uses real prompts, categorized by use case (coding, writing, research, etc.).
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-lg text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>Each test uses real prompts, categorized by use case (coding, writing, research, etc.).</p>
-                </Card>
+                  
+                  {/* Separator */}
+                  <div className="h-px ml-4" style={{ background: 'linear-gradient(90deg, hsl(var(--color-cyan) / 0.3) 0%, transparent 80%)' }} />
+                  
+                  {/* Step 2 */}
+                  <div className="flex gap-4 py-5">
+                    <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-sm font-bold text-[hsl(var(--color-cyan))]">2</span>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-rajdhani font-bold text-[hsl(var(--color-cyan))] mb-1">
+                        Multi-Model Testing
+                      </h4>
+                      <p className="text-lg text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
+                        The same prompt is run across multiple AI models and tools to ensure fair, apples-to-apples comparison.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* Separator */}
+                  <div className="h-px ml-4" style={{ background: 'linear-gradient(90deg, hsl(var(--color-cyan) / 0.3) 0%, transparent 80%)' }} />
+                  
+                  {/* Step 3 */}
+                  <div className="flex gap-4 py-5">
+                    <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-sm font-bold text-[hsl(var(--color-cyan))]">3</span>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-rajdhani font-bold text-[hsl(var(--color-cyan))] mb-1">
+                        Criteria Scoring
+                      </h4>
+                      <p className="text-lg text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
+                        Models and tools are rated 1-5 on tailored criteria covering accuracy, performance, and output quality.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* Separator */}
+                  <div className="h-px ml-4" style={{ background: 'linear-gradient(90deg, hsl(var(--color-cyan) / 0.3) 0%, transparent 80%)' }} />
+                  
+                  {/* Step 4 */}
+                  <div className="flex gap-4 py-5">
+                    <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-sm font-bold text-[hsl(var(--color-cyan))]">4</span>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-rajdhani font-bold text-[hsl(var(--color-cyan))] mb-1">
+                        AI Analysis
+                      </h4>
+                      <p className="text-lg text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
+                        Aggregate scores are analyzed to generate rankings, insights, and practical recommendations.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Scoring Criteria - 3 Column Grid */}
+              <div>
+                <h3 className="text-lg font-rajdhani font-bold text-[hsl(var(--color-pink))] mb-6">
+                  Scoring Criteria
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Model Criteria */}
+                  <Card className="p-5" style={{
+                    background: 'rgba(26, 11, 46, 0.7)',
+                    border: '1px solid hsl(var(--color-pink) / 0.2)'
+                  }}>
+                    <div className="flex items-center gap-2 mb-4">
+                      <Target className="h-5 w-5 text-[hsl(var(--color-pink))]" />
+                      <h4 className="font-rajdhani font-bold text-[hsl(var(--color-pink))]">
+                        Model Criteria
+                      </h4>
+                    </div>
+                    <div className="space-y-3">
+                      <div>
+                        <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Accuracy</p>
+                        <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Did it follow instructions?</p>
+                      </div>
+                      <div>
+                        <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Speed</p>
+                        <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Response time performance</p>
+                      </div>
+                      <div>
+                        <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Style</p>
+                        <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Tone & formatting quality</p>
+                      </div>
+                    </div>
+                  </Card>
 
-                {/* Step 2: Multi-Model Testing */}
-                <Card className="p-4" style={{
-                background: 'rgba(26, 11, 46, 0.6)',
-                border: '1px solid hsl(var(--color-cyan) / 0.2)'
-              }}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                      <span className="text-xs font-bold text-[hsl(var(--color-cyan))]">2</span>
+                  {/* Output Criteria */}
+                  <Card className="p-5" style={{
+                    background: 'rgba(26, 11, 46, 0.7)',
+                    border: '1px solid hsl(var(--color-pink) / 0.2)'
+                  }}>
+                    <div className="flex items-center gap-2 mb-4">
+                      <Sparkles className="h-5 w-5 text-[hsl(var(--color-pink))]" />
+                      <h4 className="font-rajdhani font-bold text-[hsl(var(--color-pink))]">
+                        Output Criteria
+                      </h4>
                     </div>
-                    <h3 className="font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
-                      Multi-Model Testing
-                    </h3>
-                  </div>
-                  <p className="text-lg text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
-                    The same prompt is run across multiple AI models and tools to ensure fair, apples-to-apples comparison.
-                  </p>
-                </Card>
+                    <div className="space-y-3">
+                      <div>
+                        <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Practical Guidance</p>
+                        <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Actionable, usable output</p>
+                      </div>
+                      <div>
+                        <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Technical Detail</p>
+                        <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Depth of explanation</p>
+                      </div>
+                      <div>
+                        <p className="text-base font-bold text-[hsl(var(--color-cyan))]">X-Factor</p>
+                        <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Unexpected quality or insight</p>
+                      </div>
+                    </div>
+                  </Card>
 
-                {/* Step 3: Scoring */}
-                <Card className="p-4" style={{
-                background: 'rgba(26, 11, 46, 0.6)',
-                border: '1px solid hsl(var(--color-cyan) / 0.2)'
-              }}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                      <span className="text-xs font-bold text-[hsl(var(--color-cyan))]">3</span>
+                  {/* Tool Criteria */}
+                  <Card className="p-5" style={{
+                    background: 'rgba(26, 11, 46, 0.7)',
+                    border: '1px solid hsl(var(--color-pink) / 0.2)'
+                  }}>
+                    <div className="flex items-center gap-2 mb-4">
+                      <Wrench className="h-5 w-5 text-[hsl(var(--color-pink))]" />
+                      <h4 className="font-rajdhani font-bold text-[hsl(var(--color-pink))]">
+                        Tool Criteria
+                      </h4>
                     </div>
-                    <h3 className="font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
-                      Criteria Scoring
-                    </h3>
-                  </div>
-                  <p className="text-lg text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
-                    Models and tools are rated 1-5 on tailored criteria covering accuracy, performance, and output quality.
-                  </p>
-                </Card>
-
-                {/* Step 4: AI Analysis */}
-                <Card className="p-4" style={{
-                background: 'rgba(26, 11, 46, 0.6)',
-                border: '1px solid hsl(var(--color-cyan) / 0.2)'
-              }}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                      <span className="text-xs font-bold text-[hsl(var(--color-cyan))]">4</span>
+                    <div className="space-y-3">
+                      <div>
+                        <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Output Fidelity</p>
+                        <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Accuracy and quality of generated code</p>
+                      </div>
+                      <div>
+                        <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Iteration Quality</p>
+                        <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">How well it handles refinements</p>
+                      </div>
+                      <div>
+                        <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Extra Capabilities</p>
+                        <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Unique features and integrations</p>
+                      </div>
+                      <div>
+                        <p className="text-base font-bold text-[hsl(var(--color-cyan))]">X-Factor <span className="text-[hsl(var(--color-light-text))] opacity-50 font-normal">(optional)</span></p>
+                        <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Standout qualities or surprises</p>
+                      </div>
                     </div>
-                    <h3 className="font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
-                      AI Analysis
-                    </h3>
-                  </div>
-                  <p className="text-lg text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
-                    Aggregate scores are analyzed to generate rankings, insights, and practical recommendations.
-                  </p>
-                </Card>
-
-                {/* Card 5: Model Criteria */}
-                <Card className="p-4" style={{
-                background: 'rgba(26, 11, 46, 0.6)',
-                border: '1px solid hsl(var(--color-cyan) / 0.2)'
-              }}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <Target className="h-5 w-5 text-[hsl(var(--color-pink))]" />
-                    <h3 className="font-rajdhani font-bold text-[hsl(var(--color-pink))]">
-                      Model Criteria
-                    </h3>
-                  </div>
-                  <div className="space-y-2">
-                    <div>
-                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Accuracy</p>
-                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Did it follow instructions?</p>
-                    </div>
-                    <div>
-                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Speed</p>
-                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Response time performance</p>
-                    </div>
-                    <div>
-                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Style</p>
-                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Tone & formatting quality</p>
-                    </div>
-                  </div>
-                </Card>
-
-                {/* Card 6: Output Criteria */}
-                <Card className="p-4" style={{
-                background: 'rgba(26, 11, 46, 0.6)',
-                border: '1px solid hsl(var(--color-cyan) / 0.2)'
-              }}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <Sparkles className="h-5 w-5 text-[hsl(var(--color-pink))]" />
-                    <h3 className="font-rajdhani font-bold text-[hsl(var(--color-pink))]">
-                      Output Criteria
-                    </h3>
-                  </div>
-                  <div className="space-y-2">
-                    <div>
-                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Practical Guidance</p>
-                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Actionable, usable output</p>
-                    </div>
-                    <div>
-                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Technical Detail</p>
-                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Depth of explanation</p>
-                    </div>
-                    <div>
-                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">X-Factor</p>
-                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Unexpected quality or insight</p>
-                    </div>
-                  </div>
-                </Card>
-
-                {/* Card 7: Tool Criteria */}
-                <Card className="p-4" style={{
-                background: 'rgba(26, 11, 46, 0.6)',
-                border: '1px solid hsl(var(--color-cyan) / 0.2)'
-              }}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <Wrench className="h-5 w-5 text-[hsl(var(--color-pink))]" />
-                    <h3 className="font-rajdhani font-bold text-[hsl(var(--color-pink))]">
-                      Tool Criteria
-                    </h3>
-                  </div>
-                  <div className="space-y-2">
-                    <div>
-                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Output Fidelity</p>
-                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Accuracy and quality of generated code</p>
-                    </div>
-                    <div>
-                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Iteration Quality</p>
-                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">How well it handles refinements</p>
-                    </div>
-                    <div>
-                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Extra Capabilities</p>
-                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Unique features and integrations</p>
-                    </div>
-                    <div>
-                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">X-Factor <span className="text-[hsl(var(--color-light-text))] opacity-50 font-normal">(optional)</span></p>
-                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Standout qualities or surprises</p>
-                    </div>
-                  </div>
-                </Card>
+                  </Card>
+                </div>
               </div>
             </div>
             </> : (/* Category Detail View */
