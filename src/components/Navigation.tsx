@@ -92,7 +92,7 @@ const Navigation = () => {
                   : '';
               }}
             >
-              Model Map
+              Benchmarks
             </NavLink>
             <NavLink 
               to="/blog"
@@ -174,7 +174,7 @@ const Navigation = () => {
               className={({ isActive }) => `block py-2 nav-link w-full text-left ${isActive ? 'border-l-2' : ''}`}
               style={({ isActive }) => navLinkStyle(isActive)}
             >
-              Model Map
+              Benchmarks
             </NavLink>
             <NavLink 
               to="/blog"
