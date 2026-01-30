@@ -349,8 +349,8 @@ export default function ModelMap() {
                               {runnerUp.name}
                             </span>
                           </div>}
-                      </div> : <p className="text-base text-[hsl(var(--color-light-text))] opacity-50 italic">
-                        No data yet
+                      </div> : <p className="text-base text-[hsl(var(--color-light-text))] opacity-60 italic">
+                        Testing in progress...
                       </p>}
                     
                     <div className="mt-3 pt-2 border-t border-cyan-500/10">
