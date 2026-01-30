@@ -310,8 +310,15 @@ export default function ModelMap() {
                 </div>
               </div>
 
-              {/* Summary Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {/* AI Models Section */}
+              <div className="mt-24">
+                <div className="flex items-center gap-3 mb-4">
+                  <Brain className="h-6 w-6 text-[hsl(var(--color-cyan))]" />
+                  <h2 className="text-2xl font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
+                    AI Models
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {PUBLIC_CATEGORIES.map(cat => {
               const Icon = cat.icon;
               const insight = insights?.find(i => i.category === cat.id);
@@ -353,7 +360,8 @@ export default function ModelMap() {
                     </div>
                   </Card>;
             })}
-            </div>
+                </div>
+              </div>
 
             {/* Methodology Section */}
             <div className="mt-12">
