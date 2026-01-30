@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card } from '@/components/ui/card';
-import { Brain, Zap, Code, Search, Home, Palette, PenTool, Package, Trophy, Medal, Lightbulb, CheckCircle, XCircle, LayoutGrid, ArrowLeft, BookOpen, Target, Sparkles, BarChart3 } from 'lucide-react';
+import { Brain, Zap, Code, Search, Home, Palette, PenTool, Package, Trophy, Medal, Lightbulb, CheckCircle, XCircle, LayoutGrid, ArrowLeft, BookOpen, Target, Sparkles, BarChart3, Wrench } from 'lucide-react';
 import { format } from 'date-fns';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -221,10 +221,10 @@ export default function ModelMap() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-rajdhani font-bold neon-text-cyan mb-4">
-              AI Model Map
+              My AI Benchmarks
             </h1>
             <p className="text-[22px] text-[hsl(var(--color-light-text))] opacity-80 max-w-2xl mx-auto mb-4">
-              Real-world model rankings based on hands-on testing with prompts I use daily.
+              Real-world model and tool rankings based on hands-on testing with prompts I use daily.
             </p>
             <div className="flex items-center justify-center gap-4" style={{ fontSize: '15px' }}>
               <span className="text-[hsl(var(--color-pink))]">
@@ -245,6 +245,71 @@ export default function ModelMap() {
       <section className="pb-20 px-6">
         <div className="max-w-6xl mx-auto">
           {!safeSelectedCategory ? <>
+              {/* AI Coding Tools Section */}
+              <div className="mb-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <Wrench className="h-6 w-6 text-[hsl(var(--color-cyan))]" />
+                  <h2 className="text-2xl font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
+                    AI Coding Tools
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Lovable */}
+                  <Card className="p-4" style={{
+                    background: 'rgba(26, 11, 46, 0.6)',
+                    border: '1px solid hsl(270 70% 50% / 0.4)'
+                  }}>
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-5 h-5 rounded bg-purple-500/30 flex items-center justify-center">
+                        <Code className="h-3 w-3 text-purple-400" />
+                      </div>
+                      <h3 className="font-rajdhani font-bold text-purple-400">
+                        Lovable
+                      </h3>
+                    </div>
+                    <p className="text-base text-[hsl(var(--color-light-text))] opacity-60 italic">
+                      Testing in progress...
+                    </p>
+                  </Card>
+
+                  {/* Cursor */}
+                  <Card className="p-4" style={{
+                    background: 'rgba(26, 11, 46, 0.6)',
+                    border: '1px solid hsl(45 100% 50% / 0.4)'
+                  }}>
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-5 h-5 rounded bg-amber-500/30 flex items-center justify-center">
+                        <Code className="h-3 w-3 text-amber-400" />
+                      </div>
+                      <h3 className="font-rajdhani font-bold text-amber-400">
+                        Cursor
+                      </h3>
+                    </div>
+                    <p className="text-base text-[hsl(var(--color-light-text))] opacity-60 italic">
+                      Testing in progress...
+                    </p>
+                  </Card>
+
+                  {/* Windsurf */}
+                  <Card className="p-4" style={{
+                    background: 'rgba(26, 11, 46, 0.6)',
+                    border: '1px solid hsl(var(--color-cyan) / 0.4)'
+                  }}>
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-5 h-5 rounded bg-cyan-500/30 flex items-center justify-center">
+                        <Code className="h-3 w-3 text-cyan-400" />
+                      </div>
+                      <h3 className="font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
+                        Windsurf
+                      </h3>
+                    </div>
+                    <p className="text-base text-[hsl(var(--color-light-text))] opacity-60 italic">
+                      Testing in progress...
+                    </p>
+                  </Card>
+                </div>
+              </div>
+
               {/* Summary Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {PUBLIC_CATEGORIES.map(cat => {
@@ -330,7 +395,7 @@ export default function ModelMap() {
                     </h3>
                   </div>
                   <p className="text-lg text-[hsl(var(--color-light-text))] opacity-80" style={{ lineHeight: '1.6' }}>
-                    The same prompt is run across multiple AI models to ensure fair, apples-to-apples comparison.
+                    The same prompt is run across multiple AI models and tools to ensure fair, apples-to-apples comparison.
                   </p>
                 </Card>
 
@@ -420,6 +485,37 @@ export default function ModelMap() {
                     <div>
                       <p className="text-base font-bold text-[hsl(var(--color-cyan))]">X-Factor</p>
                       <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Unexpected quality or insight</p>
+                    </div>
+                  </div>
+                </Card>
+
+                {/* Card 7: Tool Criteria */}
+                <Card className="p-4" style={{
+                background: 'rgba(26, 11, 46, 0.6)',
+                border: '1px solid hsl(var(--color-cyan) / 0.2)'
+              }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Wrench className="h-5 w-5 text-[hsl(var(--color-pink))]" />
+                    <h3 className="font-rajdhani font-bold text-[hsl(var(--color-pink))]">
+                      Tool Criteria
+                    </h3>
+                  </div>
+                  <div className="space-y-2">
+                    <div>
+                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Output Fidelity</p>
+                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Accuracy and quality of generated code</p>
+                    </div>
+                    <div>
+                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Iteration Quality</p>
+                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">How well it handles refinements</p>
+                    </div>
+                    <div>
+                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">Extra Capabilities</p>
+                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Unique features and integrations</p>
+                    </div>
+                    <div>
+                      <p className="text-base font-bold text-[hsl(var(--color-cyan))]">X-Factor <span className="text-[hsl(var(--color-light-text))] opacity-50 font-normal">(optional)</span></p>
+                      <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Standout qualities or surprises</p>
                     </div>
                   </div>
                 </Card>
