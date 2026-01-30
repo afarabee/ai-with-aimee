@@ -13,7 +13,7 @@ const Resume = () => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'Dena-Lawless-Resume.pdf';
+      link.download = 'Aimee-Farabee-Resume.pdf';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -27,32 +27,32 @@ const Resume = () => {
   const achievements = [
     {
       icon: Heart,
-      title: 'Lovable Ambassador',
-      description: 'Official ambassador for the Lovable AI platform',
+      title: 'AI for Humanity',
+      description: 'Certified in ethical AI practices and human-centered design',
       color: 'pink',
     },
     {
+      icon: GraduationCap,
+      title: 'Applied GenAI Specialization',
+      description: 'Hands-on expertise in AI theory, productization, and governance',
+      color: 'cyan',
+    },
+    {
+      icon: Cpu,
+      title: 'Enterprise AI Leader',
+      description: 'Pioneering strategic rollout of generative AI solutions',
+      color: 'purple',
+    },
+    {
       icon: Hash,
-      title: 'Creator of #CacheTag',
-      description: 'Invented viral hashtag movement for AI community',
+      title: '300M+ Users Reached',
+      description: 'Consumer-to-enterprise products driving $1B+ venture exits',
       color: 'orange',
     },
     {
       icon: MessageSquare,
-      title: 'Launched ChatPersona',
-      description: 'Built and shipped conversational AI product',
-      color: 'purple',
-    },
-    {
-      icon: Cpu,
-      title: 'Built 5 LLM Products',
-      description: 'Shipped multiple large language model applications',
-      color: 'cyan',
-    },
-    {
-      icon: GraduationCap,
-      title: 'USC Alumni Tech Event',
-      description: 'Featured speaker at USC technology alumni events',
+      title: 'USC Alumni Leadership',
+      description: 'University of Southern California network member',
       color: 'yellow',
     },
   ];
@@ -123,10 +123,10 @@ const Resume = () => {
                 textShadow: '0 0 40px rgba(245, 12, 160, 0.3)',
               }}
             >
-              DENA LAWLESS
+              AIMEE FARABEE
             </h1>
             <h2 className="text-lg md:text-xl font-josefin text-foreground/90 mb-8 relative z-10">
-              AI Product Management Leader | Platform & Marketplace | AI for Humanity
+              Product Director & AI Strategist | Enterprise AI Enablement | AI for Humanity
             </h2>
 
             {/* Action Buttons */}
@@ -166,7 +166,7 @@ const Resume = () => {
               </a>
               
               <a 
-                href="https://www.linkedin.com/in/dena-lawless/" 
+                href="https://www.linkedin.com/in/aimee-farabee/"
                 target="_blank" 
                 rel="noopener noreferrer"
               >
