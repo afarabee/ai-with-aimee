@@ -1,4 +1,4 @@
-import { Download, Linkedin, Calendar, Briefcase, Award, Hash, MessageSquare, Cpu, GraduationCap, Heart } from 'lucide-react';
+import { Download, Linkedin, Calendar, Briefcase, Award, Brain, Clock, Rocket, Shield, CreditCard } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import NeuralNetworkBackground from '@/components/NeuralNetworkBackground';
@@ -26,33 +26,33 @@ const Resume = () => {
 
   const achievements = [
     {
-      icon: Heart,
-      title: 'AI for Humanity',
-      description: 'Certified in ethical AI practices and human-centered design',
-      color: 'pink',
-    },
-    {
-      icon: GraduationCap,
-      title: 'Applied GenAI Specialization',
-      description: 'Hands-on expertise in AI theory, productization, and governance',
+      icon: Brain,
+      title: 'SARA GenAI',
+      description: '98% reduction in research time (3 mins) at Charles River Labs',
       color: 'cyan',
     },
     {
-      icon: Cpu,
-      title: 'Enterprise AI Leader',
-      description: 'Pioneering strategic rollout of generative AI solutions',
-      color: 'purple',
+      icon: Clock,
+      title: 'Behavioral Health Platform',
+      description: '97% reduction in wait times (1.5 days) through dedicated API platform',
+      color: 'pink',
     },
     {
-      icon: Hash,
-      title: '300M+ Users Reached',
-      description: 'Consumer-to-enterprise products driving $1B+ venture exits',
+      icon: Rocket,
+      title: '97-Day MVP Launch',
+      description: 'Rapid product development from concept to market',
       color: 'orange',
     },
     {
-      icon: MessageSquare,
-      title: 'USC Alumni Leadership',
-      description: 'University of Southern California network member',
+      icon: Shield,
+      title: 'AI Governance',
+      description: '100+ use cases governed with enterprise-grade compliance',
+      color: 'purple',
+    },
+    {
+      icon: CreditCard,
+      title: 'Walmart Bluebird',
+      description: '575k accounts opened through innovative fintech solution',
       color: 'yellow',
     },
   ];
@@ -126,7 +126,7 @@ const Resume = () => {
               AIMEE FARABEE
             </h1>
             <h2 className="text-lg md:text-xl font-josefin text-foreground/90 mb-8 relative z-10">
-              Product Director & AI Strategist | Enterprise AI Enablement | AI for Humanity
+              Enterprise AI and Product Executive
             </h2>
 
             {/* Action Buttons */}
