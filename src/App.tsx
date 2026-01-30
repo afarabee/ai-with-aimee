@@ -11,6 +11,7 @@ import ProjectDetail from "./pages/ProjectDetail";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import ModelMap from "./pages/ModelMap";
+import Resume from "./pages/Resume";
 import NotFound from "./pages/NotFound";
 import AdminLayout from "./components/admin/AdminLayout";
 import AdminHome from "./pages/admin/AdminHome";
@@ -58,6 +59,7 @@ const App = () => {
             <Route path="/projects/:slug" element={<ProjectDetail />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/model-map" element={<ModelMap />} />
+            <Route path="/resume" element={<Resume />} />
             {/* SEO redirect - old slug variation points to canonical URL */}
             <Route path="/blog/agents-arent-the-answer" element={<Navigate to="/blog/agents-arent-always-the-answer" replace />} />
             {/* Dynamic blog post handler - renders all posts via BlogPost.tsx */}
