@@ -1,35 +1,41 @@
-import { Award, Brain, Clock, Rocket, Shield, CreditCard } from 'lucide-react';
+import { Award, Brain, Clock, Rocket, Shield, CreditCard, Zap } from 'lucide-react';
 
 const achievements = [
   {
     icon: Brain,
     title: 'SARA GenAI',
-    description: '98% reduction in research time (3 mins) at Charles River Labs',
+    description: '98% reduction in scientific reporting cycle time (3 hrs → 3 mins) at Charles River Labs',
     color: 'cyan',
   },
   {
     icon: Clock,
     title: 'Behavioral Health Platform',
-    description: '97% reduction in wait times (1.5 days) through dedicated API platform',
+    description: '97% reduction in behavioral health wait times (48 days → 1.5 days) through dedicated API platform',
     color: 'pink',
   },
   {
     icon: Rocket,
     title: '97-Day MVP Launch',
-    description: 'Rapid product development from concept to market',
+    description: 'Zero-to-one MVP integrating 5 vendors and coordinating 10+ internal teams',
     color: 'orange',
   },
   {
     icon: Shield,
-    title: 'AI Governance',
-    description: '100+ use cases governed with enterprise-grade compliance',
+    title: 'AI Governance Framework',
+    description: '100+ AI use cases evaluated through enterprise governance framework with CIO-led AI Council',
     color: 'purple',
   },
   {
     icon: CreditCard,
     title: 'Walmart Bluebird',
-    description: '575k accounts opened through innovative fintech solution',
+    description: '575k+ accounts, $275M loads in 3 months at American Express',
     color: 'yellow',
+  },
+  {
+    icon: Zap,
+    title: 'Agentic AI Workflows',
+    description: '80% reduction in user story creation time and 50% faster refinement cycles',
+    color: 'cyan',
   },
 ];
 
