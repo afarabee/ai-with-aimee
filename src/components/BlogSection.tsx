@@ -256,7 +256,7 @@ const BlogSection = () => {
                           transformStyle: 'preserve-3d',
                           filter: isActive ? 'brightness(1)' : 'brightness(0.7) blur(1px)',
                           pointerEvents: isActive ? 'auto' : 'none',
-                          transition: 'all 1s ease-in-out',
+                          transition: 'all 0.7s ease-out',
                         }}
                       >
                         <GlowCard

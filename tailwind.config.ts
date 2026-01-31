@@ -111,11 +111,31 @@ export default {
             animationTimingFunction: "cubic-bezier(0.4, 0, 0.6, 1)",
           },
         },
+        "fade-up": {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "slide-in-left": {
+          "0%": { opacity: "0", transform: "translateX(-40px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
+        "slide-in-right": {
+          "0%": { opacity: "0", transform: "translateX(40px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
+        "scale-fade-in": {
+          "0%": { opacity: "0", transform: "scale(0.95)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "bounce-subtle": "bounce-subtle 2s ease-in-out infinite",
+        "fade-up": "fade-up 0.7s ease-out forwards",
+        "slide-in-left": "slide-in-left 0.7s ease-out forwards",
+        "slide-in-right": "slide-in-right 0.7s ease-out forwards",
+        "scale-fade-in": "scale-fade-in 0.6s ease-out forwards",
       },
     },
   },
