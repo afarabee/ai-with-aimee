@@ -1,218 +1,68 @@
 
 
-# Layout Redesign Plan: My AI Benchmarks Page
+# Add Cursor-Following Glow Effects to Benchmarks Page
 
 ## Overview
+Apply the same interactive cursor-following glow effect used on the Homepage, Projects, and Blog pages to the Benchmarks page (ModelMap.tsx). This effect creates a spotlight glow that follows the cursor and intensifies the card border on hover.
 
-This plan addresses the layout issues on the My AI Benchmarks page by improving visual hierarchy, creating better section separation, and converting the Testing Methodology to a cleaner vertical list format.
+## Current State
+- **Homepage, Projects, Blog**: Use the `GlowCard` component which tracks mouse position and renders a radial gradient overlay following the cursor
+- **Benchmarks page**: Uses standard shadcn `Card` components with static borders and backgrounds - no cursor-tracking glow
 
----
+## Implementation Approach
 
-## Current Issues
+### Option 1: Replace `Card` with `GlowCard` (Recommended)
+Replace all `Card` components on the Benchmarks page with the existing `GlowCard` component, which already implements the cursor-following effect.
 
-1. **Subtitle wrapping**: The subtitle text creates unbalanced line breaks
-2. **Methodology section**: Card grid creates awkward empty spaces (7 cards in 2-column grid = uneven layout)
-3. **Lack of visual separation**: All sections blend together without clear boundaries
-4. **Inconsistent vertical rhythm**: Spacing varies between sections
+**Cards to update:**
+1. **AI Coding Tools section** - Tool cards (lines 297-316)
+2. **AI Models section** - Category cards (lines 353-386)
+3. **Methodology section** - Scoring criteria cards (lines 493-575)
+4. **Category Detail View** - Top Picks, Best Practices, Strengths, Weaknesses cards (lines 607-699)
 
----
+### Customization Needed
+The current `GlowCard` uses hardcoded cyan glow colors. The Benchmarks page uses different accent colors per section:
+- **AI Coding Tools**: Pink accent
+- **AI Models**: Cyan accent
+- **Methodology**: Yellow/Pink accents
 
-## Proposed Changes
-
-### 1. Hero Section - Subtitle Fix
-
-Adjust the subtitle container to create more balanced text wrapping:
-
-- Change max-width from `max-w-2xl` (672px) to approximately 580px
-- This forces a more natural break point in the subtitle text
-- Result: More visually balanced two-line layout
-
----
-
-### 2. Section Container Redesign
-
-Create distinct visual zones with different background treatments:
-
-**AI Coding Tools Section**
-- Wrap in a dedicated container with subtle pink-tinted background
-- Background: `rgba(245, 12, 160, 0.03)` (very subtle pink tint)
-- Border: `1px solid hsl(var(--color-pink) / 0.15)`
-- Rounded corners and subtle glow
-- Padding: `py-10 px-6`
-
-**AI Models Section**
-- Keep current styling but add container wrapper
-- Background: `rgba(0, 255, 255, 0.02)` (very subtle cyan tint)
-- Border: `1px solid hsl(var(--color-cyan) / 0.1)`
-- This creates visual distinction from the tools section
-
-**Neon Divider Between Sections**
-- Add a horizontal gradient line between Tools and Models sections
-- Style: `linear-gradient(90deg, transparent 0%, hsl(180 100% 56%) 30%, hsl(320 95% 50%) 70%, transparent 100%)`
-- This matches the existing divider pattern used on About page
+**Solution**: Enhance `GlowCard` to accept a `glowColor` prop for customizable glow colors (the prop already exists but isn't used in the gradient).
 
 ---
 
-### 3. Testing Methodology - Vertical List Redesign
+## Technical Details
 
-Convert the 7-card grid into two distinct parts:
-
-**Part A: Process Steps (1-4)**
-Clean vertical numbered list format:
+### Step 1: Update GlowCard Component
+Modify `src/components/ui/glow-card.tsx` to use the `glowColor` prop in the radial gradient overlay.
 
 ```text
-┌─────────────────────────────────────────────┐
-│  Testing Methodology                        │
-├─────────────────────────────────────────────┤
-│                                             │
-│  1  Prompt Design                           │
-│     Each test uses real prompts...          │
-│  ─────────────────────────────────────      │
-│  2  Multi-Model Testing                     │
-│     The same prompt is run across...        │
-│  ─────────────────────────────────────      │
-│  3  Criteria Scoring                        │
-│     Models and tools are rated 1-5...       │
-│  ─────────────────────────────────────      │
-│  4  AI Analysis                             │
-│     Aggregate scores are analyzed...        │
-│                                             │
-└─────────────────────────────────────────────┘
+Current (hardcoded):
+background: `radial-gradient(600px circle at ${x}px ${y}px, rgba(0, 255, 255, 0.15), transparent 40%)`
+
+Updated (dynamic):
+background: `radial-gradient(600px circle at ${x}px ${y}px, ${glowColor}25, transparent 40%)`
 ```
 
-- Single column layout with full-width items
-- Clean separator lines between steps (subtle cyan gradient)
-- Larger step numbers (8x8 circles instead of 6x6)
-- More generous spacing between items (space-y-6)
+### Step 2: Update ModelMap.tsx
+Replace `Card` imports/usages with `GlowCard` and pass appropriate `glowColor` values:
 
-**Part B: Scoring Criteria Cards (3 cards)**
-Keep as grid but optimize layout:
+| Section | Current | After | Glow Color |
+|---------|---------|-------|------------|
+| AI Coding Tools cards | `Card` | `GlowCard` | Dynamic (purple, cyan, amber, pink, green, blue cycle) |
+| AI Models category cards | `Card` | `GlowCard` | Cyan (`#00ffff`) |
+| Methodology criteria cards | `Card` | `GlowCard` | Pink/Cyan based on card type |
+| Detail view cards | `Card` | `GlowCard` | Cyan (`#00ffff`) |
 
-- 3 equal-width cards in a row on desktop
-- Model Criteria | Output Criteria | Tool Criteria
-- Subtle background differentiation (slightly deeper purple)
-- Yellow-tinted container background: `rgba(249, 249, 64, 0.02)`
-
----
-
-### 4. Consistent Vertical Spacing
-
-Establish a clear spacing rhythm throughout:
-
-| Section                     | Margin Top | Padding    |
-|-----------------------------|------------|------------|
-| Hero                        | pt-28      | pb-8       |
-| AI Coding Tools container   | mt-0       | py-10 px-8 |
-| Divider                     | my-10      | —          |
-| AI Models container         | mt-0       | py-10 px-8 |
-| Methodology container       | mt-16      | py-10 px-8 |
-
----
-
-### 5. Container Styling Details
-
-Each major section will have:
-
-```css
-/* Section container base */
-.section-container {
-  border-radius: 1rem;
-  backdrop-filter: blur(10px);
-  padding: 2.5rem 2rem;
-}
-
-/* Tools Section - Pink accent */
-background: rgba(245, 12, 160, 0.03);
-border: 1px solid hsl(var(--color-pink) / 0.12);
-
-/* Models Section - Cyan accent */
-background: rgba(0, 255, 255, 0.02);
-border: 1px solid hsl(var(--color-cyan) / 0.12);
-
-/* Methodology Section - Yellow accent */
-background: rgba(249, 249, 64, 0.02);
-border: 1px solid hsl(var(--color-yellow) / 0.1);
-```
-
----
-
-## Technical Implementation
-
-### Files to Modify
-
-**src/pages/ModelMap.tsx**
-
-1. **Hero section (lines 220-241)**
-   - Reduce subtitle max-width to ~580px
-
-2. **AI Coding Tools section (lines 248-311)**
-   - Wrap in styled container div with pink-tinted background
-   - Add rounded corners and subtle border
-
-3. **Add neon divider (after tools section)**
-   - Insert gradient divider element between Tools and Models
-
-4. **AI Models section (lines 313-364)**
-   - Wrap in styled container div with cyan-tinted background
-   - Adjust top margin (reduce from mt-24 to mt-0 since divider handles separation)
-
-5. **Testing Methodology section (lines 366-530)**
-   - Wrap entire section in yellow-tinted container
-   - Convert steps 1-4 from grid to vertical list with separator lines
-   - Keep criteria cards (Model/Output/Tool) as 3-column grid
-   - Add subtle header to distinguish "How It Works" from "Scoring Criteria"
+### Step 3: Adjust Padding
+`GlowCard` wraps children in a `p-6` div. Adjust the inner padding of cards to avoid double-padding issues (current cards use `p-4` or `p-5`).
 
 ---
 
 ## Visual Result
+After implementation, hovering over any card on the Benchmarks page will:
+1. Display a subtle radial glow following the cursor position
+2. Intensify the border glow/shadow
+3. Apply a slight scale transform (1.03x) for interactive feedback
 
-The page will have three clearly defined zones with subtle color differentiation:
-
-```text
-┌─────────────────────────────────────────────────┐
-│                    HERO                         │
-│         My AI Benchmarks (title)                │
-│   Balanced subtitle with better wrapping        │
-└─────────────────────────────────────────────────┘
-
-┌─ PINK TINT ─────────────────────────────────────┐
-│     🔧 AI Coding Tools                          │
-│   ┌──────┐  ┌──────┐  ┌──────┐                 │
-│   │Lovable│  │Cursor│  │Windsurf│               │
-│   └──────┘  └──────┘  └──────┘                 │
-└─────────────────────────────────────────────────┘
-          ═══════════════════════════
-              (neon gradient line)
-          ═══════════════════════════
-┌─ CYAN TINT ─────────────────────────────────────┐
-│     🧠 AI Models                                │
-│   ┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐       │
-│   │Deep  │  │General│  │Coding│  │Research│    │
-│   └──────┘  └──────┘  └──────┘  └──────┘       │
-└─────────────────────────────────────────────────┘
-
-┌─ YELLOW TINT ───────────────────────────────────┐
-│     📖 Testing Methodology                      │
-│                                                 │
-│   How It Works                                  │
-│   ────────────                                  │
-│   1. Prompt Design                              │
-│   2. Multi-Model Testing                        │
-│   3. Criteria Scoring                           │
-│   4. AI Analysis                                │
-│                                                 │
-│   Scoring Criteria                              │
-│   ────────────────                              │
-│   ┌──────────┐ ┌──────────┐ ┌──────────┐       │
-│   │  Model   │ │  Output  │ │   Tool   │       │
-│   │ Criteria │ │ Criteria │ │ Criteria │       │
-│   └──────────┘ └──────────┘ └──────────┘       │
-└─────────────────────────────────────────────────┘
-```
-
----
-
-## Summary
-
-This redesign creates visual breathing room and clear section boundaries while maintaining the existing content and brand aesthetic. The colored container backgrounds are subtle enough not to distract but strong enough to create distinct zones.
+This matches the behavior on the Homepage Proven Impact section, Blog cards, and Projects cards.
 
