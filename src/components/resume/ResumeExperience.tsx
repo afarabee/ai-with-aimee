@@ -1,4 +1,5 @@
 import { Briefcase } from 'lucide-react';
+import GlowCard from '@/components/ui/glow-card';
 
 const experiences = [
   {
@@ -73,18 +74,14 @@ const ResumeExperience = () => {
       
       <div className="space-y-6">
         {experiences.map((exp, index) => (
-          <div
+          <GlowCard
             key={index}
-            className="p-6 rounded-xl relative overflow-hidden"
-            style={{
-              background: 'rgba(245, 12, 160, 0.05)',
-              border: '1px solid hsl(var(--color-pink) / 0.2)',
-              backdropFilter: 'blur(10px)',
-            }}
+            glowColor="#f50ca0"
+            className="!p-0 relative"
           >
             {/* Left accent bar */}
             <div 
-              className="absolute left-0 top-0 bottom-0 w-1 rounded-l-xl"
+              className="absolute left-0 top-0 bottom-0 w-1 rounded-l-xl z-20"
               style={{
                 background: 'linear-gradient(180deg, hsl(var(--color-pink)) 0%, rgba(139, 92, 246, 1) 100%)',
               }}
@@ -131,7 +128,7 @@ const ResumeExperience = () => {
                 ))}
               </ul>
             </div>
-          </div>
+          </GlowCard>
         ))}
       </div>
     </section>

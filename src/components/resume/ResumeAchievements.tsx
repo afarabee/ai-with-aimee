@@ -1,4 +1,5 @@
 import { Award, Brain, Clock, Rocket, Shield, CreditCard, Zap } from 'lucide-react';
+import GlowCard from '@/components/ui/glow-card';
 
 const achievements = [
   {
@@ -40,30 +41,25 @@ const achievements = [
 ];
 
 const getColorStyles = (color: string) => {
-  const colors: Record<string, { bg: string; border: string; text: string }> = {
+  const colors: Record<string, { glowHex: string; text: string }> = {
     pink: {
-      bg: 'rgba(245, 12, 160, 0.1)',
-      border: '1px solid hsl(var(--color-pink) / 0.4)',
+      glowHex: '#f50ca0',
       text: 'hsl(var(--color-pink))',
     },
     orange: {
-      bg: 'rgba(255, 140, 0, 0.1)',
-      border: '1px solid rgba(255, 140, 0, 0.4)',
+      glowHex: '#ff8c00',
       text: 'rgb(255, 180, 100)',
     },
     purple: {
-      bg: 'rgba(168, 85, 247, 0.1)',
-      border: '1px solid rgba(168, 85, 247, 0.4)',
+      glowHex: '#a855f7',
       text: 'rgb(192, 132, 252)',
     },
     cyan: {
-      bg: 'rgba(0, 255, 255, 0.1)',
-      border: '1px solid hsl(var(--color-cyan) / 0.4)',
+      glowHex: '#00ffff',
       text: 'hsl(var(--color-cyan))',
     },
     yellow: {
-      bg: 'rgba(249, 249, 64, 0.1)',
-      border: '1px solid hsl(var(--color-yellow) / 0.4)',
+      glowHex: '#f9f940',
       text: 'hsl(var(--color-yellow))',
     },
   };
@@ -95,14 +91,10 @@ const ResumeAchievements = () => {
         {achievements.map((achievement, index) => {
           const styles = getColorStyles(achievement.color);
           return (
-            <div
+            <GlowCard
               key={index}
-              className="p-6 rounded-xl transition-all duration-300 hover:scale-[1.02]"
-              style={{
-                background: styles.bg,
-                border: styles.border,
-                backdropFilter: 'blur(10px)',
-              }}
+              glowColor={styles.glowHex}
+              className="!p-0"
             >
               <div className="flex items-start gap-4">
                 <achievement.icon 
@@ -122,7 +114,7 @@ const ResumeAchievements = () => {
                   </p>
                 </div>
               </div>
-            </div>
+            </GlowCard>
           );
         })}
       </div>
