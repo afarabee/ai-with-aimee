@@ -5,9 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import aimeeHeadshot from '@/assets/aimee-headshot-new.png';
 import { RESUME_URL } from '@/constants/urls';
+import CursorGlow from '@/components/ui/cursor-glow';
+
 const About = () => {
   return <div className="min-h-screen">
       <Navigation />
+      
+      {/* Cursor-following glow effect */}
+      <CursorGlow primaryColor="#f50ca0" secondaryColor="#00ffff" size={500} />
       
       {/* Main About Section */}
       <section className="relative min-h-screen py-32 px-6">
