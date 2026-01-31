@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Card } from '@/components/ui/card';
+import GlowCard from '@/components/ui/glow-card';
 import { Brain, Zap, Code, Search, Home, Palette, PenTool, Package, Trophy, Medal, Lightbulb, CheckCircle, XCircle, LayoutGrid, ArrowLeft, BookOpen, Target, Sparkles, BarChart3, Wrench } from 'lucide-react';
 import { format } from 'date-fns';
 import Navigation from '@/components/Navigation';
@@ -284,20 +284,17 @@ export default function ModelMap() {
                   {tools?.map((tool, index) => {
                     // Cycle through colors for visual variety
                     const colors = [
-                      { bg: 'bg-purple-500/30', text: 'text-purple-400', border: 'hsl(270 70% 50% / 0.4)' },
-                      { bg: 'bg-cyan-500/30', text: 'text-cyan-400', border: 'hsl(var(--color-cyan) / 0.4)' },
-                      { bg: 'bg-amber-500/30', text: 'text-amber-400', border: 'hsl(45 100% 50% / 0.4)' },
-                      { bg: 'bg-pink-500/30', text: 'text-pink-400', border: 'hsl(var(--color-pink) / 0.4)' },
-                      { bg: 'bg-green-500/30', text: 'text-green-400', border: 'hsl(142 70% 45% / 0.4)' },
-                      { bg: 'bg-blue-500/30', text: 'text-blue-400', border: 'hsl(217 91% 60% / 0.4)' },
+                      { bg: 'bg-purple-500/30', text: 'text-purple-400', hex: '#a855f7' },
+                      { bg: 'bg-cyan-500/30', text: 'text-cyan-400', hex: '#00ffff' },
+                      { bg: 'bg-amber-500/30', text: 'text-amber-400', hex: '#f59e0b' },
+                      { bg: 'bg-pink-500/30', text: 'text-pink-400', hex: '#f50ca0' },
+                      { bg: 'bg-green-500/30', text: 'text-green-400', hex: '#22c55e' },
+                      { bg: 'bg-blue-500/30', text: 'text-blue-400', hex: '#3b82f6' },
                     ];
                     const color = colors[index % colors.length];
                     
                     return (
-                      <Card key={tool.id} className="p-4" style={{
-                        background: 'rgba(26, 11, 46, 0.6)',
-                        border: `1px solid ${color.border}`
-                      }}>
+                      <GlowCard key={tool.id} className="!p-0" glowColor={color.hex}>
                         <div className="flex items-center gap-2 mb-3">
                           <div className={`w-5 h-5 rounded ${color.bg} flex items-center justify-center`}>
                             <Code className={`h-3 w-3 ${color.text}`} />
@@ -312,7 +309,7 @@ export default function ModelMap() {
                         <p className="text-base text-[hsl(var(--color-light-text))] opacity-60 italic mt-2">
                           Testing in progress...
                         </p>
-                      </Card>
+                      </GlowCard>
                     );
                   })}
                 </div>
@@ -350,10 +347,7 @@ export default function ModelMap() {
               const winner = getModelById(insight?.winner_model_id || null);
               const runnerUp = getModelById(insight?.runner_up_model_id || null);
               const testCount = tests?.filter(t => t.prompt?.category === cat.id).length || 0;
-              return <Card key={cat.id} className="p-4 cursor-pointer hover:border-cyan-400 transition-all hover:shadow-[0_0_20px_rgba(0,255,255,0.2)]" onClick={() => handleCategorySelect(cat.id)} style={{
-                background: 'rgba(26, 11, 46, 0.6)',
-                border: '1px solid hsl(var(--color-cyan) / 0.2)'
-              }}>
+              return <GlowCard key={cat.id} className="!p-0 cursor-pointer" onClick={() => handleCategorySelect(cat.id)} glowColor="#00ffff">
                     <div className="flex items-center gap-2 mb-3">
                       <Icon className="h-5 w-5 text-[hsl(var(--color-cyan))]" />
                       <h3 className="font-rajdhani font-bold text-[hsl(var(--color-cyan))]">
@@ -383,7 +377,7 @@ export default function ModelMap() {
                         {testCount} test{testCount !== 1 ? 's' : ''} completed
                       </span>
                     </div>
-                  </Card>;
+                  </GlowCard>;
             })}
                 </div>
               </div>
@@ -490,10 +484,7 @@ export default function ModelMap() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {/* Model Criteria */}
-                  <Card className="p-5" style={{
-                    background: 'rgba(26, 11, 46, 0.7)',
-                    border: '1px solid hsl(var(--color-pink) / 0.2)'
-                  }}>
+                  <GlowCard className="!p-0" glowColor="#f50ca0">
                     <div className="flex items-center gap-2 mb-4">
                       <Target className="h-5 w-5 text-[hsl(var(--color-pink))]" />
                       <h4 className="font-rajdhani font-bold text-[hsl(var(--color-pink))]">
@@ -514,13 +505,10 @@ export default function ModelMap() {
                         <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Tone & formatting quality</p>
                       </div>
                     </div>
-                  </Card>
+                  </GlowCard>
 
                   {/* Output Criteria */}
-                  <Card className="p-5" style={{
-                    background: 'rgba(26, 11, 46, 0.7)',
-                    border: '1px solid hsl(var(--color-pink) / 0.2)'
-                  }}>
+                  <GlowCard className="!p-0" glowColor="#f50ca0">
                     <div className="flex items-center gap-2 mb-4">
                       <Sparkles className="h-5 w-5 text-[hsl(var(--color-pink))]" />
                       <h4 className="font-rajdhani font-bold text-[hsl(var(--color-pink))]">
@@ -541,13 +529,10 @@ export default function ModelMap() {
                         <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Unexpected quality or insight</p>
                       </div>
                     </div>
-                  </Card>
+                  </GlowCard>
 
                   {/* Tool Criteria */}
-                  <Card className="p-5" style={{
-                    background: 'rgba(26, 11, 46, 0.7)',
-                    border: '1px solid hsl(var(--color-pink) / 0.2)'
-                  }}>
+                  <GlowCard className="!p-0" glowColor="#f50ca0">
                     <div className="flex items-center gap-2 mb-4">
                       <Wrench className="h-5 w-5 text-[hsl(var(--color-pink))]" />
                       <h4 className="font-rajdhani font-bold text-[hsl(var(--color-pink))]">
@@ -572,7 +557,7 @@ export default function ModelMap() {
                         <p className="text-base text-[hsl(var(--color-light-text))] opacity-70">Standout qualities or surprises</p>
                       </div>
                     </div>
-                  </Card>
+                  </GlowCard>
                 </div>
               </div>
             </div>
@@ -604,10 +589,7 @@ export default function ModelMap() {
               {/* Top Picks & Best Practices */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Current Top Picks */}
-                <Card className="p-6" style={{
-              background: 'rgba(26, 11, 46, 0.6)',
-              border: '1px solid hsl(var(--color-cyan) / 0.3)'
-            }}>
+                <GlowCard className="!p-0" glowColor="#00ffff">
                   <h3 className="text-sm font-rajdhani font-bold text-[hsl(var(--color-pink))] uppercase tracking-wider mb-4">
                     Current Top Picks
                   </h3>
@@ -638,13 +620,10 @@ export default function ModelMap() {
                         </div>
                       </div>}
                   </div>
-                </Card>
+                </GlowCard>
 
                 {/* Best Practices */}
-                <Card className="p-6" style={{
-              background: 'rgba(26, 11, 46, 0.6)',
-              border: '1px solid hsl(var(--color-cyan) / 0.3)'
-            }}>
+                <GlowCard className="!p-0" glowColor="#00ffff">
                   <h3 className="text-sm font-rajdhani font-bold text-[hsl(var(--color-pink))] uppercase tracking-wider mb-4">
                     Best Practices
                   </h3>
@@ -659,16 +638,13 @@ export default function ModelMap() {
                     </div> : <p className="text-lg text-[hsl(var(--color-light-text))] opacity-50 italic">
                       No insights generated yet.
                     </p>}
-                </Card>
+                </GlowCard>
               </div>
 
               {/* Strengths & Weaknesses */}
               {currentInsight && (currentInsight.strengths?.length > 0 || currentInsight.weaknesses?.length > 0) && <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Strengths */}
-                  <Card className="p-6" style={{
-              background: 'rgba(26, 11, 46, 0.6)',
-              border: '1px solid hsl(120 100% 40% / 0.3)'
-            }}>
+                  <GlowCard className="!p-0" glowColor="#22c55e">
                     <h3 className="text-sm font-rajdhani font-bold text-green-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                       <CheckCircle className="h-4 w-4" />
                       Strengths
@@ -679,13 +655,10 @@ export default function ModelMap() {
                           {strength}
                         </li>)}
                     </ul>
-                  </Card>
+                  </GlowCard>
 
                   {/* Weaknesses */}
-                  <Card className="p-6" style={{
-              background: 'rgba(26, 11, 46, 0.6)',
-              border: '1px solid hsl(var(--color-pink) / 0.3)'
-            }}>
+                  <GlowCard className="!p-0" glowColor="#f50ca0">
                     <h3 className="text-sm font-rajdhani font-bold text-[hsl(var(--color-pink))] uppercase tracking-wider mb-4 flex items-center gap-2">
                       <XCircle className="h-4 w-4" />
                       Weaknesses
@@ -696,15 +669,12 @@ export default function ModelMap() {
                           {weakness}
                         </li>)}
                     </ul>
-                  </Card>
+                  </GlowCard>
                 </div>}
 
               {/* Tests in this Category */}
               {categoryTests.length > 0 && (
-                <Card className="p-6" style={{
-                  background: 'rgba(26, 11, 46, 0.6)',
-                  border: '1px solid hsl(var(--color-cyan) / 0.3)'
-                }}>
+                <GlowCard className="!p-0" glowColor="#00ffff">
                   <h3 className="text-base font-rajdhani font-bold text-[hsl(var(--color-pink))] uppercase tracking-wider mb-4">
                     Tests Completed
                   </h3>
@@ -725,14 +695,11 @@ export default function ModelMap() {
                       </div>
                     ))}
                   </div>
-                </Card>
+                </GlowCard>
               )}
 
               {/* Visual Heatmap */}
-              {modelAverages.length > 0 && <Card className="p-6" style={{
-            background: 'rgba(26, 11, 46, 0.6)',
-            border: '1px solid hsl(var(--color-cyan) / 0.3)'
-          }}>
+              {modelAverages.length > 0 && <GlowCard className="!p-0" glowColor="#00ffff">
                   <h3 className="text-base font-rajdhani font-bold text-[hsl(var(--color-pink))] uppercase tracking-wider mb-4">
                     Visual Heatmap: Strengths by Criteria
                   </h3>
@@ -788,12 +755,9 @@ export default function ModelMap() {
                       <span className="text-base text-red-400">Low (&lt;2.5)</span>
                     </div>
                   </div>
-                </Card>}
+                </GlowCard>}
 
-              {modelAverages.length === 0 && !currentInsight && <Card className="p-12 text-center" style={{
-            background: 'rgba(26, 11, 46, 0.6)',
-            border: '1px solid hsl(var(--color-cyan) / 0.2)'
-          }}>
+              {modelAverages.length === 0 && !currentInsight && <GlowCard className="!p-6 text-center" glowColor="#00ffff">
                   <Brain className="h-16 w-16 mx-auto mb-4 text-[hsl(var(--color-cyan))] opacity-50" />
                   <h3 className="text-xl font-rajdhani font-bold text-[hsl(var(--color-cyan))] mb-2">
                     No Data Yet
@@ -801,7 +765,7 @@ export default function ModelMap() {
                   <p className="text-[hsl(var(--color-light-text))] opacity-70">
                     Check back soon for insights on this category.
                   </p>
-                </Card>}
+                </GlowCard>}
             </div>)}
         </div>
       </section>

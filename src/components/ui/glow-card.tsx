@@ -9,11 +9,18 @@ interface GlowCardProps {
   [key: string]: any; // Allow any additional props
 }
 
+// Helper to convert hex to rgba
+const hexToRgba = (hex: string, alpha: number): string => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!result) return `rgba(0, 255, 255, ${alpha})`;
+  return `rgba(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}, ${alpha})`;
+};
+
 const GlowCard: React.FC<GlowCardProps> = ({ 
   children, 
   className = '',
   glowHue = 180, // default cyan
-  glowColor,
+  glowColor = '#00ffff',
   as: Component = 'div',
   ...props
 }) => {
@@ -46,11 +53,14 @@ const GlowCard: React.FC<GlowCardProps> = ({
     };
   }, []);
 
-  const defaultGlowColor = glowColor || '#00ffff';
+  const glowRgba = hexToRgba(glowColor, 0.15);
+  const borderRgba = hexToRgba(glowColor, 0.3);
+  const shadowHoverRgba = hexToRgba(glowColor, 0.4);
+  const shadowDefaultRgba = hexToRgba(glowColor, 0.2);
   
   const glowStyle = isHovered
     ? {
-        background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(0, 255, 255, 0.15), transparent 40%)`,
+        background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, ${glowRgba}, transparent 40%)`,
       }
     : {};
 
@@ -58,14 +68,14 @@ const GlowCard: React.FC<GlowCardProps> = ({
     <Component
       ref={cardRef}
       className={`relative rounded-2xl backdrop-blur-md transition-all duration-300 overflow-hidden ${
-        isHovered ? 'scale-[1.03]' : 'scale-100'
+        isHovered ? 'scale-[1.02]' : 'scale-100'
       } ${className}`}
       style={{
-        background: 'rgba(15, 11, 29, 0.5)',
-        border: '1px solid rgba(0, 255, 255, 0.3)',
+        background: 'rgba(26, 11, 46, 0.6)',
+        border: `1px solid ${borderRgba}`,
         boxShadow: isHovered
-          ? '0 0 30px rgba(0, 255, 255, 0.4), 0 0 60px rgba(0, 255, 255, 0.2)'
-          : '0 0 15px rgba(0, 255, 255, 0.2)',
+          ? `0 0 30px ${shadowHoverRgba}, 0 0 60px ${shadowDefaultRgba}`
+          : `0 0 15px ${shadowDefaultRgba}`,
       }}
       {...props}
     >
