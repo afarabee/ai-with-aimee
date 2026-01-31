@@ -1,4 +1,5 @@
 import { GraduationCap, Award } from 'lucide-react';
+import GlowCard from '@/components/ui/glow-card';
 
 const education = [
   {
@@ -48,14 +49,10 @@ const ResumeEducation = () => {
           
           <div className="space-y-4">
             {education.map((edu, index) => (
-              <div
+              <GlowCard
                 key={index}
-                className="p-5 rounded-xl"
-                style={{
-                  background: 'rgba(139, 92, 246, 0.1)',
-                  border: '1px solid rgba(139, 92, 246, 0.3)',
-                  backdropFilter: 'blur(10px)',
-                }}
+                glowColor="#8b5cf6"
+                className="!p-0"
               >
                 <h4 
                   className="text-lg font-rajdhani font-semibold mb-1"
@@ -71,7 +68,7 @@ const ResumeEducation = () => {
                   <span className="text-muted-foreground">•</span>
                   <span className="text-muted-foreground">{edu.honors}</span>
                 </div>
-              </div>
+              </GlowCard>
             ))}
           </div>
         </div>
@@ -96,14 +93,7 @@ const ResumeEducation = () => {
             </h3>
           </div>
           
-          <div
-            className="p-5 rounded-xl"
-            style={{
-              background: 'rgba(249, 249, 64, 0.05)',
-              border: '1px solid hsl(var(--color-yellow) / 0.3)',
-              backdropFilter: 'blur(10px)',
-            }}
-          >
+          <GlowCard glowColor="#f9f940" className="!p-0">
             <ul className="space-y-3">
               {certifications.map((cert, index) => (
                 <li 
@@ -118,7 +108,7 @@ const ResumeEducation = () => {
                 </li>
               ))}
             </ul>
-          </div>
+          </GlowCard>
         </div>
       </div>
     </section>

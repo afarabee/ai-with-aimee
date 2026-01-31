@@ -1,4 +1,5 @@
 import { User } from 'lucide-react';
+import GlowCard from '@/components/ui/glow-card';
 
 const ResumeSummary = () => {
   return (
@@ -21,14 +22,7 @@ const ResumeSummary = () => {
         </h3>
       </div>
       
-      <div
-        className="p-6 rounded-xl"
-        style={{
-          background: 'rgba(0, 255, 255, 0.05)',
-          border: '1px solid hsl(var(--color-cyan) / 0.3)',
-          backdropFilter: 'blur(10px)',
-        }}
-      >
+      <GlowCard glowColor="#00ffff" className="!p-0">
         <p className="text-lg text-foreground/90 font-ibm leading-relaxed">
           Senior Director-level Healthcare Product Leader & AI Strategist with 15+ years of experience 
           driving digital transformation across enterprise organizations. Proven track record of launching 
@@ -36,7 +30,7 @@ const ResumeSummary = () => {
           platforms serving 300M+ users. Passionate about building AI-fluent product teams and establishing 
           responsible governance frameworks that enable innovation while ensuring ethical AI deployment.
         </p>
-      </div>
+      </GlowCard>
     </section>
   );
 };

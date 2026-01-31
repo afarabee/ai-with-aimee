@@ -1,4 +1,5 @@
 import { Zap } from 'lucide-react';
+import GlowCard from '@/components/ui/glow-card';
 
 const skillCategories = [
   {
@@ -24,24 +25,24 @@ const skillCategories = [
 ];
 
 const getSkillColor = (color: string) => {
-  const colors: Record<string, { bg: string; border: string; text: string }> = {
+  const colors: Record<string, { glowHex: string; border: string; text: string }> = {
     cyan: {
-      bg: 'rgba(0, 255, 255, 0.1)',
+      glowHex: '#00ffff',
       border: 'hsl(var(--color-cyan) / 0.4)',
       text: 'hsl(var(--color-cyan))',
     },
     pink: {
-      bg: 'rgba(245, 12, 160, 0.1)',
+      glowHex: '#f50ca0',
       border: 'hsl(var(--color-pink) / 0.4)',
       text: 'hsl(var(--color-pink))',
     },
     orange: {
-      bg: 'rgba(255, 140, 0, 0.1)',
+      glowHex: '#ff8c00',
       border: 'rgba(255, 140, 0, 0.4)',
       text: 'rgb(255, 180, 100)',
     },
     purple: {
-      bg: 'rgba(139, 92, 246, 0.1)',
+      glowHex: '#8b5cf6',
       border: 'rgba(139, 92, 246, 0.4)',
       text: 'rgb(192, 132, 252)',
     },
@@ -74,14 +75,10 @@ const ResumeSkills = () => {
         {skillCategories.map((category, index) => {
           const colorStyles = getSkillColor(category.color);
           return (
-            <div
+            <GlowCard
               key={index}
-              className="p-5 rounded-xl"
-              style={{
-                background: colorStyles.bg,
-                border: `1px solid ${colorStyles.border}`,
-                backdropFilter: 'blur(10px)',
-              }}
+              glowColor={colorStyles.glowHex}
+              className="!p-0"
             >
               <h4 
                 className="font-rajdhani font-semibold text-lg mb-3"
@@ -104,7 +101,7 @@ const ResumeSkills = () => {
                   </span>
                 ))}
               </div>
-            </div>
+            </GlowCard>
           );
         })}
       </div>

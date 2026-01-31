@@ -1,6 +1,7 @@
 import { Download, Linkedin, Calendar, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RESUME_URL } from '@/constants/urls';
+import GlowCard from '@/components/ui/glow-card';
 
 const ResumeHeader = () => {
   const handleDownload = async () => {
@@ -22,13 +23,10 @@ const ResumeHeader = () => {
   };
 
   return (
-    <header 
-      className="text-center mb-16 p-10 rounded-3xl relative overflow-hidden"
-      style={{
-        background: 'linear-gradient(135deg, rgba(255, 140, 0, 0.15) 0%, rgba(245, 12, 160, 0.2) 50%, rgba(139, 92, 246, 0.15) 100%)',
-        border: '1px solid rgba(245, 12, 160, 0.3)',
-        backdropFilter: 'blur(10px)',
-      }}
+    <GlowCard
+      as="header"
+      glowColor="#f50ca0"
+      className="text-center mb-16 !p-10 rounded-3xl"
     >
       {/* Gradient glow effect */}
       <div 
@@ -128,7 +126,7 @@ const ResumeHeader = () => {
           PDF
         </Button>
       </div>
-    </header>
+    </GlowCard>
   );
 };
 
