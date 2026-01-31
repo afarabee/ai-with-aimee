@@ -12,7 +12,7 @@ const About = () => {
       <Navigation />
       
       {/* Cursor-following glow effect */}
-      <CursorGlow primaryColor="#f50ca0" secondaryColor="#00ffff" size={500} />
+      <CursorGlow primaryColor="#f50ca0" secondaryColor="#f50ca0" size={125} />
       
       {/* Main About Section */}
       <section className="relative min-h-screen py-32 px-6">
