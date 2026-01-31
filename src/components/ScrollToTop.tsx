@@ -16,7 +16,7 @@ const ScrollToTop = () => {
           const elementPosition = element.offsetTop - navHeight;
           window.scrollTo({ top: elementPosition, behavior: 'smooth' });
         }
-      }, 0);
+      }, 100);
     } else {
       // No hash, scroll to top as usual
       window.scrollTo(0, 0);
