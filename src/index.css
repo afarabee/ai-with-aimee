@@ -1124,3 +1124,20 @@ All colors MUST be HSL.
   scrollbar-width: thin;
   scrollbar-color: hsl(var(--color-cyan) / 0.4) transparent;
 }
+
+/* === Reduced Motion Accessibility === */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-slide-in-left,
+  .animate-slide-in-right,
+  .animate-scale-fade-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  
+  .project-card {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

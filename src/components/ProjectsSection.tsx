@@ -112,12 +112,12 @@ const ProjectsSection = () => {
         <div className="grid md:grid-cols-2 gap-8 mb-16">
           {isLoading ?
         // Loading skeletons
-        Array.from({
+              Array.from({
           length: 4
         }).map((_, index) => <div key={index} className="space-y-4">
                 <Skeleton className="h-64 w-full rounded-2xl" />
-              </div>) : projects.length > 0 ? projects.map((project, index) => <div key={index} data-index={index} className={`project-card transition-all ease-in-out ${visibleCards[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{
-          transitionDuration: '0.5s'
+              </div>) : projects.length > 0 ? projects.map((project, index) => <div key={index} data-index={index} className={`project-card transition-all ease-out ${visibleCards[index] ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.95]'}`} style={{
+          transitionDuration: '0.6s'
         }}>
               {project.slug ? <Link to={`/projects/${project.slug}`} className="block cursor-pointer">
                   <GlowCard>

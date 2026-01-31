@@ -1,20 +1,9 @@
 import { BarChart3, Stethoscope, Rocket, ShieldCheck } from "lucide-react";
 import GlowCard from "./ui/glow-card";
 import SectionDivider from "./SectionDivider";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const impactCategories = [
-  {
-    icon: BarChart3,
-    title: "Measurable Outcomes",
-    items: [
-      "98% reduction in pre-clinical draft reporting cycle time",
-      "80% reduction in user story creation time across 20+ product teams",
-      '97 days zero-to-one launch of CareNav+ "Future of Care" pilot',
-      "72 hours guaranteed patient appointment scheduling (down from weeks)",
-      "70% reduction in time-to-market through automated migration tooling",
-      "~13 weeks of productive time recovered per product owner annually",
-    ],
-  },
   {
     icon: ShieldCheck,
     title: "AI Transformation & Governance",
@@ -27,14 +16,15 @@ const impactCategories = [
     ],
   },
   {
-    icon: Rocket,
-    title: "Zero-to-One Track Record",
+    icon: BarChart3,
+    title: "Measurable Outcomes",
     items: [
-      "7 zero-to-one deliveries in regulated healthcare and life sciences environments",
-      "Established 3 Product Owner Communities of Practice to scale organizational capability",
-      "16+ years translating complex technology into customer-centric experiences",
-      "7+ years in product leadership roles managing cross-functional teams",
-      "Led strategic initiatives from conception through enterprise-scale adoption",
+      "98% reduction in pre-clinical draft reporting cycle time",
+      "80% reduction in user story creation time across 20+ product teams",
+      '97 days zero-to-one launch of CareNav+ "Future of Care" pilot',
+      "72 hours guaranteed patient appointment scheduling (down from weeks)",
+      "70% reduction in time-to-market through automated migration tooling",
+      "~13 weeks of productive time recovered per product owner annually",
     ],
   },
   {
@@ -49,9 +39,22 @@ const impactCategories = [
       "Led digital transformation initiatives across Cigna, Evernorth, and Express Scripts",
     ],
   },
+  {
+    icon: Rocket,
+    title: "Zero-to-One Track Record",
+    items: [
+      "7 zero-to-one deliveries in regulated healthcare and life sciences environments",
+      "Established 3 Product Owner Communities of Practice to scale organizational capability",
+      "16+ years translating complex technology into customer-centric experiences",
+      "7+ years in product leadership roles managing cross-functional teams",
+      "Led strategic initiatives from conception through enterprise-scale adoption",
+    ],
+  },
 ];
 
 const ProvenImpactSection = () => {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
+
   return (
     <section id="proven-impact" className="relative py-20 bg-gradient-to-b from-[#0f0b1d] to-background overflow-hidden">
       {/* Floating particles background */}
@@ -80,28 +83,37 @@ const ProvenImpactSection = () => {
         </div>
 
         {/* Impact Cards Grid */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div ref={ref} className="grid md:grid-cols-2 gap-6">
           {impactCategories.map((category, index) => {
             const IconComponent = category.icon;
             return (
-              <GlowCard key={index} className="h-full">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30">
-                    <IconComponent className="w-6 h-6 text-cyan-400" />
+              <div
+                key={index}
+                className={`h-full opacity-0 ${isVisible ? 'animate-fade-up' : ''}`}
+                style={{ 
+                  animationDelay: isVisible ? `${index * 100}ms` : '0ms',
+                  animationFillMode: 'forwards'
+                }}
+              >
+                <GlowCard className="h-full">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30">
+                      <IconComponent className="w-6 h-6 text-cyan-400" />
+                    </div>
+                    <h3 className="text-xl font-rajdhani font-semibold uppercase tracking-wide neon-text-yellow">
+                      {category.title}
+                    </h3>
                   </div>
-                  <h3 className="text-xl font-rajdhani font-semibold uppercase tracking-wide neon-text-yellow">
-                    {category.title}
-                  </h3>
-                </div>
-                <ul className="space-y-2">
-                  {category.items.map((item, itemIndex) => (
-                    <li key={itemIndex} className="flex items-start gap-2 text-base font-ibm text-gray-300" style={{ lineHeight: '1.6' }}>
-                      <span className="text-pink-400 mt-1 flex-shrink-0">▹</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </GlowCard>
+                  <ul className="space-y-2">
+                    {category.items.map((item, itemIndex) => (
+                      <li key={itemIndex} className="flex items-start gap-2 text-base font-ibm text-gray-300" style={{ lineHeight: '1.6' }}>
+                        <span className="text-pink-400 mt-1 flex-shrink-0">▹</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </GlowCard>
+              </div>
             );
           })}
         </div>
