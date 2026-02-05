@@ -1,167 +1,244 @@
 
 
-# Enhanced Demo Banner with Animated Glow Border
+# Interactive Demo Page — Intelligent Story Builder
 
 ## Overview
-Transform the placeholder DemoBanner into an eye-catching, full-width section featuring the "Intelligent Story Builder" with animated glow effects, compelling copy, and a visual element to break up the text.
+Build out the Demo page with the Intelligent Story Builder showcase, featuring an intro section, three scenario cards, an embedded demo iframe, a collapsible "What You're Seeing" sidebar, and a Return Home button.
 
-## Content Updates
+## Page Structure
 
-| Element | New Content |
-|---------|-------------|
-| **Headline** | See AI in Action |
-| **Subheadline** | Don't just read about what I build—experience it yourself. |
-| **Body** | Try the Intelligent Story Builder, an agentic AI tool I designed to transform raw ideas into production-ready user stories. Select a scenario, watch the AI work, and see why this system reduced story creation time by 80%. |
-| **CTA Button** | Launch Interactive Demo → |
-
-## Design Implementation
-
-### Layout Structure
 ```text
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  ┌─ Animated Gradient Border (pink/cyan pulsing glow) ─────────────────┐   │
-│  │                                                                      │   │
-│  │   ┌──────────────┐    ┌─────────────────────────────────────────┐   │   │
-│  │   │  ✨ Visual   │    │  See AI in Action (H2 - neon cyan)     │   │   │
-│  │   │   Element    │    │                                         │   │   │
-│  │   │  (Sparkles   │    │  Subheadline (muted text)               │   │   │
-│  │   │   + Zap)     │    │                                         │   │   │
-│  │   │              │    │  Body paragraph (lighter text)          │   │   │
-│  │   └──────────────┘    │                                         │   │   │
-│  │                       │     [Launch Interactive Demo →]          │   │   │
-│  │                       └─────────────────────────────────────────┘   │   │
-│  │                                                                      │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│  Navigation                                                      [Return Home]  │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                 │
+│     Intelligent Story Builder — Interactive Demo (H1)                           │
+│                                                                                 │
+│     "This is the AI system I built at Charles River Labs..."                    │
+│                                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                 │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐                  │
+│  │  Quick Demo     │  │  Compare AI     │  │  Upload &       │                  │
+│  │  (30 sec)       │  │  Models (1 min) │  │  Generate (2min)│                  │
+│  │                 │  │                 │  │                 │                  │
+│  │  Watch the AI   │  │  See GPT-5 Nano │  │  Paste your own │                  │
+│  │  generate...    │  │  and Gemini...  │  │  requirements...│                  │
+│  │                 │  │                 │  │                 │                  │
+│  │  Best for: ...  │  │  Best for: ...  │  │  Best for: ...  │                  │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘                  │
+│                                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐  ┌──────────────┐  │
+│  │                                                         │  │ What You're  │  │
+│  │                   Embedded Demo                         │  │ Seeing       │  │
+│  │                   (iframe)                              │  │              │  │
+│  │                                                         │  │ ▸ RAG Context│  │
+│  │                                                         │  │ ▸ Prompt...  │  │
+│  │                                                         │  │ ▸ DevOps...  │  │
+│  │                                                         │  │              │  │
+│  └─────────────────────────────────────────────────────────┘  └──────────────┘  │
+│                                                                                 │
+│                           [← Return Home]                                       │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+│  Footer                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Visual Element (Left Side)
-Rather than a screenshot (which doesn't exist yet), I'll create an abstract "tool interface" icon using:
-- **Sparkles icon** (lucide-react) - represents AI magic
-- **Zap icon** (lucide-react) - represents speed/automation
-- Arranged in a glowing container with gradient background
+## Components to Create
 
-### Animated Glow Border
-CSS keyframe animation that creates a subtle pulsing glow around the banner:
-- Alternates between pink and cyan hues
-- 4-second animation cycle for smooth, non-distracting effect
-- Uses `box-shadow` with multiple layers for depth
+### 1. Demo Page Layout (`src/pages/Demo.tsx`)
+
+Complete rewrite with the following sections:
+
+**Header Section**
+- Page title: "Intelligent Story Builder — Interactive Demo" (H1, neon-text-yellow)
+- Intro paragraph with the full context text
+- "Return Home" button in the top-right corner
+
+**Scenario Cards Section**
+- Three GlowCard components in a responsive grid
+- Each card contains:
+  - Icon (Play, GitCompare, Upload from lucide-react)
+  - Title with duration badge
+  - Description text
+  - "Best for:" tag line
+  - Clickable (future: could trigger different demo modes)
+
+**Embedded Demo Section**
+- Full-width iframe container with styled border
+- Placeholder URL (can be updated later with actual demo app URL)
+- Responsive height (70vh on desktop, 50vh on mobile)
+
+**Collapsible Sidebar**
+- Uses Radix Collapsible component
+- Positioned to the right of the iframe on desktop
+- Contains feature explanations:
+  - RAG Context
+  - Prompt Versioning
+  - DevOps Integration
+- Collapsed by default, expandable with click
+
+**Bottom CTA**
+- "Return Home" button centered below the demo
+
+## Content Details
+
+### Scenario Cards
+
+| Card | Icon | Title | Description | Best For |
+|------|------|-------|-------------|----------|
+| 1 | Play | Quick Demo (30 sec) | Watch the AI generate a complete user story from a simple login requirement. | Getting a fast feel for the output quality. |
+| 2 | GitCompare | Compare AI Models (1 min) | See GPT-5 Nano and Gemini 2.5 Flash Lite tackle the same prompt side-by-side. | Understanding how I approach model evaluation. |
+| 3 | Upload | Upload & Generate (2 min) | Paste your own requirements or upload a doc, then generate a story. | Hands-on exploration. |
+
+### "What You're Seeing" Sidebar Features
+
+| Feature | Description |
+|---------|-------------|
+| RAG Context | The system pulls from a curated knowledge base of user story best practices to ground its outputs. |
+| Prompt Versioning | Each generation uses a version-controlled prompt, allowing A/B testing and continuous refinement. |
+| DevOps Integration | Output is formatted for direct import into Azure DevOps or Jira with proper acceptance criteria. |
 
 ## File Changes
 
-### `src/components/DemoBanner.tsx`
+### `src/pages/Demo.tsx`
+
 Complete rewrite with:
 
-1. **New Imports**
-   - Add `Sparkles` and `Zap` icons from lucide-react
+1. **Imports**
+   - Link from react-router-dom
+   - Navigation, Footer components
+   - GlowCard component
+   - Collapsible, CollapsibleTrigger, CollapsibleContent from UI
+   - Icons: Play, GitCompare, Upload, ArrowLeft, ChevronRight, ChevronDown, Info, Database, GitBranch, Settings
 
-2. **Layout Structure**
-   - Two-column grid on desktop (visual | text)
-   - Single column stack on mobile
-   - Full-width with max-w-6xl content container
+2. **State**
+   - `sidebarOpen` for collapsible panel
+   - `selectedScenario` for future scenario selection (null initially)
 
-3. **Visual Element**
-   - Abstract icon composition in a gradient container
-   - Subtle floating animation on the icons
+3. **Component Structure**
+   - Navigation
+   - Hero section with title, intro, and top-right "Return Home" link
+   - Scenario cards grid (3 columns on desktop, 1 on mobile)
+   - Demo area with iframe + collapsible sidebar
+   - Bottom "Return Home" button
+   - Footer
 
-4. **Content Section**
-   - H2 headline with `neon-text-cyan` styling
-   - Subheadline with pink accent styling
-   - Body paragraph with standard text styling
-   - Existing `btn-hero` CTA button
+4. **Styling**
+   - Matches existing design system (neon-text-*, GlowCard, btn-hero)
+   - Animated background particles (like ProjectsSection)
+   - Responsive layout
 
-5. **Animated Border**
-   - Wrapper div with animated box-shadow
-   - CSS animation defined inline or as a custom class
+### Iframe Placeholder
 
-### `src/index.css`
-Add new keyframe animation for the glow border:
+The iframe will initially use a placeholder message or URL. You can update this later with:
+- A deployed Lovable app URL
+- An internal component that simulates the demo
+- An external tool URL
 
-```css
-@keyframes banner-glow {
-  0%, 100% {
-    box-shadow: 
-      0 0 20px hsl(var(--color-pink) / 0.4),
-      0 0 40px hsl(var(--color-pink) / 0.2),
-      inset 0 0 20px hsl(var(--color-pink) / 0.1);
-  }
-  50% {
-    box-shadow: 
-      0 0 20px hsl(var(--color-cyan) / 0.4),
-      0 0 40px hsl(var(--color-cyan) / 0.2),
-      inset 0 0 20px hsl(var(--color-cyan) / 0.1);
-  }
-}
-
-.animate-banner-glow {
-  animation: banner-glow 4s ease-in-out infinite;
-}
+```typescript
+// Placeholder for now - can be updated to actual demo URL
+const DEMO_IFRAME_URL = "about:blank"; // or a placeholder component
 ```
+
+## Mobile Responsiveness
+
+| Viewport | Layout |
+|----------|--------|
+| Desktop (md+) | 3-column scenario cards, iframe with sidebar |
+| Tablet | 2-column cards, sidebar below iframe |
+| Mobile | 1-column cards, sidebar below iframe, smaller iframe height |
 
 ## Technical Details
 
 ### Component Structure
-```typescript
-const DemoBanner = () => {
-  return (
-    <section className="py-20 relative">
-      <div className="max-w-6xl mx-auto px-6">
-        {/* Animated glow container */}
-        <div className="relative rounded-2xl border border-pink-500/30 
-                        animate-banner-glow bg-gradient-to-br 
-                        from-pink-500/10 via-transparent to-cyan-500/10 
-                        p-8 md:p-12">
-          
-          <div className="grid md:grid-cols-[200px_1fr] gap-8 items-center">
-            {/* Visual Element - Left */}
-            <div className="hidden md:flex justify-center">
-              <div className="relative p-6 rounded-xl 
-                              bg-gradient-to-br from-pink-500/20 to-cyan-500/20 
-                              border border-cyan-500/30">
-                <Sparkles className="w-12 h-12 text-cyan-400" />
-                <Zap className="absolute top-2 right-2 w-6 h-6 text-pink-400" />
-              </div>
-            </div>
 
-            {/* Content - Right */}
-            <div className="text-center md:text-left">
-              <h2 className="neon-text-cyan font-rajdhani font-bold 
-                           text-3xl md:text-4xl mb-3">
-                See AI in Action
-              </h2>
-              <p className="text-lg text-pink-400/90 font-medium mb-4">
-                Don't just read about what I build—experience it yourself.
-              </p>
-              <p className="text-base text-gray-300 mb-8 max-w-2xl">
-                Try the Intelligent Story Builder...
-              </p>
-              <Link to="/demo" className="btn-hero ...">
-                Launch Interactive Demo →
-              </Link>
+```typescript
+const Demo = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const scenarios = [
+    {
+      icon: Play,
+      title: "Quick Demo",
+      duration: "30 sec",
+      description: "Watch the AI generate...",
+      bestFor: "Getting a fast feel for the output quality."
+    },
+    // ... more scenarios
+  ];
+
+  const features = [
+    {
+      icon: Database,
+      title: "RAG Context",
+      description: "The system pulls from..."
+    },
+    // ... more features
+  ];
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navigation />
+      
+      <main className="pt-20 pb-16">
+        {/* Hero Section */}
+        <section className="max-w-6xl mx-auto px-6 py-12">
+          <div className="flex justify-between items-start mb-8">
+            <div>
+              <h1 className="...">Intelligent Story Builder</h1>
+              <p className="...">Interactive Demo</p>
             </div>
+            <Link to="/" className="btn-hero ...">
+              <ArrowLeft /> Return Home
+            </Link>
           </div>
+          <p className="...">This is the AI system I built...</p>
+        </section>
+
+        {/* Scenario Cards */}
+        <section className="max-w-6xl mx-auto px-6 py-8">
+          <div className="grid md:grid-cols-3 gap-6">
+            {scenarios.map(...)}
+          </div>
+        </section>
+
+        {/* Demo + Sidebar */}
+        <section className="max-w-7xl mx-auto px-6 py-8">
+          <div className="grid lg:grid-cols-[1fr_280px] gap-6">
+            {/* Iframe */}
+            <div className="rounded-2xl border ... h-[70vh]">
+              <iframe ... />
+            </div>
+            
+            {/* Collapsible Sidebar */}
+            <Collapsible open={sidebarOpen} onOpenChange={setSidebarOpen}>
+              ...
+            </Collapsible>
+          </div>
+        </section>
+
+        {/* Bottom CTA */}
+        <div className="text-center py-12">
+          <Link to="/" className="btn-hero ...">
+            ← Return Home
+          </Link>
         </div>
-      </div>
-    </section>
+      </main>
+
+      <Footer />
+    </div>
   );
 };
 ```
 
-### Accessibility Considerations
-- Animation respects `prefers-reduced-motion` (added to CSS)
-- Proper heading hierarchy (H2)
-- Focus states on CTA button (inherited from btn-hero)
+## Future Enhancements (Not in This Build)
 
-### Mobile Responsiveness
-- Icon section hidden on mobile (md:flex)
-- Text centered on mobile, left-aligned on desktop
-- Padding adjusts (p-8 → md:p-12)
-
-## Files to Modify
-
-| File | Changes |
-|------|---------|
-| `src/components/DemoBanner.tsx` | Complete redesign with two-column layout, visual element, new copy, animated glow border |
-| `src/index.css` | Add `banner-glow` keyframe animation and `.animate-banner-glow` class |
+- Scenario card click handlers to switch iframe content
+- Actual embedded demo application
+- Progress indicators for guided scenarios
+- Analytics tracking for scenario engagement
 
