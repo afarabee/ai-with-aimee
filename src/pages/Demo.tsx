@@ -79,27 +79,26 @@ const Demo = () => {
       <Navigation />
 
       <main className="pt-20 pb-16">
-        {/* Hero Section */}
+        {/* Zone 1: Context Hook */}
         <section className="max-w-6xl mx-auto px-6 py-12">
-          <div className="mb-8">
-            <h1 className="text-4xl md:text-5xl font-rajdhani font-bold neon-text-yellow mb-2">
+          <div className="mb-6">
+            <h1 className="text-4xl md:text-5xl font-rajdhani font-bold neon-text-yellow">
               Intelligent Story Builder
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground font-medium">
-              Interactive Demo
-            </p>
           </div>
-          <p className="text-lg text-foreground/80 max-w-4xl leading-relaxed">
-            This is the AI system I built at Charles River Labs to help product
-            teams write better user stories, faster. Pick a guided scenario
-            below to see how it transforms raw requirements into structured,
-            DevOps-ready output—or dive into the full tool and explore on your
-            own.
+          <p className="text-xl md:text-2xl text-foreground/90 font-medium mb-3">
+            Generate production-ready Agile user stories in seconds.
+          </p>
+          <p className="text-lg text-muted-foreground">
+            This tool reduced story creation time by 80% across 20+ product teams.
           </p>
         </section>
 
-        {/* Scenario Cards */}
+        {/* Zone 2: Guided Experience */}
         <section className="max-w-6xl mx-auto px-6 py-8">
+          <h2 className="text-sm uppercase tracking-wider text-pink-400 font-medium mb-6">
+            Choose Your Experience
+          </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {scenarios.map((scenario) => (
               <GlowCard
@@ -151,8 +150,11 @@ const Demo = () => {
           </div>
         </section>
 
-        {/* Demo + Sidebar */}
+        {/* Zone 3: Full Interactive Demo */}
         <section className="max-w-7xl mx-auto px-6 py-8">
+          <h2 className="text-sm uppercase tracking-wider text-cyan-400 font-medium mb-6">
+            Explore the Full Tool
+          </h2>
           <div className="grid lg:grid-cols-[1fr_280px] gap-6">
             {/* Iframe Container */}
             <div className="relative rounded-2xl border border-cyan-500/30 bg-card/50 backdrop-blur-sm overflow-hidden">
