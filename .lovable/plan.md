@@ -1,146 +1,94 @@
 
 
-# Demo Page - Three Zone Reorganization
+# Simplify Demo Page Layout
 
 ## Overview
-Refine the existing Demo page layout to clearly establish three distinct zones with improved copy and visual separation. The structure is already mostly in place - this is primarily a content update and visual polish pass.
+Streamline the Demo page by removing unnecessary UI elements and embedding the live Intelligent Story Builder application.
 
-## The Three Zones
+## Changes Summary
+
+| Change | Action |
+|--------|--------|
+| Third scenario card | Remove "Upload & Generate" |
+| Grid layout | Change to 2-column (`md:grid-cols-2`) |
+| "Choose Your Experience" header | Remove |
+| "Explore the Full Tool" header | Remove |
+| Collapsible sidebar | Remove entirely |
+| Iframe | Embed live app URL |
+| Return Home button | Keep as-is |
+
+## Visual Before/After
 
 ```text
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│  Navigation                                                                     │
-├─────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                 │
-│  ZONE 1: CONTEXT HOOK                                                           │
-│  ─────────────────────                                                          │
-│  "Intelligent Story Builder"                                                    │
-│  Generate production-ready Agile user stories in seconds.                       │
-│  This tool reduced story creation time by 80% across 20+ product teams.         │
-│                                                                                 │
-├─────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                 │
-│  ZONE 2: GUIDED EXPERIENCE                                                      │
-│  ─────────────────────────                                                      │
-│  "Choose Your Experience" (section header)                                      │
-│                                                                                 │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐                  │
-│  │  Quick Demo     │  │  Compare AI     │  │  Upload &       │                  │
-│  │  ⏱ 30 sec       │  │  Models ⏱ 1min  │  │  Generate ⏱ 2min│                  │
-│  └─────────────────┘  └─────────────────┘  └─────────────────┘                  │
-│                                                                                 │
-├─────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                 │
-│  ZONE 3: FULL INTERACTIVE DEMO                                                  │
-│  ─────────────────────────────                                                  │
-│  "Explore Freely" (section header)                                              │
-│                                                                                 │
-│  ┌─────────────────────────────────────────────────┐  ┌──────────────────────┐  │
-│  │                                                 │  │  What You're Seeing  │  │
-│  │              Embedded Demo (iframe)             │  │  ▸ RAG Context       │  │
-│  │                                                 │  │  ▸ Prompt Versioning │  │
-│  │                                                 │  │  ▸ DevOps Integration│  │
-│  └─────────────────────────────────────────────────┘  └──────────────────────┘  │
-│                                                                                 │
-│                           [← Return Home]                                       │
-│                                                                                 │
-└─────────────────────────────────────────────────────────────────────────────────┘
+BEFORE:
+┌─────────────────────────────────────────────────────────────┐
+│  Zone 1: Context Hook                                       │
+├─────────────────────────────────────────────────────────────┤
+│  "Choose Your Experience" ← REMOVE                          │
+│  [Card 1] [Card 2] [Card 3] ← REMOVE Card 3                 │
+├─────────────────────────────────────────────────────────────┤
+│  "Explore the Full Tool" ← REMOVE                           │
+│  ┌──────────────────────────┐ ┌────────────────────┐        │
+│  │  Placeholder iframe      │ │ What You're Seeing │ REMOVE │
+│  └──────────────────────────┘ └────────────────────┘        │
+│                    [Return Home]                            │
+└─────────────────────────────────────────────────────────────┘
+
+AFTER:
+┌─────────────────────────────────────────────────────────────┐
+│  Zone 1: Context Hook                                       │
+├─────────────────────────────────────────────────────────────┤
+│  [Quick Demo]          [Compare AI Models]                  │
+├─────────────────────────────────────────────────────────────┤
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  https://intelligent-ai-story-builder.lovable.app/   │   │
+│  │              (Full-width iframe)                     │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                    [Return Home]                            │
+└─────────────────────────────────────────────────────────────┘
 ```
-
-## Changes by Zone
-
-### Zone 1: Context Hook (Update Existing Hero)
-
-**Current Text:**
-> "This is the AI system I built at Charles River Labs to help product teams write better user stories, faster..."
-
-**New Text:**
-- **Headline**: Intelligent Story Builder (keep)
-- **Tagline**: "Generate production-ready Agile user stories in seconds."
-- **Hook**: "This tool reduced story creation time by 80% across 20+ product teams."
-
-The intro becomes more punchy - 2 sentences instead of a paragraph.
-
-### Zone 2: Guided Experience (Add Section Header)
-
-- Add a subtle section header: "Choose Your Experience" with a divider
-- Keep existing scenario cards (they're already well-structured)
-- Cards already show duration badges (30 sec, 1 min, 2 min)
-
-### Zone 3: Full Interactive Demo (Add Section Header)
-
-- Add a subtle section header: "Explore the Full Tool" or "Dive In"
-- Keep existing iframe container and collapsible sidebar
-- The sidebar stays as "What You're Seeing" for technical context
 
 ## File Changes
 
 ### `src/pages/Demo.tsx`
 
-| Section | Change |
-|---------|--------|
-| Hero (Zone 1) | Replace long intro paragraph with punchy 2-sentence hook |
-| Scenario Cards (Zone 2) | Add "Choose Your Experience" section header |
-| Iframe Section (Zone 3) | Add "Explore the Full Tool" section header |
-
-## Updated Content
-
-### Zone 1 - New Intro Copy
-
+**1. Update imports** - Remove unused icons and Collapsible components:
 ```typescript
-<section className="max-w-6xl mx-auto px-6 py-12">
-  <div className="mb-6">
-    <h1 className="...">Intelligent Story Builder</h1>
-  </div>
-  <p className="text-xl md:text-2xl text-foreground/90 font-medium mb-3">
-    Generate production-ready Agile user stories in seconds.
-  </p>
-  <p className="text-lg text-muted-foreground">
-    This tool reduced story creation time by 80% across 20+ product teams.
-  </p>
-</section>
+// Remove: Upload, ChevronRight, ChevronDown, Database, GitBranch, Settings
+// Remove: Collapsible, CollapsibleContent, CollapsibleTrigger
 ```
 
-### Zone 2 - Section Header
+**2. Remove scenarios array item** - Delete "Upload & Generate" card (third item)
 
+**3. Remove features array** - No longer needed without sidebar
+
+**4. Remove sidebar state** - Delete `useState` for `sidebarOpen`
+
+**5. Remove "Choose Your Experience" header** - Delete the h2 element in Zone 2
+
+**6. Update scenario cards grid** - Change to 2-column layout:
 ```typescript
-<section className="max-w-6xl mx-auto px-6 py-8">
-  <h2 className="text-sm uppercase tracking-wider text-pink-400 font-medium mb-6">
-    Choose Your Experience
-  </h2>
-  <div className="grid md:grid-cols-3 gap-6">
-    {/* Existing scenario cards */}
-  </div>
-</section>
+<div className="grid md:grid-cols-2 gap-6">
 ```
 
-### Zone 3 - Section Header
+**7. Remove "Explore the Full Tool" header** - Delete the h2 element in Zone 3
 
+**8. Remove collapsible sidebar** - Change grid from `lg:grid-cols-[1fr_280px]` to full-width, remove entire Collapsible component
+
+**9. Embed live iframe** - Replace placeholder with actual URL:
 ```typescript
-<section className="max-w-7xl mx-auto px-6 py-8">
-  <h2 className="text-sm uppercase tracking-wider text-cyan-400 font-medium mb-6">
-    Explore the Full Tool
-  </h2>
-  <div className="grid lg:grid-cols-[1fr_280px] gap-6">
-    {/* Existing iframe + sidebar */}
-  </div>
-</section>
+<iframe
+  src="https://intelligent-ai-story-builder.lovable.app/"
+  className="w-full h-full border-0"
+  title="Intelligent Story Builder Demo"
+  allow="clipboard-write"
+/>
 ```
-
-## Visual Hierarchy
-
-| Zone | Header Style | Color Accent |
-|------|-------------|--------------|
-| 1 - Context | H1 neon-text-yellow | Yellow (brand) |
-| 2 - Guided | Uppercase tracking-wider | Pink |
-| 3 - Full Demo | Uppercase tracking-wider | Cyan |
-
-This creates clear visual separation between zones while maintaining the existing design system.
 
 ## Technical Notes
 
-- No new components needed
-- No new dependencies
-- Changes are primarily to content and adding section headers
-- Existing GlowCard, Collapsible, and styling remain unchanged
+- Iframe will be full-width without the sidebar
+- Existing GlowCard styling preserved for the 2 remaining scenario cards
+- Return Home button remains unchanged at bottom
+- No new dependencies required
 
