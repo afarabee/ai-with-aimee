@@ -6,12 +6,18 @@ import BlogSection from "@/components/BlogSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import SectionDivider from "@/components/SectionDivider";
+import DemoBanner from "@/components/DemoBanner";
+import { isFeatureEnabled } from "@/config/featureFlags";
 
 const Index = () => {
   return (
     <div className="min-h-screen">
       <Navigation />
       <HeroSection />
+      
+      {/* Feature-flagged Demo Banner */}
+      {isFeatureEnabled('INTERACTIVE_DEMO') && <DemoBanner />}
+      
       <ProvenImpactSection />
       <BlogSection />
       <div className="relative">
