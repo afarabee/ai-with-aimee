@@ -81,22 +81,13 @@ const Demo = () => {
       <main className="pt-20 pb-16">
         {/* Hero Section */}
         <section className="max-w-6xl mx-auto px-6 py-12">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-8">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-rajdhani font-bold neon-text-yellow mb-2">
-                Intelligent Story Builder
-              </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground font-medium">
-                Interactive Demo
-              </p>
-            </div>
-            <Link
-              to="/"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Return Home
-            </Link>
+          <div className="mb-8">
+            <h1 className="text-4xl md:text-5xl font-rajdhani font-bold neon-text-yellow mb-2">
+              Intelligent Story Builder
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground font-medium">
+              Interactive Demo
+            </p>
           </div>
           <p className="text-lg text-foreground/80 max-w-4xl leading-relaxed">
             This is the AI system I built at Charles River Labs to help product
