@@ -41,11 +41,8 @@ const Demo = () => {
           <p className="text-xl md:text-2xl text-foreground/90 font-medium mb-3">
             Generate production-ready Agile user stories in seconds.
           </p>
-          <p className="text-lg text-muted-foreground mb-2">
+          <p className="text-lg text-muted-foreground">
             This tool reduced story creation time by 80% across 20+ product teams.
-          </p>
-          <p className="text-base text-muted-foreground/70">
-            Enter requirements and watch the magic happen.
           </p>
         </section>
 
