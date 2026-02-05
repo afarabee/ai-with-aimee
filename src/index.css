@@ -499,6 +499,35 @@ All colors MUST be HSL.
     50% { opacity: 0.8; text-shadow: 0 0 6px hsl(var(--neon-pink)), 0 0 10px hsl(280 100% 50%); }
   }
 
+  /* Demo Banner Animated Glow Border */
+  @keyframes banner-glow {
+    0%, 100% {
+      box-shadow: 
+        0 0 20px hsl(var(--color-pink) / 0.4),
+        0 0 40px hsl(var(--color-pink) / 0.2),
+        inset 0 0 20px hsl(var(--color-pink) / 0.1);
+    }
+    50% {
+      box-shadow: 
+        0 0 20px hsl(var(--color-cyan) / 0.4),
+        0 0 40px hsl(var(--color-cyan) / 0.2),
+        inset 0 0 20px hsl(var(--color-cyan) / 0.1);
+    }
+  }
+
+  .animate-banner-glow {
+    animation: banner-glow 4s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-banner-glow {
+      animation: none;
+      box-shadow: 
+        0 0 20px hsl(var(--color-pink) / 0.3),
+        0 0 40px hsl(var(--color-pink) / 0.15);
+    }
+  }
+
   @keyframes glow-pulse {
     0%, 100% { 
       box-shadow: 0 0 15px hsl(var(--neon-cyan) / 0.35), 0 0 25px hsl(var(--neon-pink) / 0.2);
