@@ -1,174 +1,167 @@
 
-# Feature Flag System with Environment Variables
+
+# Enhanced Demo Banner with Animated Glow Border
 
 ## Overview
-Create a feature flag system using **environment variables** that allows you to build the **Interactive Demo Banner** (homepage) and **Interactive Demo Page** (`/demo` route) incrementally. Features will be enabled in development and disabled in production until you're ready to launch.
+Transform the placeholder DemoBanner into an eye-catching, full-width section featuring the "Intelligent Story Builder" with animated glow effects, compelling copy, and a visual element to break up the text.
 
-## Environment Variable Approach
+## Content Updates
 
-The system reads from Vite environment variables, allowing you to toggle features without code changes.
+| Element | New Content |
+|---------|-------------|
+| **Headline** | See AI in Action |
+| **Subheadline** | Don't just read about what I build—experience it yourself. |
+| **Body** | Try the Intelligent Story Builder, an agentic AI tool I designed to transform raw ideas into production-ready user stories. Select a scenario, watch the AI work, and see why this system reduced story creation time by 80%. |
+| **CTA Button** | Launch Interactive Demo → |
 
-### How It Works
+## Design Implementation
+
+### Layout Structure
 ```text
-┌─────────────────────────────────────────────────────────┐
-│  Environment Files                                      │
-│  ─────────────────                                      │
-│  .env.development: VITE_FEATURE_INTERACTIVE_DEMO=true   │
-│  .env.production:  VITE_FEATURE_INTERACTIVE_DEMO=false  │
-└─────────────────────────────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│  src/config/featureFlags.ts                             │
-│  ─────────────────────────────                          │
-│  import.meta.env.VITE_FEATURE_INTERACTIVE_DEMO === 'true'│
-└─────────────────────────────────────────────────────────┘
-                         │
-         ┌───────────────┴───────────────┐
-         ▼                               ▼
-┌─────────────────────┐       ┌─────────────────────┐
-│  Homepage (Index)   │       │  App.tsx (Router)   │
-│  ─────────────────  │       │  ───────────────    │
-│  if (DEMO_BANNER)   │       │  if (DEMO_PAGE)     │
-│    <DemoBanner />   │       │    <Route /demo />  │
-└─────────────────────┘       └─────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  ┌─ Animated Gradient Border (pink/cyan pulsing glow) ─────────────────┐   │
+│  │                                                                      │   │
+│  │   ┌──────────────┐    ┌─────────────────────────────────────────┐   │   │
+│  │   │  ✨ Visual   │    │  See AI in Action (H2 - neon cyan)     │   │   │
+│  │   │   Element    │    │                                         │   │   │
+│  │   │  (Sparkles   │    │  Subheadline (muted text)               │   │   │
+│  │   │   + Zap)     │    │                                         │   │   │
+│  │   │              │    │  Body paragraph (lighter text)          │   │   │
+│  │   └──────────────┘    │                                         │   │   │
+│  │                       │     [Launch Interactive Demo →]          │   │   │
+│  │                       └─────────────────────────────────────────┘   │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-## Files to Create
+### Visual Element (Left Side)
+Rather than a screenshot (which doesn't exist yet), I'll create an abstract "tool interface" icon using:
+- **Sparkles icon** (lucide-react) - represents AI magic
+- **Zap icon** (lucide-react) - represents speed/automation
+- Arranged in a glowing container with gradient background
 
-### 1. `.env.development`
-Development environment - features **enabled** for local testing.
+### Animated Glow Border
+CSS keyframe animation that creates a subtle pulsing glow around the banner:
+- Alternates between pink and cyan hues
+- 4-second animation cycle for smooth, non-distracting effect
+- Uses `box-shadow` with multiple layers for depth
 
-```
-VITE_FEATURE_INTERACTIVE_DEMO=true
-```
+## File Changes
 
-### 2. `.env.production`
-Production environment - features **disabled** until ready to launch.
+### `src/components/DemoBanner.tsx`
+Complete rewrite with:
 
-```
-VITE_FEATURE_INTERACTIVE_DEMO=false
-```
+1. **New Imports**
+   - Add `Sparkles` and `Zap` icons from lucide-react
 
-### 3. `src/config/featureFlags.ts`
-Central configuration that reads from environment variables.
+2. **Layout Structure**
+   - Two-column grid on desktop (visual | text)
+   - Single column stack on mobile
+   - Full-width with max-w-6xl content container
 
-```typescript
-// Feature flags read from environment variables
-// Toggle via .env.development / .env.production files
-export const featureFlags = {
-  // Interactive Demo - homepage banner and /demo page
-  INTERACTIVE_DEMO: import.meta.env.VITE_FEATURE_INTERACTIVE_DEMO === 'true',
-} as const;
+3. **Visual Element**
+   - Abstract icon composition in a gradient container
+   - Subtle floating animation on the icons
 
-// Type-safe helper for checking flags
-export function isFeatureEnabled(
-  flag: keyof typeof featureFlags
-): boolean {
-  return featureFlags[flag];
+4. **Content Section**
+   - H2 headline with `neon-text-cyan` styling
+   - Subheadline with pink accent styling
+   - Body paragraph with standard text styling
+   - Existing `btn-hero` CTA button
+
+5. **Animated Border**
+   - Wrapper div with animated box-shadow
+   - CSS animation defined inline or as a custom class
+
+### `src/index.css`
+Add new keyframe animation for the glow border:
+
+```css
+@keyframes banner-glow {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px hsl(var(--color-pink) / 0.4),
+      0 0 40px hsl(var(--color-pink) / 0.2),
+      inset 0 0 20px hsl(var(--color-pink) / 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 20px hsl(var(--color-cyan) / 0.4),
+      0 0 40px hsl(var(--color-cyan) / 0.2),
+      inset 0 0 20px hsl(var(--color-cyan) / 0.1);
+  }
+}
+
+.animate-banner-glow {
+  animation: banner-glow 4s ease-in-out infinite;
 }
 ```
 
-### 4. `src/components/DemoBanner.tsx`
-Placeholder banner component for the homepage.
+## Technical Details
 
+### Component Structure
 ```typescript
-// Skeleton structure - build out incrementally
 const DemoBanner = () => {
   return (
-    <section className="py-16 bg-gradient-to-r from-pink-500/10 to-cyan-500/10">
-      <div className="max-w-6xl mx-auto px-6 text-center">
-        <h2>Try the Interactive Demo</h2>
-        <p>Experience AI capabilities hands-on</p>
-        <Link to="/demo">Launch Demo →</Link>
+    <section className="py-20 relative">
+      <div className="max-w-6xl mx-auto px-6">
+        {/* Animated glow container */}
+        <div className="relative rounded-2xl border border-pink-500/30 
+                        animate-banner-glow bg-gradient-to-br 
+                        from-pink-500/10 via-transparent to-cyan-500/10 
+                        p-8 md:p-12">
+          
+          <div className="grid md:grid-cols-[200px_1fr] gap-8 items-center">
+            {/* Visual Element - Left */}
+            <div className="hidden md:flex justify-center">
+              <div className="relative p-6 rounded-xl 
+                              bg-gradient-to-br from-pink-500/20 to-cyan-500/20 
+                              border border-cyan-500/30">
+                <Sparkles className="w-12 h-12 text-cyan-400" />
+                <Zap className="absolute top-2 right-2 w-6 h-6 text-pink-400" />
+              </div>
+            </div>
+
+            {/* Content - Right */}
+            <div className="text-center md:text-left">
+              <h2 className="neon-text-cyan font-rajdhani font-bold 
+                           text-3xl md:text-4xl mb-3">
+                See AI in Action
+              </h2>
+              <p className="text-lg text-pink-400/90 font-medium mb-4">
+                Don't just read about what I build—experience it yourself.
+              </p>
+              <p className="text-base text-gray-300 mb-8 max-w-2xl">
+                Try the Intelligent Story Builder...
+              </p>
+              <Link to="/demo" className="btn-hero ...">
+                Launch Interactive Demo →
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
 };
 ```
 
-### 5. `src/pages/Demo.tsx`
-Placeholder page for the interactive demo experience.
+### Accessibility Considerations
+- Animation respects `prefers-reduced-motion` (added to CSS)
+- Proper heading hierarchy (H2)
+- Focus states on CTA button (inherited from btn-hero)
 
-```typescript
-// Skeleton structure - build out incrementally
-const Demo = () => {
-  return (
-    <div className="min-h-screen">
-      <Navigation />
-      <main className="pt-20">
-        <h1>Interactive Demo</h1>
-        {/* Demo content will go here */}
-      </main>
-      <Footer />
-    </div>
-  );
-};
-```
+### Mobile Responsiveness
+- Icon section hidden on mobile (md:flex)
+- Text centered on mobile, left-aligned on desktop
+- Padding adjusts (p-8 → md:p-12)
 
 ## Files to Modify
 
-### 6. `src/pages/Index.tsx`
-Conditionally render the DemoBanner based on feature flag.
+| File | Changes |
+|------|---------|
+| `src/components/DemoBanner.tsx` | Complete redesign with two-column layout, visual element, new copy, animated glow border |
+| `src/index.css` | Add `banner-glow` keyframe animation and `.animate-banner-glow` class |
 
-```typescript
-import { isFeatureEnabled } from '@/config/featureFlags';
-import DemoBanner from '@/components/DemoBanner';
-
-// Inside the component...
-{isFeatureEnabled('INTERACTIVE_DEMO') && <DemoBanner />}
-```
-
-### 7. `src/App.tsx`
-Conditionally register the `/demo` route based on feature flag.
-
-```typescript
-import { isFeatureEnabled } from '@/config/featureFlags';
-import Demo from './pages/Demo';
-
-// Inside Routes...
-{isFeatureEnabled('INTERACTIVE_DEMO') && (
-  <Route path="/demo" element={<Demo />} />
-)}
-```
-
-## Launching Features
-
-When you're ready to launch, update `.env.production`:
-
-```
-VITE_FEATURE_INTERACTIVE_DEMO=true
-```
-
-## File Structure After Implementation
-
-```text
-├── .env.development          ← NEW: Dev flags (enabled)
-├── .env.production           ← NEW: Prod flags (disabled)
-src/
-├── config/
-│   └── featureFlags.ts       ← NEW: Reads from env vars
-├── components/
-│   └── DemoBanner.tsx        ← NEW: Homepage demo banner
-├── pages/
-│   └── Demo.tsx              ← NEW: Full demo page
-├── App.tsx                   ← MODIFIED: Conditional route
-└── pages/
-    └── Index.tsx             ← MODIFIED: Conditional banner
-```
-
-## Benefits
-
-| Benefit | Description |
-|---------|-------------|
-| **No Code Changes to Launch** | Flip the env var and redeploy |
-| **Environment-Specific** | Auto-enabled in dev, disabled in prod |
-| **Git-Friendly** | .env files can be committed (no secrets) |
-| **Vite Native** | Uses built-in import.meta.env pattern |
-| **Type Safety** | TypeScript helper ensures valid flag names |
-
-## Technical Notes
-
-- Vite automatically loads `.env.development` during `npm run dev` and `.env.production` during `npm run build`
-- Environment variables must be prefixed with `VITE_` to be exposed to client code
-- The existing `.env` file (with Supabase config) will NOT be modified - Vite merges all .env files with environment-specific ones taking precedence
