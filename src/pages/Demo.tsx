@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import GlowCard from "@/components/ui/glow-card";
-import { Play, GitCompare, ArrowLeft } from "lucide-react";
+import { Play, GitCompare, ArrowLeft, MousePointerClick } from "lucide-react";
 
 const Demo = () => {
   const scenarios = [
@@ -101,7 +101,14 @@ const Demo = () => {
 
         {/* Zone 3: Interactive Demo */}
         <section className="max-w-7xl mx-auto px-6 py-8">
-          <div className="relative rounded-2xl border border-cyan-500/30 bg-card/50 backdrop-blur-sm overflow-hidden">
+          {/* Interaction hint */}
+          <p className="text-center text-pink-400 mb-4 flex items-center justify-center gap-2">
+            <MousePointerClick className="w-5 h-5" />
+            <span>This is a live demo—go ahead and interact!</span>
+          </p>
+          
+          {/* Iframe with animated glow border */}
+          <div className="relative rounded-2xl border border-pink-500/30 animate-banner-glow bg-card/50 backdrop-blur-sm overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-pink-500/5" />
             <div className="relative h-[50vh] md:h-[70vh]">
               <iframe
