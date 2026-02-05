@@ -1,49 +1,30 @@
 
-
-# Simplify Demo Page Layout
+# Enhance Demo Page Iframe Section
 
 ## Overview
-Streamline the Demo page by removing unnecessary UI elements and embedding the live Intelligent Story Builder application.
+Add two visual enhancements to the iframe section on the Demo page to improve user experience and create visual consistency with the site's neon aesthetic.
 
-## Changes Summary
+## Enhancements Summary
 
-| Change | Action |
-|--------|--------|
-| Third scenario card | Remove "Upload & Generate" |
-| Grid layout | Change to 2-column (`md:grid-cols-2`) |
-| "Choose Your Experience" header | Remove |
-| "Explore the Full Tool" header | Remove |
-| Collapsible sidebar | Remove entirely |
-| Iframe | Embed live app URL |
-| Return Home button | Keep as-is |
+| Enhancement | Description |
+|-------------|-------------|
+| Animated border | Pink/cyan pulsing glow around the iframe container |
+| Hint text | Instructional text above the iframe prompting interaction |
 
-## Visual Before/After
+## Visual Representation
 
 ```text
-BEFORE:
-┌─────────────────────────────────────────────────────────────┐
-│  Zone 1: Context Hook                                       │
-├─────────────────────────────────────────────────────────────┤
-│  "Choose Your Experience" ← REMOVE                          │
-│  [Card 1] [Card 2] [Card 3] ← REMOVE Card 3                 │
-├─────────────────────────────────────────────────────────────┤
-│  "Explore the Full Tool" ← REMOVE                           │
-│  ┌──────────────────────────┐ ┌────────────────────┐        │
-│  │  Placeholder iframe      │ │ What You're Seeing │ REMOVE │
-│  └──────────────────────────┘ └────────────────────┘        │
-│                    [Return Home]                            │
-└─────────────────────────────────────────────────────────────┘
-
-AFTER:
 ┌─────────────────────────────────────────────────────────────┐
 │  Zone 1: Context Hook                                       │
 ├─────────────────────────────────────────────────────────────┤
 │  [Quick Demo]          [Compare AI Models]                  │
 ├─────────────────────────────────────────────────────────────┤
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  https://intelligent-ai-story-builder.lovable.app/   │   │
-│  │              (Full-width iframe)                     │   │
-│  └──────────────────────────────────────────────────────┘   │
+│         👆 This is a live demo—go ahead and interact!       │  ← NEW
+│  ┌ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ┐   │
+│  ║                                                       ║   │  ← Animated
+│  ║   https://intelligent-ai-story-builder.lovable.app/  ║   │     border
+│  ║                                                       ║   │
+│  └ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ┘   │
 │                    [Return Home]                            │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -52,43 +33,42 @@ AFTER:
 
 ### `src/pages/Demo.tsx`
 
-**1. Update imports** - Remove unused icons and Collapsible components:
-```typescript
-// Remove: Upload, ChevronRight, ChevronDown, Database, GitBranch, Settings
-// Remove: Collapsible, CollapsibleContent, CollapsibleTrigger
+**1. Add hint text above the iframe**
+
+Insert a paragraph element above the iframe container with:
+- Text: "This is a live demo—go ahead and interact!"
+- Styling: Brand pink color with subtle glow
+- Icon: Hand pointer (MousePointerClick) or similar indicator
+
+**2. Apply animated glow border to iframe container**
+
+The site already has the `animate-banner-glow` class defined in `index.css` that pulses between pink and cyan. Apply this existing animation to the iframe container for consistency:
+
+```tsx
+<section className="max-w-7xl mx-auto px-6 py-8">
+  {/* Interaction hint */}
+  <p className="text-center text-pink-400 mb-4 flex items-center justify-center gap-2">
+    <MousePointerClick className="w-5 h-5" />
+    <span>This is a live demo—go ahead and interact!</span>
+  </p>
+  
+  {/* Iframe with animated glow border */}
+  <div className="relative rounded-2xl border border-pink-500/30 animate-banner-glow bg-card/50 backdrop-blur-sm overflow-hidden">
+    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-pink-500/5" />
+    <div className="relative h-[50vh] md:h-[70vh]">
+      <iframe ... />
+    </div>
+  </div>
+</section>
 ```
 
-**2. Remove scenarios array item** - Delete "Upload & Generate" card (third item)
+**3. Add icon import**
 
-**3. Remove features array** - No longer needed without sidebar
-
-**4. Remove sidebar state** - Delete `useState` for `sidebarOpen`
-
-**5. Remove "Choose Your Experience" header** - Delete the h2 element in Zone 2
-
-**6. Update scenario cards grid** - Change to 2-column layout:
-```typescript
-<div className="grid md:grid-cols-2 gap-6">
-```
-
-**7. Remove "Explore the Full Tool" header** - Delete the h2 element in Zone 3
-
-**8. Remove collapsible sidebar** - Change grid from `lg:grid-cols-[1fr_280px]` to full-width, remove entire Collapsible component
-
-**9. Embed live iframe** - Replace placeholder with actual URL:
-```typescript
-<iframe
-  src="https://intelligent-ai-story-builder.lovable.app/"
-  className="w-full h-full border-0"
-  title="Intelligent Story Builder Demo"
-  allow="clipboard-write"
-/>
-```
+Add `MousePointerClick` (or `Pointer`) to the existing Lucide imports.
 
 ## Technical Notes
 
-- Iframe will be full-width without the sidebar
-- Existing GlowCard styling preserved for the 2 remaining scenario cards
-- Return Home button remains unchanged at bottom
-- No new dependencies required
-
+- **Reuses existing animation**: The `animate-banner-glow` animation is already defined in `src/index.css` (lines 503-520) and includes reduced-motion accessibility support
+- **Animation timing**: 4-second cycle, easing in/out between pink and cyan glows
+- **Accessibility**: The hint text provides clear instruction; the animation respects `prefers-reduced-motion`
+- **No new CSS required**: All styling uses existing utility classes and animations
