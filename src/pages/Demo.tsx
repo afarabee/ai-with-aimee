@@ -1,28 +1,10 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import GlowCard from "@/components/ui/glow-card";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
-  Play,
-  GitCompare,
-  Upload,
-  ArrowLeft,
-  ChevronRight,
-  ChevronDown,
-  Database,
-  GitBranch,
-  Settings,
-} from "lucide-react";
+import { Play, GitCompare, ArrowLeft } from "lucide-react";
 
 const Demo = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
   const scenarios = [
     {
       icon: Play,
@@ -41,36 +23,6 @@ const Demo = () => {
         "See GPT-5 Nano and Gemini 2.5 Flash Lite tackle the same prompt side-by-side.",
       bestFor: "Understanding how I approach model evaluation.",
       glowColor: "#ff00ff",
-    },
-    {
-      icon: Upload,
-      title: "Upload & Generate",
-      duration: "2 min",
-      description:
-        "Paste your own requirements or upload a doc, then generate a story.",
-      bestFor: "Hands-on exploration.",
-      glowColor: "#ffcc00",
-    },
-  ];
-
-  const features = [
-    {
-      icon: Database,
-      title: "RAG Context",
-      description:
-        "The system pulls from a curated knowledge base of user story best practices to ground its outputs.",
-    },
-    {
-      icon: GitBranch,
-      title: "Prompt Versioning",
-      description:
-        "Each generation uses a version-controlled prompt, allowing A/B testing and continuous refinement.",
-    },
-    {
-      icon: Settings,
-      title: "DevOps Integration",
-      description:
-        "Output is formatted for direct import into Azure DevOps or Jira with proper acceptance criteria.",
     },
   ];
 
@@ -94,12 +46,9 @@ const Demo = () => {
           </p>
         </section>
 
-        {/* Zone 2: Guided Experience */}
+        {/* Zone 2: Scenario Cards */}
         <section className="max-w-6xl mx-auto px-6 py-8">
-          <h2 className="text-sm uppercase tracking-wider text-pink-400 font-medium mb-6">
-            Choose Your Experience
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
             {scenarios.map((scenario) => (
               <GlowCard
                 key={scenario.title}
@@ -150,76 +99,17 @@ const Demo = () => {
           </div>
         </section>
 
-        {/* Zone 3: Full Interactive Demo */}
+        {/* Zone 3: Interactive Demo */}
         <section className="max-w-7xl mx-auto px-6 py-8">
-          <h2 className="text-sm uppercase tracking-wider text-cyan-400 font-medium mb-6">
-            Explore the Full Tool
-          </h2>
-          <div className="grid lg:grid-cols-[1fr_280px] gap-6">
-            {/* Iframe Container */}
-            <div className="relative rounded-2xl border border-cyan-500/30 bg-card/50 backdrop-blur-sm overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-pink-500/5" />
-              <div className="relative h-[50vh] md:h-[70vh] flex items-center justify-center">
-                {/* Placeholder content - replace with actual iframe when ready */}
-                <div className="text-center p-8">
-                  <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-pink-500/20 border border-cyan-500/30 flex items-center justify-center">
-                    <Play className="w-10 h-10 text-cyan-400" />
-                  </div>
-                  <h3 className="text-xl font-rajdhani font-bold text-foreground mb-2">
-                    Demo Coming Soon
-                  </h3>
-                  <p className="text-muted-foreground max-w-md">
-                    Select a scenario above to see the Intelligent Story Builder
-                    in action. The embedded demo will appear here.
-                  </p>
-                </div>
-                {/* Uncomment when iframe URL is ready:
-                <iframe
-                  src="YOUR_DEMO_URL_HERE"
-                  className="w-full h-full border-0"
-                  title="Intelligent Story Builder Demo"
-                  allow="clipboard-write"
-                />
-                */}
-              </div>
-            </div>
-
-            {/* Collapsible Sidebar */}
-            <div className="lg:block">
-              <Collapsible open={sidebarOpen} onOpenChange={setSidebarOpen}>
-                <CollapsibleTrigger className="w-full">
-                  <div className="flex items-center justify-between p-4 rounded-xl border border-pink-500/30 bg-card/50 backdrop-blur-sm hover:bg-pink-500/5 transition-colors">
-                    <span className="font-rajdhani font-bold text-foreground">
-                      What You're Seeing
-                    </span>
-                    {sidebarOpen ? (
-                      <ChevronDown className="w-5 h-5 text-pink-400" />
-                    ) : (
-                      <ChevronRight className="w-5 h-5 text-pink-400" />
-                    )}
-                  </div>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <div className="mt-4 space-y-4">
-                    {features.map((feature) => (
-                      <div
-                        key={feature.title}
-                        className="p-4 rounded-xl border border-cyan-500/20 bg-card/30 backdrop-blur-sm"
-                      >
-                        <div className="flex items-center gap-3 mb-2">
-                          <feature.icon className="w-5 h-5 text-cyan-400" />
-                          <h4 className="font-rajdhani font-bold text-foreground">
-                            {feature.title}
-                          </h4>
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          {feature.description}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
+          <div className="relative rounded-2xl border border-cyan-500/30 bg-card/50 backdrop-blur-sm overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-pink-500/5" />
+            <div className="relative h-[50vh] md:h-[70vh]">
+              <iframe
+                src="https://intelligent-ai-story-builder.lovable.app/"
+                className="w-full h-full border-0"
+                title="Intelligent Story Builder Demo"
+                allow="clipboard-write"
+              />
             </div>
           </div>
         </section>
