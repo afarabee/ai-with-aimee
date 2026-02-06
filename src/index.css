@@ -101,10 +101,10 @@ All colors MUST be HSL.
     --clr-text-dim: 168 69% 81%;
 
     /* Font families */
-    --font-title: "Rajdhani", sans-serif;
-    --font-subtitle: "Josefin Sans", sans-serif;
-    --font-body: "IBM Plex Sans", sans-serif;
-    --font-mono: "Titillium Web", monospace;
+    --font-title: "Outfit", sans-serif;
+    --font-subtitle: "Syne", sans-serif;
+    --font-body: "Outfit", sans-serif;
+    --font-mono: "Space Mono", monospace;
 
     /* Transitions */
     --transition-smooth: all 0.3s ease-in-out;
@@ -189,7 +189,7 @@ All colors MUST be HSL.
 
   .nav-link {
     position: relative;
-    font-family: 'Titillium Web', sans-serif;
+    font-family: 'Space Mono', monospace;
     font-weight: 600;
     text-transform: uppercase;
     color: hsl(var(--neon-cyan));
