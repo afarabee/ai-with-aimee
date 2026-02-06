@@ -104,7 +104,7 @@ All colors MUST be HSL.
     --font-title: "Outfit", sans-serif;
     --font-subtitle: "Syne", sans-serif;
     --font-body: "Outfit", sans-serif;
-    --font-mono: "Space Mono", monospace;
+    --font-mono: "Fira Code", monospace;
 
     /* Transitions */
     --transition-smooth: all 0.3s ease-in-out;
@@ -189,9 +189,9 @@ All colors MUST be HSL.
 
   .nav-link {
     position: relative;
-    font-family: 'Space Mono', monospace;
-    font-weight: 600;
-    text-transform: uppercase;
+    font-family: 'Fira Code', monospace;
+    font-weight: 500;
+    text-transform: lowercase;
     color: hsl(var(--neon-cyan));
     text-shadow: 0 0 6px hsl(var(--neon-cyan) / 0.6), 0 0 14px hsl(var(--neon-cyan) / 0.4);
     transition: all 0.3s ease;

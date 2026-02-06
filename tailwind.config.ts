@@ -70,11 +70,11 @@ export default {
       fontFamily: {
         outfit: ["Outfit", "sans-serif"],
         syne: ["Syne", "sans-serif"],
-        "space-mono": ["Space Mono", "monospace"],
+        "space-mono": ["Fira Code", "monospace"],
         rajdhani: ["Outfit", "sans-serif"],
         josefin: ["Syne", "sans-serif"],
         ibm: ["Outfit", "sans-serif"],
-        titillium: ["Space Mono", "monospace"],
+        titillium: ["Fira Code", "monospace"],
         montserrat: ["Montserrat", "sans-serif"],
         retro: ["Orbitron", "sans-serif"],
         pixel: ["Press Start 2P", "cursive"],
