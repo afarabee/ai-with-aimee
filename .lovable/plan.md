@@ -1,45 +1,48 @@
 
 
-# Add Subtitle Text to Demo Page
+# Typography Update: Outfit + Syne + Space Mono
 
-## Overview
-Add a descriptive subtitle with muted styling to guide users on how the demo works.
+## Summary
+Replace the current font stack with three new fonts while preserving the "Aimee Farabee" signature font (Over the Rainbow).
 
-## Change Summary
+| Role | Current | New |
+|------|---------|-----|
+| Headings | Rajdhani | **Outfit** |
+| Body | IBM Plex Sans | **Outfit** |
+| Taglines/Accent | Josefin Sans | **Syne** (Italic / Extra Bold) |
+| Nav and UI | Titillium Web | **Space Mono** |
+| Signature ("Aimee Farabee") | Over the Rainbow | **No change** |
 
-| Element | Text | Styling |
-|---------|------|---------|
-| Subtitle | "Enter requirements and watch the magic happen." | Muted text color |
+## Files to Modify
 
-## File Change
+### 1. `index.html`
+- Update the Google Fonts `<link>` to load **Outfit** (400-800), **Inter** removed, **Syne** (500-800, italic), and **Space Mono** (400, 700).
+- Remove Rajdhani, Josefin Sans, IBM Plex Sans, and Titillium Web from the import.
+- Keep all other fonts (Orbitron, Press Start 2P, Fira Code, Montserrat, Over the Rainbow, Shadows Into Light, etc.).
 
-### `src/pages/Demo.tsx`
-
-Add a new paragraph in the Context Hook section (Zone 1) after the existing description text:
-
-```tsx
-{/* Zone 1: Context Hook */}
-<section className="max-w-6xl mx-auto px-6 py-12">
-  <div className="mb-6">
-    <h1 className="text-4xl md:text-5xl font-rajdhani font-bold neon-text-yellow">
-      Intelligent Story Builder
-    </h1>
-  </div>
-  <p className="text-xl md:text-2xl text-foreground/90 font-medium mb-3">
-    Generate production-ready Agile user stories in seconds.
-  </p>
-  <p className="text-lg text-muted-foreground mb-2">
-    This tool reduced story creation time by 80% across 20+ product teams.
-  </p>
-  <p className="text-base text-muted-foreground/70">           <!-- NEW -->
-    Enter requirements and watch the magic happen.
-  </p>
-</section>
+### 2. `src/index.css` (lines 103-107)
+Update CSS custom properties:
+```
+--font-title: "Outfit", sans-serif;
+--font-subtitle: "Syne", sans-serif;
+--font-body: "Outfit", sans-serif;
+--font-mono: "Space Mono", monospace;
 ```
 
-## Technical Notes
+Update `.nav-link` class (line 192): change `'Titillium Web'` to `'Space Mono'`.
 
-- Uses `text-muted-foreground/70` for a lighter/more muted appearance than existing muted text
-- Slightly smaller text size (`text-base`) to create visual hierarchy
-- Positioned as the final line in the header section before the scenario cards
+### 3. `tailwind.config.ts`
+Update `fontFamily` entries and add aliases so existing classes keep working:
+- `outfit` / `rajdhani` (alias) -> Outfit
+- `syne` / `josefin` (alias) -> Syne
+- `ibm` (alias) -> Outfit (body and headings share the same font)
+- `"space-mono"` / `titillium` (alias) -> Space Mono
+- `sans` (default) -> Outfit
+
+All other font families (montserrat, retro, pixel, rainbow, shadows) remain untouched.
+
+## What Stays the Same
+- The "Aimee Farabee" NavLink uses `font-rainbow` (Over the Rainbow) -- completely unaffected.
+- Orbitron, Press Start 2P, Fira Code, Montserrat, and decorative fonts are preserved.
+- No component files need editing thanks to the aliasing strategy.
 
