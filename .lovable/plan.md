@@ -1,66 +1,69 @@
 
 
-# Demo Page Overhaul and DemoBanner Upgrade
+# Demo Page Full Rewrite
 
 ## Summary
-Rebuild the Demo page with a pre-loaded sample output section, feature decomposition, and a sandbox trust bar. Update the homepage DemoBanner with refined copy and a new CTA.
+Complete rewrite of `src/pages/Demo.tsx` with new hero copy, metric badges, a structured sample output panel with collapsible story cards, a "Grounded Context" drawer, and updated iframe section. DemoBanner is unchanged.
 
 ---
 
-## Demo.tsx -- Full Restructure
+## Zone 1: Hero (updated copy + metric badges)
+- Title stays: "Intelligent Story Builder"
+- New subhead: "This tool reduced story creation time by 80% across 20+ product teams. Try it yourself."
+- Remove the old "Generate production-ready..." line
+- Add 3 inline metric badges below the subhead:
+  - "80% faster" -- cyan glow border
+  - "45% less rework" -- pink glow border
+  - "~7 wks/PO/yr recovered" -- yellow glow border
+- Badges are small rounded pills with subtle colored borders/shadows
 
-### Zone 1: Context Hook (updated copy)
-- Keep the "Intelligent Story Builder" heading
-- Update subheadline to: **"Generate production-ready Agile user stories in seconds."**
-- Update impact line to: **"This tool reduced story creation time by 80% across 20+ product teams."**
-- Add a scroll-to CTA button: **"Try the Live Demo"** that smooth-scrolls down to the iframe section
+## Zone 2: Sample Output Panel (replaces old cards)
+A single full-width panel styled like tool output:
 
-### Zone 2: Pre-loaded Sample Output (NEW -- biggest change)
-Replace the current scenario cards with **two static user story cards** showing real example output from the tool. Each card is a GlowCard containing:
+- **Header**: "Sample Output -- Feature Decomposition"
+- **Input label**: "Input: As a user, I want to search for providers by specialty and location"
+- **Summary line**: "Decomposed into 3 user stories with acceptance criteria, covering search input, results display, and filter refinement"
+- **2 collapsible story cards** using Radix Collapsible:
+  - Story 1: "Provider Search Input" -- user story text + 3 acceptance criteria bullets (CheckCircle2 icons, cyan)
+  - Story 2: "Search Results Display" -- user story text + 3 acceptance criteria bullets (CheckCircle2 icons, pink)
+  - Each starts collapsed; clicking toggles open/closed with a chevron indicator
+- **Risks and Assumptions** section with 2-3 muted bullets (AlertTriangle icon)
+- **CTA button** below: "Run It Live" that smooth-scrolls to the iframe
 
-**Story 1** (cyan glow):
-- Title: "Provider Search"
-- User story: *"As a user, I want to enter a specialty and location so the system returns relevant providers."*
-- 3 acceptance criteria bullets (synthetic examples, e.g., "Given a specialty and zip code, the system returns providers within 25 miles", etc.)
+## Zone 3: Grounded Context Drawer + Sandbox + Iframe
+- **Collapsible "Grounded Context" drawer** above the iframe:
+  - Toggle button: "View Grounded Context" with chevron
+  - When expanded, shows 3 items in a grid or stacked list:
+    1. "README excerpt (redacted)" -- 2-3 lines of synthetic placeholder
+    2. "Backlog snippet (synthetic)" -- 2-3 lines
+    3. "Product persona" -- 2-3 lines
+  - Small note at bottom: "Citations in the output link back to these sources."
+- **Trust bar**: "Sandbox demo . Synthetic data only . No PII . Model calls proxied and logged" with Shield icon (updated text to include "Sandbox demo")
+- **Interaction hint**: Keep existing pink text with MousePointerClick icon
+- **Iframe**: Keep as-is with animated glow border
 
-**Story 2** (pink glow):
-- Title: "Provider Results"
-- User story: *"As a user, I want to see a ranked list of providers with key details so I can make an informed selection."*
-- 3 acceptance criteria bullets (synthetic examples)
-
-Each card will have a small label like "sample output" in muted text to clarify these are examples.
-
-### Zone 3: Sandbox Trust Bar + Live Demo
-- **Trust bar**: A small, muted horizontal bar above the iframe with a Shield icon and the text: **"Synthetic data only . No PII . Model calls proxied and logged"** -- styled in subdued gray text, small font size
-- Keep the existing iframe pointing to `https://intelligent-ai-story-builder.lovable.app/`
-- Keep the interaction hint with pointer icon
-- Keep the animated glow border on the iframe container
-
-### Zone 4: Bottom CTA
-- Keep the "Return Home" link
-
----
-
-## DemoBanner.tsx -- Copy and CTA Update
-
-### Changes:
-1. **Body copy** updated to: *"Try the Intelligent Story Builder -- an agentic AI tool I designed that reduced story creation time by 80% across 20+ product teams. Select a scenario, watch the AI work, and see real output."*
-2. **CTA button text** changed from "Launch Interactive Demo" to **"TRY THE LIVE DEMO -->"**
-3. Keep the existing layout, glow animation, and icons unchanged
+## Zone 4: Bottom CTA
+- Keep "Return Home" link unchanged
 
 ---
 
-## Files Modified
+## Technical Details
 
-| File | Change |
-|------|--------|
-| `src/pages/Demo.tsx` | Replace scenario cards with sample output cards, add trust bar, add scroll-to CTA |
-| `src/components/DemoBanner.tsx` | Update body copy and CTA text |
+### File: `src/pages/Demo.tsx`
+Full rewrite. New imports added:
+- `Collapsible`, `CollapsibleTrigger`, `CollapsibleContent` from `@/components/ui/collapsible`
+- `AlertTriangle`, `ChevronRight` from `lucide-react`
+- `useState` from React (to manage collapsible states)
 
-## What Stays the Same
-- Navigation and Footer on Demo page
-- The live iframe embed URL
-- The animated glow border styling
-- The DemoBanner layout, icons, and heading ("See AI in Action")
-- All font assignments (Outfit, Syne, Fira Code) from the recent typography update
+The collapsible story cards use Radix Collapsible (already installed). Each card has:
+- A trigger row with title + chevron that rotates on open
+- Content area with user story text and acceptance criteria list
+
+The metric badges are simple `span` elements with colored border + subtle box-shadow matching the brand colors.
+
+### File: `src/components/DemoBanner.tsx`
+No changes needed -- already has the correct copy and CTA from the previous update.
+
+### Dependencies
+No new packages required. Uses existing Radix Collapsible and Lucide icons.
 
