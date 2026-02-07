@@ -22,17 +22,14 @@ const DemoBanner = () => {
               <h2 className="neon-text-cyan font-rajdhani font-bold text-3xl md:text-4xl mb-3">
                 See AI in Action
               </h2>
-              <p className="text-lg text-pink-400/90 font-medium mb-4">
-                Don't just read about what I build—experience it yourself.
-              </p>
               <p className="text-base text-gray-300 mb-8 max-w-2xl">
-                Try the Intelligent Story Builder — an agentic AI tool I designed that reduced story creation time by 80% across 20+ product teams. Select a scenario, watch the AI work, and see real output.
+                Try the Intelligent Story Builder — an agentic AI tool that reduced story creation time by 80% across 20+ product teams. Select a scenario, watch the AI work, and see real output.
               </p>
               <Link
                 to="/demo"
                 className="btn-hero px-8 py-4 text-base font-montserrat inline-flex items-center gap-2"
               >
-                <span>TRY THE LIVE DEMO →</span>
+                <span>TRY THE LIVE DEMO</span>
               </Link>
             </div>
           </div>
