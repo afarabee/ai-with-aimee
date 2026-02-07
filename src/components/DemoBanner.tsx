@@ -26,13 +26,13 @@ const DemoBanner = () => {
                 Don't just read about what I build—experience it yourself.
               </p>
               <p className="text-base text-gray-300 mb-8 max-w-2xl">
-                Try the Intelligent Story Builder, an agentic AI tool I designed to transform raw ideas into production-ready user stories. Select a scenario, watch the AI work, and see why this system reduced story creation time by 80%.
+                Try the Intelligent Story Builder — an agentic AI tool I designed that reduced story creation time by 80% across 20+ product teams. Select a scenario, watch the AI work, and see real output.
               </p>
               <Link
                 to="/demo"
                 className="btn-hero px-8 py-4 text-base font-montserrat inline-flex items-center gap-2"
               >
-                <span>Launch Interactive Demo →</span>
+                <span>TRY THE LIVE DEMO →</span>
               </Link>
             </div>
           </div>
