@@ -1,10 +1,22 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import GlowCard from "@/components/ui/glow-card";
-import { Play, GitCompare, ArrowLeft, MousePointerClick, ArrowDown } from "lucide-react";
+import { Play, GitCompare, ArrowLeft, MousePointerClick, ArrowDown, Rocket, X } from "lucide-react";
 
 const Demo = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [isModalOpen]);
   const scenarios = [
     {
       icon: Play,
@@ -135,36 +147,55 @@ const Demo = () => {
             ))}
           </div>
 
-          {/* Browser-chrome iframe container */}
-          <div className="rounded-xl border border-border/60 shadow-[0_8px_32px_-8px_hsl(var(--color-cyan)/0.15)] bg-card/30 backdrop-blur-sm overflow-hidden">
-            {/* Title bar */}
-            <div className="flex items-center gap-3 px-4 py-2.5 border-b border-border/40 bg-card/60">
-              {/* Traffic-light dots */}
-              <div className="flex gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-red-500/70" />
-                <span className="w-3 h-3 rounded-full bg-yellow-500/70" />
-                <span className="w-3 h-3 rounded-full bg-green-500/70" />
-              </div>
-              {/* Title */}
-              <span className="font-mono text-sm text-muted-foreground flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+          {/* Launch Button */}
+          <div className="flex justify-center py-8">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="group relative inline-flex items-center gap-3 px-10 py-5 rounded-xl text-lg font-rajdhani font-bold text-background bg-[hsl(var(--color-cyan))] shadow-[0_0_30px_hsl(var(--color-cyan)/0.4)] hover:shadow-[0_0_50px_hsl(var(--color-cyan)/0.6)] transition-all duration-300 hover:scale-105"
+            >
+              <Rocket className="w-6 h-6 transition-transform group-hover:-translate-y-0.5" />
+              Launch Story Builder
+            </button>
+          </div>
+        </section>
+
+        {/* Modal Overlay */}
+        {isModalOpen && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+            onClick={() => setIsModalOpen(false)}
+          >
+            <div
+              className="relative w-[90vw] h-[90vh] rounded-xl border border-border/60 bg-card overflow-hidden shadow-[0_0_60px_hsl(var(--color-cyan)/0.15)]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/40 bg-card/80">
+                <span className="font-mono text-sm text-muted-foreground flex items-center gap-2">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                  </span>
+                  Intelligent Story Builder
                 </span>
-                live tool — intelligent story builder
-              </span>
-            </div>
-            {/* Iframe */}
-            <div className="relative h-[80vh] md:h-[90vh]">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="rounded-sm p-1 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              {/* Iframe */}
               <iframe
                 src="https://intelligent-ai-story-builder.lovable.app/"
-                className="w-full h-full border-0"
+                className="w-full border-0"
+                style={{ height: "calc(90vh - 44px)" }}
                 title="Intelligent Story Builder Demo"
                 allow="clipboard-write"
               />
             </div>
           </div>
-        </section>
+        )}
 
         {/* Bottom CTA */}
         <div className="text-center py-12">
