@@ -102,9 +102,9 @@ const Demo = () => {
         {/* Zone 3: Interactive Demo */}
         <section className="max-w-7xl mx-auto px-6 py-8">
           {/* Interaction hint */}
-          <p className="text-center text-pink-400 mb-4 flex items-center justify-center gap-2">
+          <p className="text-center text-[hsl(var(--color-pink))] mb-4 flex items-center justify-center gap-2 font-mono text-sm">
             <MousePointerClick className="w-5 h-5" />
-            <span>This is a live demo—go ahead and interact!</span>
+            <span>this is a live demo — go ahead and interact!</span>
           </p>
           
           {/* Iframe with animated glow border */}
