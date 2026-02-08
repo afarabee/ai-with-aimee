@@ -110,7 +110,7 @@ const Demo = () => {
               </h2>
             </div>
             <p className="text-muted-foreground font-mono text-sm">
-              fully interactive · no login required · synthetic data only
+              fully interactive · no login required · powered by real LLM calls
             </p>
             <ArrowDown className="w-6 h-6 text-[hsl(var(--color-pink))] mx-auto mt-4 animate-bounce" />
           </div>
