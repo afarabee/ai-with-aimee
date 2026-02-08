@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import GlowCard from "@/components/ui/glow-card";
-import { Play, GitCompare, ArrowLeft, MousePointerClick } from "lucide-react";
+import { Play, GitCompare, ArrowLeft, MousePointerClick, ArrowDown } from "lucide-react";
 
 const Demo = () => {
   const scenarios = [
@@ -100,16 +100,61 @@ const Demo = () => {
         </section>
 
         {/* Zone 3: Interactive Demo */}
-        <section className="max-w-7xl mx-auto px-6 py-8">
-          {/* Interaction hint */}
-          <p className="text-center text-[hsl(var(--color-pink))] mb-4 flex items-center justify-center gap-2 font-mono text-sm">
-            <MousePointerClick className="w-5 h-5" />
-            <span>this is a live demo — go ahead and interact!</span>
-          </p>
-          
-          {/* Iframe with animated glow border */}
-          <div className="relative rounded-2xl border border-pink-500/30 animate-banner-glow bg-card/50 backdrop-blur-sm overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-pink-500/5" />
+        <section className="max-w-7xl mx-auto px-6 py-8 space-y-6">
+          {/* Big CTA callout */}
+          <div className="relative rounded-xl border border-[hsl(var(--color-pink))]/30 bg-[hsl(var(--color-pink))]/5 backdrop-blur-sm p-6 md:p-8 text-center">
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <MousePointerClick className="w-8 h-8 text-[hsl(var(--color-pink))]" />
+              <h2 className="text-2xl md:text-3xl font-outfit font-bold text-foreground">
+                this is a live tool — try it yourself below
+              </h2>
+            </div>
+            <p className="text-muted-foreground font-mono text-sm">
+              fully interactive · no login required · synthetic data only
+            </p>
+            <ArrowDown className="w-6 h-6 text-[hsl(var(--color-pink))] mx-auto mt-4 animate-bounce" />
+          </div>
+
+          {/* Quick-start steps */}
+          <div className="flex flex-wrap justify-center gap-3">
+            {[
+              "select a preset scenario or paste your own requirement",
+              "click \u201CNew User Story\u201D to generate",
+              "review the AI-generated stories & acceptance criteria",
+              "try model comparison to see different AI outputs side-by-side",
+            ].map((step, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-2 rounded-full border border-border bg-card/60 backdrop-blur-sm px-4 py-2 text-sm"
+              >
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[hsl(var(--color-cyan))]/20 text-[hsl(var(--color-cyan))] font-mono font-bold text-xs flex items-center justify-center">
+                  {i + 1}
+                </span>
+                <span className="text-muted-foreground">{step}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Browser-chrome iframe container */}
+          <div className="rounded-xl border border-border/60 shadow-[0_8px_32px_-8px_hsl(var(--color-cyan)/0.15)] bg-card/30 backdrop-blur-sm overflow-hidden">
+            {/* Title bar */}
+            <div className="flex items-center gap-3 px-4 py-2.5 border-b border-border/40 bg-card/60">
+              {/* Traffic-light dots */}
+              <div className="flex gap-1.5">
+                <span className="w-3 h-3 rounded-full bg-red-500/70" />
+                <span className="w-3 h-3 rounded-full bg-yellow-500/70" />
+                <span className="w-3 h-3 rounded-full bg-green-500/70" />
+              </div>
+              {/* Title */}
+              <span className="font-mono text-sm text-muted-foreground flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                </span>
+                live tool — intelligent story builder
+              </span>
+            </div>
+            {/* Iframe */}
             <div className="relative h-[50vh] md:h-[70vh]">
               <iframe
                 src="https://intelligent-ai-story-builder.lovable.app/"
