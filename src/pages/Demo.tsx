@@ -155,7 +155,7 @@ const Demo = () => {
               </span>
             </div>
             {/* Iframe */}
-            <div className="relative h-[50vh] md:h-[70vh]">
+            <div className="relative h-[80vh] md:h-[90vh]">
               <iframe
                 src="https://intelligent-ai-story-builder.lovable.app/"
                 className="w-full h-full border-0"
