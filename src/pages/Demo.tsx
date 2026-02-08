@@ -119,7 +119,7 @@ const Demo = () => {
           <div className="flex flex-wrap justify-center gap-3">
             {[
               "select a preset scenario or paste your own requirement",
-              "click \u201CNew User Story\u201D to generate",
+              "click \u201CGenerate User Story\u201D to create new story draft",
               "review the AI-generated stories & acceptance criteria",
               "try model comparison to see different AI outputs side-by-side",
             ].map((step, i) => (
