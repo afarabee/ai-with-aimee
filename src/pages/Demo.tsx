@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import GlowCard from "@/components/ui/glow-card";
-import { Play, GitCompare, ArrowLeft, Rocket, X } from "lucide-react";
+import { ArrowLeft, Rocket, X } from "lucide-react";
 
 const Demo = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,26 +16,6 @@ const Demo = () => {
     }
     return () => { document.body.style.overflow = ""; };
   }, [isModalOpen]);
-  const scenarios = [
-    {
-      icon: Play,
-      title: "Quick Demo",
-      duration: "30 sec",
-      description:
-        "Watch the AI generate a complete user story from a simple login requirement.",
-      bestFor: "Getting a fast feel for the output quality.",
-      glowColor: "#00ffff",
-    },
-    {
-      icon: GitCompare,
-      title: "Compare AI Models",
-      duration: "1 min",
-      description:
-        "See GPT-5 Nano and Gemini 2.5 Flash Lite tackle the same prompt side-by-side.",
-      bestFor: "Understanding how I approach model evaluation.",
-      glowColor: "#ff00ff",
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -58,73 +37,9 @@ const Demo = () => {
           </p>
         </section>
 
-        {/* Zone 2: Scenario Cards */}
+        {/* Launch Button */}
         <section className="max-w-6xl mx-auto px-6 py-8">
-          <div className="grid md:grid-cols-2 gap-6">
-            {scenarios.map((scenario) => (
-              <GlowCard
-                key={scenario.title}
-                glowColor={scenario.glowColor}
-                className="cursor-pointer hover:scale-[1.03] transition-transform"
-              >
-                <div className="flex items-start gap-4">
-                  <div
-                    className="p-3 rounded-xl"
-                    style={{
-                      background: `linear-gradient(135deg, ${scenario.glowColor}20, ${scenario.glowColor}10)`,
-                      border: `1px solid ${scenario.glowColor}40`,
-                    }}
-                  >
-                    <scenario.icon
-                      className="w-6 h-6"
-                      style={{ color: scenario.glowColor }}
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h3 className="text-lg font-rajdhani font-bold text-foreground">
-                        {scenario.title}
-                      </h3>
-                      <span
-                        className="text-xs px-2 py-0.5 rounded-full"
-                        style={{
-                          background: `${scenario.glowColor}20`,
-                          color: scenario.glowColor,
-                        }}
-                      >
-                        {scenario.duration}
-                      </span>
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      {scenario.description}
-                    </p>
-                    <p className="text-xs text-foreground/60">
-                      <span className="font-medium text-pink-400">
-                        Best for:
-                      </span>{" "}
-                      {scenario.bestFor}
-                    </p>
-                  </div>
-                </div>
-              </GlowCard>
-            ))}
-          </div>
-        </section>
-
-        {/* Zone 3: Interactive Demo */}
-        <section className="max-w-7xl mx-auto px-6 py-8 space-y-6">
-          {/* CTA section */}
-          <div className="text-center space-y-3">
-            <h2 className="text-2xl md:text-3xl font-outfit font-bold text-foreground">
-              this is a live tool — try it yourself below
-            </h2>
-            <p className="text-muted-foreground font-mono text-sm">
-              fully interactive · no login required · powered by real LLM calls
-            </p>
-          </div>
-
-          {/* Launch Button */}
-          <div className="flex justify-center py-8">
+          <div className="flex flex-col items-center gap-4 py-8">
             <button
               onClick={() => setIsModalOpen(true)}
               className="group relative inline-flex items-center gap-3 px-10 py-5 rounded-xl text-lg font-rajdhani font-bold text-background bg-[hsl(var(--color-cyan))] shadow-[0_0_30px_hsl(var(--color-cyan)/0.4)] hover:shadow-[0_0_50px_hsl(var(--color-cyan)/0.6)] transition-all duration-300 hover:scale-105"
@@ -132,6 +47,9 @@ const Demo = () => {
               <Rocket className="w-6 h-6 transition-transform group-hover:-translate-y-0.5" />
               Launch Story Builder
             </button>
+            <p className="text-muted-foreground font-mono text-sm">
+              fully interactive · no login required · powered by real LLM calls
+            </p>
           </div>
         </section>
 
