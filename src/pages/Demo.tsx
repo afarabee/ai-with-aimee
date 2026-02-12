@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import GlowCard from "@/components/ui/glow-card";
-import { Play, GitCompare, ArrowLeft, MousePointerClick, ArrowDown, Rocket, X } from "lucide-react";
+import { Play, GitCompare, ArrowLeft, Rocket, X } from "lucide-react";
 
 const Demo = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -113,38 +113,14 @@ const Demo = () => {
 
         {/* Zone 3: Interactive Demo */}
         <section className="max-w-7xl mx-auto px-6 py-8 space-y-6">
-          {/* Big CTA callout */}
-          <div className="relative rounded-xl border border-[hsl(var(--color-pink))]/30 bg-[hsl(var(--color-pink))]/5 backdrop-blur-sm p-6 md:p-8 text-center">
-            <div className="flex items-center justify-center gap-3 mb-2">
-              <MousePointerClick className="w-8 h-8 text-[hsl(var(--color-pink))]" />
-              <h2 className="text-2xl md:text-3xl font-outfit font-bold text-foreground">
-                this is a live tool — try it yourself below
-              </h2>
-            </div>
+          {/* CTA section */}
+          <div className="text-center space-y-3">
+            <h2 className="text-2xl md:text-3xl font-outfit font-bold text-foreground">
+              this is a live tool — try it yourself below
+            </h2>
             <p className="text-muted-foreground font-mono text-sm">
               fully interactive · no login required · powered by real LLM calls
             </p>
-            <ArrowDown className="w-6 h-6 text-[hsl(var(--color-pink))] mx-auto mt-4 animate-bounce" />
-          </div>
-
-          {/* Quick-start steps */}
-          <div className="flex flex-wrap justify-center gap-3">
-            {[
-              "select a preset scenario or paste your own requirement",
-              "click \u201CGenerate User Story\u201D to create new story draft",
-              "review the AI-generated stories & acceptance criteria",
-              "try model comparison to see different AI outputs side-by-side",
-            ].map((step, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-2 rounded-full border border-border bg-card/60 backdrop-blur-sm px-4 py-2 text-sm"
-              >
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[hsl(var(--color-cyan))]/20 text-[hsl(var(--color-cyan))] font-mono font-bold text-xs flex items-center justify-center">
-                  {i + 1}
-                </span>
-                <span className="text-muted-foreground">{step}</span>
-              </div>
-            ))}
           </div>
 
           {/* Launch Button */}
