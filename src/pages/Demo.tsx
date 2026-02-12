@@ -22,35 +22,23 @@ const Demo = () => {
       <Navigation />
 
       <main className="pt-20 pb-16">
-        {/* Zone 1: Context Hook */}
-        <section className="max-w-6xl mx-auto px-6 py-12">
-          <div className="mb-6">
-            <h1 className="text-4xl md:text-5xl font-rajdhani font-bold neon-text-yellow">
-              Intelligent Story Builder
-            </h1>
-          </div>
-          <p className="text-xl md:text-2xl text-foreground/90 font-medium mb-3">
+        <section className="max-w-6xl mx-auto px-6 py-12 flex flex-col items-center text-center gap-6">
+          <h1 className="text-4xl md:text-5xl font-rajdhani font-bold neon-text-yellow">
+            Intelligent Story Builder
+          </h1>
+          <p className="text-xl md:text-2xl text-foreground/90 font-medium">
             Generate production-ready Agile user stories in seconds.
           </p>
-          <p className="text-lg text-[hsl(var(--color-pink))]">
-            This tool reduced story creation time by 80% across 20+ product teams.
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="group relative inline-flex items-center gap-3 px-10 py-5 rounded-xl text-lg font-rajdhani font-bold text-background bg-[hsl(var(--color-cyan))] shadow-[0_0_30px_hsl(var(--color-cyan)/0.4)] hover:shadow-[0_0_50px_hsl(var(--color-cyan)/0.6)] transition-all duration-300 hover:scale-105"
+          >
+            <Rocket className="w-6 h-6 transition-transform group-hover:-translate-y-0.5" />
+            Launch Story Builder
+          </button>
+          <p className="text-muted-foreground font-mono text-sm">
+            fully interactive · no login required · powered by real LLM calls
           </p>
-        </section>
-
-        {/* Launch Button */}
-        <section className="max-w-6xl mx-auto px-6 py-8">
-          <div className="flex flex-col items-center gap-4 py-8">
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="group relative inline-flex items-center gap-3 px-10 py-5 rounded-xl text-lg font-rajdhani font-bold text-background bg-[hsl(var(--color-cyan))] shadow-[0_0_30px_hsl(var(--color-cyan)/0.4)] hover:shadow-[0_0_50px_hsl(var(--color-cyan)/0.6)] transition-all duration-300 hover:scale-105"
-            >
-              <Rocket className="w-6 h-6 transition-transform group-hover:-translate-y-0.5" />
-              Launch Story Builder
-            </button>
-            <p className="text-muted-foreground font-mono text-sm">
-              fully interactive · no login required · powered by real LLM calls
-            </p>
-          </div>
         </section>
 
         {/* Modal Overlay */}
