@@ -7,7 +7,7 @@ import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import SectionDivider from "@/components/SectionDivider";
 import DemoBanner from "@/components/DemoBanner";
-import { isFeatureEnabled } from "@/config/featureFlags";
+
 
 const Index = () => {
   return (
@@ -15,8 +15,7 @@ const Index = () => {
       <Navigation />
       <HeroSection />
       
-      {/* Feature-flagged Demo Banner */}
-      {isFeatureEnabled('INTERACTIVE_DEMO') && <DemoBanner />}
+      <DemoBanner />
       
       <ProvenImpactSection />
       <BlogSection />
