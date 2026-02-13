@@ -36,7 +36,6 @@ import BackToTop from "./components/BackToTop";
 import PageTransition from "./components/PageTransition";
 import { useSpotlightEffect } from "./hooks/useSpotlightEffect";
 import { isFeatureEnabled } from "./config/featureFlags";
-import Demo from "./pages/Demo";
 
 const queryClient = new QueryClient();
 
@@ -62,10 +61,7 @@ const App = () => {
             <Route path="/blog" element={<Blog />} />
             <Route path="/model-map" element={<ModelMap />} />
             <Route path="/resume" element={<Resume />} />
-            {/* Feature-flagged Demo route */}
-            {isFeatureEnabled('INTERACTIVE_DEMO') && (
-              <Route path="/demo" element={<Demo />} />
-            )}
+            {/* /demo removed — Story Builder launches from homepage banner */}
             {/* SEO redirect - old slug variation points to canonical URL */}
             <Route path="/blog/agents-arent-the-answer" element={<Navigate to="/blog/agents-arent-always-the-answer" replace />} />
             {/* Dynamic blog post handler - renders all posts via BlogPost.tsx */}
