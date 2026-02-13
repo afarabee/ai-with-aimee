@@ -35,7 +35,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import BackToTop from "./components/BackToTop";
 import PageTransition from "./components/PageTransition";
 import { useSpotlightEffect } from "./hooks/useSpotlightEffect";
-import { isFeatureEnabled } from "./config/featureFlags";
+
 
 const queryClient = new QueryClient();
 
