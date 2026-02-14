@@ -509,6 +509,60 @@ export type Database = {
         }
         Relationships: []
       }
+      why_aimee: {
+        Row: {
+          closing_subtext: string | null
+          closing_tagline: string | null
+          company: string
+          created_at: string
+          hero_subtext: string | null
+          hero_tagline: string | null
+          id: string
+          metrics: Json
+          requirements: Json
+          role: string
+          slug: string
+          status: string
+          updated_at: string
+          vision_points: Json
+          vision_title: string | null
+        }
+        Insert: {
+          closing_subtext?: string | null
+          closing_tagline?: string | null
+          company: string
+          created_at?: string
+          hero_subtext?: string | null
+          hero_tagline?: string | null
+          id?: string
+          metrics?: Json
+          requirements?: Json
+          role: string
+          slug: string
+          status?: string
+          updated_at?: string
+          vision_points?: Json
+          vision_title?: string | null
+        }
+        Update: {
+          closing_subtext?: string | null
+          closing_tagline?: string | null
+          company?: string
+          created_at?: string
+          hero_subtext?: string | null
+          hero_tagline?: string | null
+          id?: string
+          metrics?: Json
+          requirements?: Json
+          role?: string
+          slug?: string
+          status?: string
+          updated_at?: string
+          vision_points?: Json
+          vision_title?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
