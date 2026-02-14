@@ -31,6 +31,9 @@ import HeadshotEditor from "./pages/admin/HeadshotEditor";
 import ModelsToolsDashboard from "./pages/admin/ModelsToolsDashboard";
 import TestLabDashboard from "./pages/admin/TestLabDashboard";
 import ModelMapDashboard from "./pages/admin/ModelMapDashboard";
+import WhyAimeeDashboard from "./pages/admin/WhyAimeeDashboard";
+import WhyAimeeEditor from "./pages/admin/WhyAimeeEditor";
+import WhyAimee from "./pages/WhyAimee";
 import ScrollToTop from "./components/ScrollToTop";
 import BackToTop from "./components/BackToTop";
 import PageTransition from "./components/PageTransition";
@@ -86,10 +89,14 @@ const App = () => {
               <Route path="models" element={<Navigate to="/admin/models-tools" replace />} />
               <Route path="test-lab" element={<TestLabDashboard />} />
               <Route path="model-map" element={<ModelMapDashboard />} />
+              <Route path="why-aimee" element={<WhyAimeeDashboard />} />
+              <Route path="why-aimee-editor" element={<WhyAimeeEditor />} />
             </Route>
             {/* Standalone Blog Writer - Full-screen editor without sidebar */}
             <Route path="/admin/blogs/new" element={<BlogsWriter />} />
             <Route path="/admin/blogs/edit" element={<BlogsWriter />} />
+            {/* Public Why Aimee page — unlisted, direct link only */}
+            <Route path="/why-aimee/:slug" element={<WhyAimee />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -1,4 +1,4 @@
-import { FileText, Image, Brain, Mail, MailOpen, BarChart3, LogOut, ArrowLeft, LayoutDashboard, Rocket, Map, Bot, FlaskConical, ChevronDown } from 'lucide-react';
+import { FileText, Image, Brain, Mail, MailOpen, BarChart3, LogOut, ArrowLeft, LayoutDashboard, Rocket, Map, Bot, FlaskConical, ChevronDown, UserCheck } from 'lucide-react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   Sidebar,
@@ -69,6 +69,13 @@ const adminModules = [
     url: '/admin/newsletter-logs',
     icon: MailOpen,
     description: 'View all saved and sent newsletters',
+    disabled: false,
+  },
+  {
+    title: 'Why Aimee',
+    url: '/admin/why-aimee',
+    icon: UserCheck,
+    description: 'Role-specific pitch pages',
     disabled: false,
   },
   {
