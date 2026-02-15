@@ -309,6 +309,28 @@ export default function WhyAimee() {
           >
             {data.vision_title}
           </h2>
+
+          {/* Closing statement badge */}
+          {(data.closing_tagline || data.closing_subtext) && (
+            <div className="flex justify-center mb-8">
+              <div
+                className="inline-block rounded-xl px-6 py-4 text-center max-w-xl"
+                style={{
+                  background: 'linear-gradient(135deg, #00e5ff, #10b981)',
+                  animation: 'glowPulse 3s ease infinite',
+                  boxShadow: '0 0 20px rgba(0,229,255,0.3)',
+                }}
+              >
+                {data.closing_tagline && (
+                  <p className="text-base font-bold text-slate-900 leading-snug">{data.closing_tagline}</p>
+                )}
+                {data.closing_subtext && (
+                  <p className="text-sm text-slate-800 mt-1 leading-relaxed">{data.closing_subtext}</p>
+                )}
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {data.vision_points.map((pt, i) => (
               <div
@@ -324,18 +346,6 @@ export default function WhyAimee() {
               </div>
             ))}
           </div>
-
-          {/* Closing statement */}
-          {(data.closing_tagline || data.closing_subtext) && (
-            <div className="mt-10 text-center">
-              {data.closing_tagline && (
-                <p className="text-lg font-bold text-cyan-300 mb-2">{data.closing_tagline}</p>
-              )}
-              {data.closing_subtext && (
-                <p className="text-sm text-gray-400 leading-relaxed">{data.closing_subtext}</p>
-              )}
-            </div>
-          )}
         </section>
       )}
 
