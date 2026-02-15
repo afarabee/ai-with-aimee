@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ArrowLeft, Plus, Trash2, Save, Send, EyeOff } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Save, Send, EyeOff, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -54,6 +54,7 @@ export default function WhyAimeeEditor() {
   const editId = searchParams.get('id');
   const isEditing = !!editId;
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('draft');
   const [company, setCompany] = useState('');
@@ -164,6 +165,50 @@ export default function WhyAimeeEditor() {
   const addRequirement = () => { if (requirements.length < 8) setRequirements([...requirements, { jdRequirement: '', myExperience: '', company: '', proof: '' }]); };
   const removeRequirement = (i: number) => { if (requirements.length > 3) setRequirements(requirements.filter((_, idx) => idx !== i)); };
 
+  const handleImportJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const json = JSON.parse(event.target?.result as string);
+        if (!json.company || !json.role) {
+          toast.error('JSON must contain "company" and "role" fields');
+          return;
+        }
+        setCompany(json.company);
+        setRole(json.role);
+        setSlug(slugify(json.company));
+        if (json.heroTagline) setHeroTagline(json.heroTagline);
+        if (json.heroSubtext) setHeroSubtext(json.heroSubtext);
+        if (json.visionTitle) setVisionTitle(json.visionTitle);
+        if (json.closingTagline) setClosingTagline(json.closingTagline);
+        if (json.closingSubtext) setClosingSubtext(json.closingSubtext);
+        if (Array.isArray(json.metrics)) {
+          const clamped = json.metrics.slice(0, 6);
+          while (clamped.length < 4) clamped.push({ value: '', label: '', sub: '' });
+          setMetrics(clamped);
+        }
+        if (Array.isArray(json.visionPoints)) {
+          const vp = json.visionPoints.slice(0, 4);
+          while (vp.length < 4) vp.push({ heading: '', text: '' });
+          setVisionPoints(vp);
+        }
+        if (Array.isArray(json.requirements)) {
+          const reqs = json.requirements.slice(0, 8);
+          while (reqs.length < 3) reqs.push({ jdRequirement: '', myExperience: '', company: '', proof: '' });
+          setRequirements(reqs);
+        }
+        toast.success(`Imported "${json.company}" — review and save when ready`);
+      } catch {
+        toast.error('Invalid JSON file');
+      }
+      // Reset input so same file can be re-imported
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    };
+    reader.readAsText(file);
+  };
+
   const sectionHeader = "text-lg font-bold text-primary border-b border-border pb-2 mb-4 mt-8";
 
   return (
@@ -181,6 +226,8 @@ export default function WhyAimeeEditor() {
 
       {/* Status Buttons */}
       <div className="flex flex-wrap gap-2 mb-6">
+        <input type="file" accept=".json" ref={fileInputRef} className="hidden" onChange={handleImportJSON} />
+        <Button onClick={() => fileInputRef.current?.click()} variant="outline"><Upload className="h-4 w-4 mr-1" />Import JSON</Button>
         <Button onClick={() => handleSave()} disabled={loading} variant="outline"><Save className="h-4 w-4 mr-1" />Save Draft</Button>
         {status !== 'published' && (
           <Button onClick={() => handleSave('published')} disabled={loading}><Send className="h-4 w-4 mr-1" />Publish Now</Button>
