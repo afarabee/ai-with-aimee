@@ -75,9 +75,9 @@ const About = () => {
                 For more than 15 years, I've lived inside the machinery of large, complex enterprises, including Express Scripts, Cigna, American Express, and now Charles River Laboratories.
               </p>
               
-              <p>
-                I've built my career at the intersection of technology, business, and human needs. My work is guided by a belief that great products do more than deliver features; they solve meaningful problems in smart, scalable ways.
-              </p>
+              <p>My work is guided by a belief that great products do more than deliver features, they solve meaningful problems in smart, scalable ways.
+
+            </p>
               
               <p>
                 My recent focus has been leading the charge on early enterprise AI adoption and pioneering the strategic rollout of generative AI solutions at Charles River. To continually lead these complex, cross-functional initiatives, I secured an Applied Generative AI Specialization, deepening my hands-on expertise in AI theory, productization, and governance, guaranteeing the safe and valuable integration of new platform capabilities.
@@ -113,11 +113,11 @@ const About = () => {
           }].map((social, index) => <a key={index} href={social.href} aria-label={social.label} target={social.external ? '_blank' : undefined} rel={social.external ? 'noopener noreferrer' : undefined} className="w-16 h-16 rounded-full flex items-center justify-center border-2 transition-all duration-400 focus:ring-2 focus:ring-cyan-400/50 focus:outline-none cursor-pointer" style={{
             borderColor: 'hsl(180 100% 56%)',
             boxShadow: '0 0 8px hsl(180 100% 56% / 0.6), 0 0 16px hsl(180 100% 56% / 0.4)'
-          }} onMouseEnter={e => {
+          }} onMouseEnter={(e) => {
             e.currentTarget.style.borderColor = 'hsl(320 95% 50%)';
             e.currentTarget.style.boxShadow = '0 0 12px hsl(320 95% 50% / 0.7), 0 0 20px hsl(320 95% 50% / 0.5)';
             e.currentTarget.style.transform = 'scale(1.05)';
-          }} onMouseLeave={e => {
+          }} onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = 'hsl(180 100% 56%)';
             e.currentTarget.style.boxShadow = '0 0 8px hsl(180 100% 56% / 0.6), 0 0 16px hsl(180 100% 56% / 0.4)';
             e.currentTarget.style.transform = 'scale(1)';
@@ -186,11 +186,11 @@ const About = () => {
             <Link to="/" className="text-sm mt-8 transition-all duration-300 group" style={{
             color: '#ffffff',
             textShadow: '0 0 6px rgba(242, 127, 155, 0.5)'
-          }} onMouseEnter={e => {
+          }} onMouseEnter={(e) => {
             e.currentTarget.style.color = '#ffffff';
             e.currentTarget.style.textShadow = '0 0 12px rgba(242, 127, 155, 0.8), 0 0 20px rgba(242, 127, 155, 0.4)';
             e.currentTarget.style.textDecoration = 'underline';
-          }} onMouseLeave={e => {
+          }} onMouseLeave={(e) => {
             e.currentTarget.style.color = '#ffffff';
             e.currentTarget.style.textShadow = '0 0 6px rgba(242, 127, 155, 0.5)';
             e.currentTarget.style.textDecoration = 'none';
