@@ -1,29 +1,25 @@
 
+# Move Closing Statement Under Vision Title + Restyle as Badge Box
 
-# Move Closing Fields to Vision Section + Update CTA Footer
-
-Move the closing tagline/subtext into the Vision section on the public page, and replace the CTA footer with a static "Let's Connect" heading with real clickable contact links.
-
----
-
-## Changes
+## What Changes
 
 **File:** `src/pages/WhyAimee.tsx`
 
-### 1. Vision Section (after the vision cards grid, line 326)
-Insert a centered block displaying `data.closing_tagline` and `data.closing_subtext` below the vision point cards, before the section closes.
+### 1. Move the closing statement block (lines 328-338)
+- Remove from its current position (after the vision cards grid)
+- Insert it immediately after the vision section title (line 311), before the cards grid
 
-### 2. CTA Footer Box (lines 353-371)
-Replace with:
-- Static heading: **"Let's Connect"**
-- Contact line: **Aimee Farabee** - Manchester, TN - 813-503-0323 - linked email
-- Links row with real anchor tags:
-  - **Email:** mailto:aimee.farabee@gmail.com
-  - **LinkedIn:** https://www.linkedin.com/in/aimee-farabee/
-  - **AI Portfolio:** https://ai-with-aims.studio
-  - **GitHub:** https://github.com/afarabee
+### 2. Restyle as a single styled box
+- Combine `closing_tagline` and `closing_subtext` into one box styled like the role badge in the hero section
+- The box will have:
+  - Rounded corners with a cyan-to-emerald gradient background
+  - Dark text (slate-900) for contrast
+  - `closing_tagline` as bold text, `closing_subtext` as smaller text below it, both inside the same pill/box
+  - Centered layout with a subtle glow pulse animation matching the role badge
+  - A `mb-8` margin to separate it from the vision cards below
 
-All links open in new tabs (except email) and are styled as clickable text with hover effects matching the page aesthetic.
-
-### No other files changed.
-
+### Result
+The visual flow will be:
+1. Vision Section Title (magenta gradient, Orbitron)
+2. Closing tagline + subtext box (cyan-emerald gradient pill, matching the role badge style)
+3. Vision point cards (2-column grid)
