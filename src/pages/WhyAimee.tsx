@@ -241,15 +241,21 @@ export default function WhyAimee() {
         <div className="absolute inset-0 bg-gradient-to-b from-cyan-900/10 via-transparent to-transparent" />
         <div className="relative max-w-3xl mx-auto px-6 pt-16 pb-12 text-center">
           <p
-            className="text-xs font-bold tracking-widest text-pink-400 uppercase mb-4"
+            className="text-base sm:text-lg font-bold tracking-widest text-pink-400 uppercase mb-4"
             style={{ animation: 'fadeSlideUp 0.5s ease-out 0s both', fontFamily: "'Orbitron', sans-serif" }}
           >
             Aimee Farabee — Why Me for {data.company}
           </p>
+          <div
+            className="inline-block rounded-xl px-5 py-2.5 text-sm font-semibold text-slate-900 bg-gradient-to-r from-cyan-400 to-emerald-400 neon-border mb-5"
+            style={{ animation: 'fadeSlideUp 0.6s ease-out 0.1s both, glowPulse 3s ease infinite' }}
+          >
+            {data.role}
+          </div>
           <h1
             className="text-3xl sm:text-4xl font-black leading-tight mb-4"
             style={{
-              animation: 'fadeSlideUp 0.6s ease-out 0.1s both, neonFlicker 5s ease infinite',
+              animation: 'fadeSlideUp 0.6s ease-out 0.2s both, neonFlicker 5s ease infinite',
               background: 'linear-gradient(135deg, #00ffff 0%, #00ff88 50%, #00ffff 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -260,16 +266,10 @@ export default function WhyAimee() {
           </h1>
           <p
             className="text-base text-gray-400 leading-relaxed max-w-2xl mx-auto mb-6"
-            style={{ animation: 'fadeSlideUp 0.6s ease-out 0.2s both' }}
+            style={{ animation: 'fadeSlideUp 0.6s ease-out 0.3s both' }}
           >
             {data.hero_subtext}
           </p>
-          <div
-            className="inline-block rounded-xl px-5 py-2.5 text-sm font-semibold text-slate-900 bg-gradient-to-r from-cyan-400 to-emerald-400 neon-border"
-            style={{ animation: 'fadeSlideUp 0.6s ease-out 0.3s both, glowPulse 3s ease infinite' }}
-          >
-            {data.role}
-          </div>
         </div>
       </section>
 
