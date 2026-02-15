@@ -4,7 +4,7 @@
 
 Senior Director-level Healthcare Product Leader & AI Strategist with 15+ years of experience building, shipping, and scaling AI products.
 
-🔗 **Live site:** [ai-with-aimee.lovable.app](https://ai-with-aimee.lovable.app)
+🔗 **Live site:** [[ai-with-aimee.lovable.app](https://ai-with-aims.studio/)]
 
 ---
 
@@ -20,8 +20,7 @@ Senior Director-level Healthcare Product Leader & AI Strategist with 15+ years o
 | `/blog` | Blog listing |
 | `/blog/:slug` | Individual blog post |
 | `/model-map` | AI model benchmarks visualization |
-| `/resume` | Resume / CV page |
-| `/why-aimee/:slug` | Role-specific pitch pages (unlisted, direct link only) |
+
 
 ## Admin CMS
 
@@ -38,7 +37,6 @@ All admin routes live under `/admin` and are protected by a session-based passwo
 - **Models & Tools** — Track AI models and tools for benchmarking
 - **Test Lab** — Run and score prompt tests across models and tools
 - **Model Map** — AI-generated benchmark insights and comparisons
-- **Why Aimee** — Create role-specific pitch pages for job applications
 
 ## Tech Stack
 
