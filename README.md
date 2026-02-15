@@ -1,73 +1,124 @@
-# Welcome to your Lovable project
+# AI With Aimee
 
-## Project info
+**Aimee Farabee's personal AI portfolio and content platform.**
 
-**URL**: https://lovable.dev/projects/31bbeef7-3364-4783-b71d-3be8d990c5f9
+Senior Director-level Healthcare Product Leader & AI Strategist with 15+ years of experience building, shipping, and scaling AI products.
 
-## How can I edit this code?
+🔗 **Live site:** [ai-with-aimee.lovable.app](https://ai-with-aimee.lovable.app)
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## Public Pages
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/31bbeef7-3364-4783-b71d-3be8d990c5f9) and start prompting.
+| Route | Description |
+|-------|-------------|
+| `/` | Homepage — Hero, Proven Impact grid, Blog previews, Projects, Contact |
+| `/about` | Bio and background |
+| `/projects` | Project showcase listing |
+| `/projects/:slug` | Individual project detail page |
+| `/blog` | Blog listing |
+| `/blog/:slug` | Individual blog post |
+| `/model-map` | AI model benchmarks visualization |
+| `/resume` | Resume / CV page |
+| `/why-aimee/:slug` | Role-specific pitch pages (unlisted, direct link only) |
 
-Changes made via Lovable will be committed automatically to this repo.
+## Admin CMS
 
-**Use your preferred IDE**
+All admin routes live under `/admin` and are protected by a session-based password gate.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+**Modules:**
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- **Blogs** — Create, edit, and publish blog posts with rich markdown editing
+- **Projects** — Manage portfolio project entries with drag-and-drop ordering
+- **Prompt Library** — Store and organize AI prompts for testing
+- **Newsletter Composer** — Build and queue email newsletters
+- **Asset Gallery** — Upload and manage images and files
+- **Headshot Editor** — AI-powered headshot retouching
+- **Models & Tools** — Track AI models and tools for benchmarking
+- **Test Lab** — Run and score prompt tests across models and tools
+- **Model Map** — AI-generated benchmark insights and comparisons
+- **Why Aimee** — Create role-specific pitch pages for job applications
 
-Follow these steps:
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Framework | React 18 + TypeScript |
+| Build | Vite |
+| Styling | Tailwind CSS + shadcn/ui |
+| Backend | Lovable Cloud (database, storage, edge functions) |
+| Data Fetching | TanStack React Query |
+| Routing | React Router v6 |
+| Markdown | react-markdown + rehype/remark plugins |
+| Charts | Recharts |
+
+## Backend Functions
+
+| Function | Purpose |
+|----------|---------|
+| `analyze-model-map` | AI-powered model benchmark analysis and insights generation |
+| `chat-admin` | Admin chat assistant for CMS help |
+| `edit-headshot` | AI headshot editing and retouching |
+| `upload-blog-image` | Image and PDF upload to cloud storage |
+
+## Design System
+
+- **Theme:** Dark background with cyan and pink neon accents
+- **Fonts:** Outfit (headings/body), Syne (taglines/accents), Fira Code (nav/UI), Over the Rainbow (signature)
+- **Custom Components:** NeuralNetworkBackground, GlowCard, CursorGlow, AboutBackground
+- **Tokens:** HSL-based CSS custom properties for consistent theming across light/dark modes
+
+## Database Tables
+
+| Table | Purpose |
+|-------|---------|
+| `blogs` | Blog post content and metadata |
+| `projects` | Portfolio project entries |
+| `prompts` | AI prompt library |
+| `models` | AI model registry |
+| `tools` | AI tool registry |
+| `tests` | Test sessions linking prompts to scoring |
+| `test_results` | Model test scores (accuracy, style, speed, etc.) |
+| `tool_test_results` | Tool test scores (fidelity, workflow, etc.) |
+| `model_map_insights` | AI-generated benchmark comparisons |
+| `newsletter_queue` | Newsletter drafts and scheduling |
+| `why_aimee` | Role-specific pitch page content |
+| `user_roles` | Admin role assignments |
+
+## Project Structure
+
+```
+src/
+├── assets/          # Static images and logos
+├── components/      # Reusable UI components
+│   ├── admin/       # Admin CMS components
+│   ├── resume/      # Resume page components
+│   └── ui/          # shadcn/ui primitives
+├── constants/       # URL constants
+├── hooks/           # Custom React hooks
+├── integrations/    # Lovable Cloud client and types
+├── pages/           # Route page components
+│   └── admin/       # Admin page components
+├── types/           # TypeScript type definitions
+└── utils/           # Utility functions
+
+supabase/
+└── functions/       # Backend edge functions
+```
+
+## Getting Started
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Install dependencies
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start the dev server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/31bbeef7-3364-4783-b71d-3be8d990c5f9) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Built with [Lovable](https://lovable.dev)
