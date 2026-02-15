@@ -1,24 +1,37 @@
 
 
-# JSON Import for Why Aimee Editor
+# Add Preview to Why Aimee Editor
 
-Add an "Import JSON" button to the editor that uploads a `.json` file and populates all form fields without saving, so you can review and tweak before saving.
+Add an "Eye" preview button that opens the public-facing Why Aimee page in a new browser tab, working for both published and unpublished (draft) entries.
+
+---
+
+## How It Works
+
+- A new **Preview** button appears in the action bar alongside Import JSON, Save Draft, etc.
+- Clicking it opens `/why-aimee/{slug}` in a new tab
+- For **draft/unpublished** entries to be previewable, the public page query needs to allow a `?preview=true` query parameter that skips the `status = 'published'` filter
+- The button is disabled if no slug exists yet (i.e., company name hasn't been entered)
 
 ---
 
 ## Changes
 
-**File:** `src/pages/admin/WhyAimeeEditor.tsx`
+### `src/pages/admin/WhyAimeeEditor.tsx`
+- Import `Eye` icon from lucide-react
+- Add a Preview button in the action bar that opens `/why-aimee/${slug}?preview=true` via `window.open`
+- Disabled state when slug is empty
 
-1. Add `Upload` icon import from lucide-react and `useRef` from React
-2. Add a hidden `<input type="file" accept=".json" ref={fileInputRef}>` element
-3. Add `handleImportJSON` function that:
-   - Reads file via FileReader
-   - Parses JSON, validates `company` and `role` are present
-   - Populates all state: company, role, heroTagline, heroSubtext, metrics (clamped 4-6), visionTitle, visionPoints (exactly 4), requirements (clamped 3-8), closingTagline, closingSubtext
-   - Auto-generates slug from imported company name
-   - Shows success or error toast
-4. Add "Import JSON" button in the action bar next to Save Draft
+### `src/pages/WhyAimee.tsx`
+- Read `preview` query parameter from the URL using `useSearchParams`
+- When `preview=true`, fetch the entry by slug without filtering on `status = 'published'`
+- This lets draft entries render in the public template for preview purposes
 
-No database changes. No new files. The form stays open after import for review.
+---
+
+## Technical Notes
+
+- No database changes needed -- preview mode simply relaxes the client-side query filter
+- Since the app handles non-sensitive demo data and RLS is open, this approach is safe
+- The preview parameter is only useful if you know the slug, keeping unlisted pages private in practice
 
