@@ -4,7 +4,7 @@
 
 Senior Director-level Healthcare Product Leader & AI Strategist with 15+ years of experience building, shipping, and scaling AI products.
 
-🔗 **Live site:** [[ai-with-aimee.lovable.app](https://ai-with-aims.studio/)]
+🔗 **Live site:** [[ai-with-aims.studio](https://ai-with-aims.studio/)]
 
 ---
 
