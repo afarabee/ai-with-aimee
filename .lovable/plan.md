@@ -1,25 +1,57 @@
 
-# Move Closing Statement Under Vision Title + Restyle as Badge Box
 
-## What Changes
+# README Generation for AI With Aimee
 
-**File:** `src/pages/WhyAimee.tsx`
+## Overview
 
-### 1. Move the closing statement block (lines 328-338)
-- Remove from its current position (after the vision cards grid)
-- Insert it immediately after the vision section title (line 311), before the cards grid
+I'll replace the current boilerplate Lovable README with a comprehensive, professional README that documents the entire site -- its purpose, public pages, admin CMS, tech stack, and architecture.
 
-### 2. Restyle as a single styled box
-- Combine `closing_tagline` and `closing_subtext` into one box styled like the role badge in the hero section
-- The box will have:
-  - Rounded corners with a cyan-to-emerald gradient background
-  - Dark text (slate-900) for contrast
-  - `closing_tagline` as bold text, `closing_subtext` as smaller text below it, both inside the same pill/box
-  - Centered layout with a subtle glow pulse animation matching the role badge
-  - A `mb-8` margin to separate it from the vision cards below
+## README Content Outline
 
-### Result
-The visual flow will be:
-1. Vision Section Title (magenta gradient, Orbitron)
-2. Closing tagline + subtext box (cyan-emerald gradient pill, matching the role badge style)
-3. Vision point cards (2-column grid)
+### 1. Project Title and Description
+- "AI With Aimee" -- Aimee Farabee's personal AI portfolio and content platform
+- Positioning: Senior Director-level Healthcare Product Leader and AI Strategist
+
+### 2. Live Site
+- Published URL: `https://ai-with-aimee.lovable.app`
+
+### 3. Public Pages
+| Route | Description |
+|-------|-------------|
+| `/` | Homepage -- Hero, Proven Impact grid, Blog previews, Projects, Contact |
+| `/about` | Bio and background |
+| `/projects` | Project showcase listing |
+| `/projects/:slug` | Individual project detail |
+| `/blog` | Blog listing |
+| `/blog/:slug` | Individual blog post |
+| `/model-map` | AI model benchmarks visualization |
+| `/resume` | Resume / CV page |
+| `/why-aimee/:slug` | Role-specific pitch pages (unlisted, direct link only) |
+
+### 4. Admin CMS (`/admin`)
+- Password-protected (session-based gate)
+- Modules: Blog Editor, Project Editor, Prompt Library, Newsletter Composer, Asset Gallery, Headshot Editor, Models and Tools, Test Lab, Model Map, Why Aimee
+
+### 5. Tech Stack
+- React 18 + TypeScript + Vite
+- Tailwind CSS + shadcn/ui
+- Lovable Cloud (database, storage, edge functions)
+- TanStack React Query
+
+### 6. Backend Functions
+- `analyze-model-map` -- AI model analysis
+- `chat-admin` -- Admin chat assistant
+- `edit-headshot` -- AI headshot editing
+- `upload-blog-image` -- Blog image uploads
+
+### 7. Design System
+- Dark theme with cyan/pink neon accents
+- Fonts: Rajdhani, Montserrat, Rainbow
+- Custom components: NeuralNetworkBackground, GlowCard, CursorGlow
+
+## Technical Details
+
+- **File changed**: `README.md` -- full replacement of the boilerplate content
+- No other files affected
+- No dependencies or database changes needed
+
