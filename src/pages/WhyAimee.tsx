@@ -397,10 +397,6 @@ export default function WhyAimee() {
             </a>
           </p>
           <div className="flex flex-wrap justify-center gap-4 text-sm">
-            <a href="mailto:aimee.farabee@gmail.com" className="text-cyan-400 hover:text-cyan-300 transition-colors underline underline-offset-2">
-              Email
-            </a>
-            <span className="text-gray-600">&middot;</span>
             <a href="https://www.linkedin.com/in/aimee-farabee/" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 transition-colors underline underline-offset-2">
               LinkedIn
             </a>
