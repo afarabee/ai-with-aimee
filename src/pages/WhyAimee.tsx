@@ -324,6 +324,18 @@ export default function WhyAimee() {
               </div>
             ))}
           </div>
+
+          {/* Closing statement */}
+          {(data.closing_tagline || data.closing_subtext) && (
+            <div className="mt-10 text-center">
+              {data.closing_tagline && (
+                <p className="text-lg font-bold text-cyan-300 mb-2">{data.closing_tagline}</p>
+              )}
+              {data.closing_subtext && (
+                <p className="text-sm text-gray-400 leading-relaxed">{data.closing_subtext}</p>
+              )}
+            </div>
+          )}
         </section>
       )}
 
@@ -356,17 +368,41 @@ export default function WhyAimee() {
           className="rounded-2xl border border-cyan-500/30 bg-gradient-to-b from-slate-900/80 to-slate-950 p-8 neon-border"
           style={{ animation: 'glowPulse 3s ease infinite' }}
         >
-          <p className="text-lg font-bold text-cyan-300 mb-2">
-            {data.closing_tagline}
-          </p>
-          {data.closing_subtext && <p className="text-sm text-gray-500 mb-4">{data.closing_subtext}</p>}
-          <p className="text-sm text-gray-400">
+          <h2
+            className="text-xl font-black tracking-wide uppercase mb-4"
+            style={{
+              fontFamily: "'Orbitron', sans-serif",
+              background: 'linear-gradient(90deg, #00ffff, #00bfff)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}
+          >
+            Let's Connect
+          </h2>
+          <p className="text-sm text-gray-400 mb-4">
             <span className="text-pink-400 font-semibold">Aimee Farabee</span>
-            {' '}&middot;{' '}813-503-0323{' '}&middot;{' '}aimee.farabee@gmail.com
+            {' '}&middot; Manchester, TN &middot; 813-503-0323 &middot;{' '}
+            <a href="mailto:aimee.farabee@gmail.com" className="text-cyan-400 hover:text-cyan-300 transition-colors underline underline-offset-2">
+              aimee.farabee@gmail.com
+            </a>
           </p>
-          <p className="text-xs text-gray-600 mt-2">
-            LinkedIn &middot; AI Portfolio &middot; GitHub
-          </p>
+          <div className="flex flex-wrap justify-center gap-4 text-sm">
+            <a href="mailto:aimee.farabee@gmail.com" className="text-cyan-400 hover:text-cyan-300 transition-colors underline underline-offset-2">
+              Email
+            </a>
+            <span className="text-gray-600">&middot;</span>
+            <a href="https://www.linkedin.com/in/aimee-farabee/" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 transition-colors underline underline-offset-2">
+              LinkedIn
+            </a>
+            <span className="text-gray-600">&middot;</span>
+            <a href="https://ai-with-aims.studio" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 transition-colors underline underline-offset-2">
+              AI Portfolio
+            </a>
+            <span className="text-gray-600">&middot;</span>
+            <a href="https://github.com/afarabee" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 transition-colors underline underline-offset-2">
+              GitHub
+            </a>
+          </div>
         </div>
       </section>
 
