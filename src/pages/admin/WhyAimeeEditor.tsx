@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ArrowLeft, Plus, Trash2, Save, Send, EyeOff, Upload } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Save, Send, EyeOff, Upload, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -228,6 +228,7 @@ export default function WhyAimeeEditor() {
       <div className="flex flex-wrap gap-2 mb-6">
         <input type="file" accept=".json" ref={fileInputRef} className="hidden" onChange={handleImportJSON} />
         <Button onClick={() => fileInputRef.current?.click()} variant="outline"><Upload className="h-4 w-4 mr-1" />Import JSON</Button>
+        <Button onClick={() => window.open(`/why-aimee/${slug}?preview=true`, '_blank')} variant="outline" disabled={!slug.trim()}><Eye className="h-4 w-4 mr-1" />Preview</Button>
         <Button onClick={() => handleSave()} disabled={loading} variant="outline"><Save className="h-4 w-4 mr-1" />Save Draft</Button>
         {status !== 'published' && (
           <Button onClick={() => handleSave('published')} disabled={loading}><Send className="h-4 w-4 mr-1" />Publish Now</Button>
