@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Plus, Edit, Eye, Archive } from 'lucide-react';
+import { Plus, Edit, Eye, Archive, Copy } from 'lucide-react';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -134,6 +134,11 @@ export default function WhyAimeeDashboard() {
                     <td className="p-4 text-muted-foreground">{format(new Date(entry.created_at), 'MMM dd, yyyy')}</td>
                     <td className="p-4">
                       <div className="flex gap-2 justify-end">
+                        <Button size="sm" variant="outline" onClick={() => {
+                          const url = `${window.location.origin}/why-aimee/${entry.slug}`;
+                          navigator.clipboard.writeText(url);
+                          toast.success('URL copied to clipboard');
+                        }}><Copy className="h-4 w-4" /></Button>
                         <Button size="sm" variant="outline" onClick={() => navigate(`/admin/why-aimee-editor?id=${entry.id}`)}><Edit className="h-4 w-4" /></Button>
                         {entry.status === 'published' && (
                           <Button size="sm" variant="outline" onClick={() => window.open(`/why-aimee/${entry.slug}`, '_blank')}><Eye className="h-4 w-4" /></Button>
