@@ -14,6 +14,7 @@ Senior Director-level Healthcare Product Leader & AI Strategist with 15+ years o
 |-------|-------------|
 | `/` | Homepage — Hero, Proven Impact grid, Blog previews, Projects, Contact |
 | `/about` | Bio and background |
+| `/my-ai-journey` | AI journey timeline and milestones |
 | `/projects` | Project showcase listing |
 | `/projects/:slug` | Individual project detail page |
 | `/blog` | Blog listing |
