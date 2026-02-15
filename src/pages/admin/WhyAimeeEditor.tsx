@@ -270,6 +270,10 @@ export default function WhyAimeeEditor() {
       {/* Vision Section */}
       <h2 className={sectionHeader}>Vision Section (4 Cards)</h2>
       <div className="mb-4"><Label>Section Title</Label><Input value={visionTitle} onChange={(e) => setVisionTitle(e.target.value)} placeholder="My Vision for Company's..." /></div>
+      <div className="space-y-4 mb-4">
+        <div><Label>Closing Tagline</Label><Input value={closingTagline} onChange={(e) => setClosingTagline(e.target.value)} placeholder="I want the opportunity to define how..." /></div>
+        <div><Label>Closing Subtext</Label><Input value={closingSubtext} onChange={(e) => setClosingSubtext(e.target.value)} placeholder="Not just a place they store files." /></div>
+      </div>
       <div className="space-y-4">
         {visionPoints.map((v, i) => (
           <div key={i} className="p-4 bg-card border border-border rounded-lg space-y-2">
@@ -305,12 +309,6 @@ export default function WhyAimeeEditor() {
         ))}
       </div>
 
-      {/* Closing CTA */}
-      <h2 className={sectionHeader}>Closing CTA</h2>
-      <div className="space-y-4 mb-12">
-        <div><Label>Closing Tagline</Label><Input value={closingTagline} onChange={(e) => setClosingTagline(e.target.value)} placeholder="I want the opportunity to define how..." /></div>
-        <div><Label>Closing Subtext</Label><Input value={closingSubtext} onChange={(e) => setClosingSubtext(e.target.value)} placeholder="Not just a place they store files." /></div>
-      </div>
     </div>
   );
 }
