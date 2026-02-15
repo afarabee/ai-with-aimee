@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 
 // ─── Types ───────────────────────────────────────────────────
@@ -120,18 +120,24 @@ function MatchRow({ item, index }: { item: Requirement; index: number }) {
 // ─── Main Component ──────────────────────────────────────────
 export default function WhyAimee() {
   const { slug } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
+  const isPreview = searchParams.get('preview') === 'true';
   const [data, setData] = useState<WhyAimeeData | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
-      const { data: entry, error } = await supabase
+      let query = supabase
         .from('why_aimee')
         .select('*')
-        .eq('slug', slug || '')
-        .eq('status', 'published')
-        .maybeSingle();
+        .eq('slug', slug || '');
+
+      if (!isPreview) {
+        query = query.eq('status', 'published');
+      }
+
+      const { data: entry, error } = await query.maybeSingle();
 
       if (error || !entry) {
         setNotFound(true);
