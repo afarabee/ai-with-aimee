@@ -1,17 +1,29 @@
 
 
-# Move Closing Fields Under Vision Section Title
+# Move Closing Fields to Vision Section + Update CTA Footer
 
-Relocate the "Closing Tagline" and "Closing Subtext" fields from the bottom of the form to appear directly after the Vision Section's "Section Title" input, but before the 4 vision point cards.
+Move the closing tagline/subtext into the Vision section on the public page, and replace the CTA footer with a static "Let's Connect" heading with real clickable contact links.
 
 ---
 
 ## Changes
 
-**File:** `src/pages/admin/WhyAimeeEditor.tsx`
+**File:** `src/pages/WhyAimee.tsx`
 
-- Remove the entire "Closing CTA" block (lines 308-313: the h2 header and the two input fields)
-- Insert the two closing fields (Closing Tagline and Closing Subtext) immediately after the Vision Section Title input on line 272, before the vision point cards
-- No section header needed for these fields since they'll sit naturally within the Vision section
-- No other files or database changes required
+### 1. Vision Section (after the vision cards grid, line 326)
+Insert a centered block displaying `data.closing_tagline` and `data.closing_subtext` below the vision point cards, before the section closes.
+
+### 2. CTA Footer Box (lines 353-371)
+Replace with:
+- Static heading: **"Let's Connect"**
+- Contact line: **Aimee Farabee** - Manchester, TN - 813-503-0323 - linked email
+- Links row with real anchor tags:
+  - **Email:** mailto:aimee.farabee@gmail.com
+  - **LinkedIn:** https://www.linkedin.com/in/aimee-farabee/
+  - **AI Portfolio:** https://ai-with-aims.studio
+  - **GitHub:** https://github.com/afarabee
+
+All links open in new tabs (except email) and are styled as clickable text with hover effects matching the page aesthetic.
+
+### No other files changed.
 
