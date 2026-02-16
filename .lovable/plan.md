@@ -1,40 +1,68 @@
 
 
-# Fix: og-meta Edge Function Persistent 404
+# Strip Generic Metadata from og-metadata Edge Function
 
-## Problem
-The `og-meta` edge function deploys "successfully" but returns 404 when called. The thumbnail is now set in the database, so once the function works, LinkedIn will show the correct project-specific image.
+## What's happening now
 
-## Root Cause
-The import `jsr:@supabase/supabase-js@2` is not supported by this project's edge runtime version. Every other working function in the project uses `https://esm.sh/@supabase/supabase-js@2` or `@2.75.0`. The `jsr:` specifier silently fails, making the function unreachable.
+When LinkedIn crawls your `/share/projects/...` URL, the HTML it receives contains **both** project-specific OG tags **and** generic site-level signals. LinkedIn sees the generic signals as higher authority and falls back to them, ignoring the project title, description, and image you actually want shown.
 
-## Plan
+## What we're changing
 
-### 1. Fix the import in `supabase/functions/og-meta/index.ts`
+We're editing **one function** in **one spot** -- the `buildHTML()` function inside `supabase/functions/og-metadata/index.ts`. We're removing four lines that create ambiguity for LinkedIn's parser:
 
-Change line 1 from:
-```typescript
-import { createClient } from "jsr:@supabase/supabase-js@2";
+1. **Remove the site name from the page title** -- changing `<title>Project Title | AI With Aimee</title>` to just `<title>Project Title</title>` so LinkedIn doesn't latch onto the branding suffix.
+
+2. **Remove the `<meta name="description">` tag** -- this generic HTML description competes with `og:description`. Without it, LinkedIn has no choice but to use the OG tag.
+
+3. **Remove `og:site_name`** -- this tells LinkedIn "this page belongs to a parent site," which triggers fallback behavior. Removing it makes the page stand on its own.
+
+4. **Remove the `<meta http-equiv="refresh">` redirect** -- LinkedIn treats pages that immediately redirect as non-authoritative and falls back to cached site metadata. Human visitors will still be redirected because your Cloudflare Worker and SPA `/share/*` route already handle that.
+
+## What we're NOT changing
+
+Everything else stays exactly as-is:
+- `og:title`, `og:description`, `og:image`, `og:url` -- these are the tags LinkedIn will now use
+- Twitter card tags
+- Canonical link
+- All query logic, database lookups, defaults, and error handling
+
+## Expected result
+
+After deploy, when you paste `https://ai-with-aims.studio/share/projects/chief-of-staff-personal-life-operations-app` into LinkedIn Post Inspector, it will show:
+- The project's title
+- The project's subtitle
+- The project's thumbnail image
+- No generic site-level fallback
+
+No Cloudflare changes needed.
+
+## Technical detail
+
+**File**: `supabase/functions/og-metadata/index.ts`
+
+**Lines changed**: 26-50 (the `buildHTML` return template)
+
+The final `<head>` output will be:
+
+```text
+<head>
+<meta charset="UTF-8" />
+<title>${t}</title>
+${extra}
+<meta property="og:title" content="${t}" />
+<meta property="og:description" content="${d}" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="${img}" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="${u}" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@aimeefara" />
+<meta name="twitter:title" content="${t}" />
+<meta name="twitter:description" content="${d}" />
+<meta name="twitter:image" content="${img}" />
+<link rel="canonical" href="${u}" />
+</head>
 ```
-to:
-```typescript
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-```
 
-This matches the pattern used by `analyze-model-map` and other working functions in the project.
-
-### 2. Deploy and verify
-
-After saving, the function auto-deploys. We'll call it directly to confirm it returns HTML with the project's thumbnail image in the `og:image` tag.
-
-### 3. Test the full flow
-
-Verify that `https://ai-with-aims.studio/share/projects/chief-of-staff-personal-life-operations-app` (via your Cloudflare Worker) returns the HTML with:
-- `og:title` = "Chief of Staff -- Personal Life Operations App"
-- `og:image` = the new thumbnail URL from the database
-
-## Technical Details
-
-- **File**: `supabase/functions/og-meta/index.ts` -- line 1 only
-- **No other changes** -- the `htmlResponse` helper and all logic remain the same
-- The thumbnail URL is already set in the database: `https://axmjbykoyrwbfxeifbnp.supabase.co/storage/v1/object/public/blog-images/blog/dc4d4b29-7add-45e9-b5e6-09be126ae920.png`
+Four lines removed, zero lines added. The function auto-deploys after the edit.
