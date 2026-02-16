@@ -11,7 +11,7 @@ interface SEOHeadProps {
 }
 
 const SITE_NAME = "AI With Aimee";
-const DEFAULT_IMAGE = "https://ai-with-aimee.lovable.app/og-image.png";
+const DEFAULT_IMAGE = "https://ai-with-aims.studio/og-image.png";
 
 const SEOHead = ({
   title,
