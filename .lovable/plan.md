@@ -1,48 +1,40 @@
 
 
-# Fix: Rename og-metadata to get-og-metadata to bypass stuck deployment
+# Fix: Repurpose the working `chat-admin` function for OG metadata
 
-## The real problem
+## The Problem
 
-The code changes we made (removing generic tags) are correct and already in the file. But the function named `og-metadata` is stuck in a bad deployment state -- it reports "deployed successfully" but returns 404 every time. No logs are ever generated, meaning it never boots. Other functions (like `chat-admin`) work fine.
+Every new function we create deploys "successfully" but returns 404 with zero logs. The platform gateway isn't registering new function routes. However, **existing functions like `chat-admin` are reachable** (it returned a 410 response, proving the route works).
 
-This is a platform-level caching issue where the function name is essentially "poisoned."
+## The Solution
 
-## The fix
+Instead of creating a new function, we'll **repurpose the `chat-admin` function** to serve OG metadata. Since `chat-admin` is already disabled (returns "This endpoint is no longer active"), we can safely replace its code with the `serve-meta` logic.
 
-We will rename the function from `og-metadata` to `get-og-metadata`. This means:
+### Steps:
 
-1. Create a new folder `supabase/functions/get-og-metadata/` with the exact same `index.ts` code (no changes to logic)
-2. Delete the old `supabase/functions/og-metadata/` folder
-3. Update `supabase/config.toml` to reference `get-og-metadata` instead of `og-metadata`
-4. Deploy the new function
+1. **Replace `chat-admin/index.ts`** with the current `serve-meta/index.ts` code (the OG metadata logic)
+2. **Keep `serve-meta/` as-is** for now (no harm in leaving it)
+3. **Deploy `chat-admin`** -- since this route already works, the new code should be immediately reachable
+4. **Test** the function at the `chat-admin` URL
 
-The code stays identical -- all the generic-tag removals are already done. The `<head>` output will contain only project-specific OG tags, no competing metadata.
+### What you'll need to update in Cloudflare
 
-## What you need to do after
+Change the Worker URL to use `chat-admin` instead of `serve-meta`:
 
-Update your **Cloudflare Worker** to call the new function URL:
-
-```text
-OLD: https://axmjbykoyrwbfxeifbnp.supabase.co/functions/v1/og-metadata?path=...
-NEW: https://axmjbykoyrwbfxeifbnp.supabase.co/functions/v1/get-og-metadata?path=...
+```
+https://axmjbykoyrwbfxeifbnp.supabase.co/functions/v1/chat-admin?path=/projects/chief-of-staff-personal-life-operations-app
 ```
 
-Just change `og-metadata` to `get-og-metadata` in the Worker code. Everything else stays the same.
+Yes, the name is misleading (`chat-admin` serving metadata), but it will actually work because the route is already registered in the platform gateway.
 
-## Expected result after both changes
+## Why this should work
 
-When you paste `https://ai-with-aims.studio/share/projects/chief-of-staff-personal-life-operations-app` into LinkedIn Post Inspector, it will show:
-
-- **Title**: Chief of Staff -- Personal Life Operations App
-- **Description**: The project's subtitle
-- **Image**: The project's thumbnail (the one you just uploaded)
-- No generic site-level fallback
+- `chat-admin` returned a 410 response when we called it, proving the route is live and reachable
+- We're not creating a new route -- just updating the code behind an existing one
+- The deploy mechanism works for updating existing functions (we've seen this with other functions)
 
 ## Technical details
 
-- **New file**: `supabase/functions/get-og-metadata/index.ts` (copy of current code, unchanged)
-- **Deleted**: `supabase/functions/og-metadata/` directory
-- **Updated**: `supabase/config.toml` -- rename `[functions.og-metadata]` to `[functions.get-og-metadata]`
-- **Your action**: Update Cloudflare Worker URL from `og-metadata` to `get-og-metadata`
-
+- **Modified file**: `supabase/functions/chat-admin/index.ts` -- replaced with serve-meta logic
+- **No new files or routes needed**
+- **Your action**: Update Cloudflare Worker URL from `serve-meta` (or `og-metadata`) to `chat-admin`
