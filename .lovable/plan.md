@@ -1,57 +1,41 @@
 
 
-# README Generation for AI With Aimee
+# Fix: Deploy og-meta Edge Function Successfully
 
-## Overview
+## Problem
+The `og-meta` edge function file exists and the config is correct, but deploy reports success while the function returns 404. LinkedIn's Post Inspector gets a server error because the function URL isn't reachable.
 
-I'll replace the current boilerplate Lovable README with a comprehensive, professional README that documents the entire site -- its purpose, public pages, admin CMS, tech stack, and architecture.
+## Root Cause
+The `esm.sh` import (`https://esm.sh/@supabase/supabase-js@2`) can cause deploy issues in edge-runtime. Switching to the more stable `npm:` specifier should fix it.
 
-## README Content Outline
+## Plan
 
-### 1. Project Title and Description
-- "AI With Aimee" -- Aimee Farabee's personal AI portfolio and content platform
-- Positioning: Senior Director-level Healthcare Product Leader and AI Strategist
+### 1. Update the import in `supabase/functions/og-meta/index.ts`
 
-### 2. Live Site
-- Published URL: `https://ai-with-aimee.lovable.app`
+Change line 1 from:
+```typescript
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+```
+to:
+```typescript
+import { createClient } from "npm:@supabase/supabase-js@2";
+```
 
-### 3. Public Pages
-| Route | Description |
-|-------|-------------|
-| `/` | Homepage -- Hero, Proven Impact grid, Blog previews, Projects, Contact |
-| `/about` | Bio and background |
-| `/projects` | Project showcase listing |
-| `/projects/:slug` | Individual project detail |
-| `/blog` | Blog listing |
-| `/blog/:slug` | Individual blog post |
-| `/model-map` | AI model benchmarks visualization |
-| `/resume` | Resume / CV page |
-| `/why-aimee/:slug` | Role-specific pitch pages (unlisted, direct link only) |
+This is a single-line change. Everything else in the function stays the same.
 
-### 4. Admin CMS (`/admin`)
-- Password-protected (session-based gate)
-- Modules: Blog Editor, Project Editor, Prompt Library, Newsletter Composer, Asset Gallery, Headshot Editor, Models and Tools, Test Lab, Model Map, Why Aimee
+### 2. Deploy and verify
 
-### 5. Tech Stack
-- React 18 + TypeScript + Vite
-- Tailwind CSS + shadcn/ui
-- Lovable Cloud (database, storage, edge functions)
-- TanStack React Query
+After saving, the function will auto-deploy. We'll test by calling the function URL and confirming it returns valid HTML with OG tags.
 
-### 6. Backend Functions
-- `analyze-model-map` -- AI model analysis
-- `chat-admin` -- Admin chat assistant
-- `edit-headshot` -- AI headshot editing
-- `upload-blog-image` -- Blog image uploads
+### 3. Test with LinkedIn Post Inspector
 
-### 7. Design System
-- Dark theme with cyan/pink neon accents
-- Fonts: Rajdhani, Montserrat, Rainbow
-- Custom components: NeuralNetworkBackground, GlowCard, CursorGlow
+Once the function responds correctly, the URL format for sharing is:
+```
+https://axmjbykoyrwbfxeifbnp.supabase.co/functions/v1/og-meta?path=/projects/chief-of-staff-personal-life-operations-app
+```
 
 ## Technical Details
-
-- **File changed**: `README.md` -- full replacement of the boilerplate content
-- No other files affected
-- No dependencies or database changes needed
+- **File changed**: `supabase/functions/og-meta/index.ts` (line 1 only)
+- **Why**: `npm:` specifiers are more reliable than `esm.sh` URLs in Deno edge-runtime, avoiding stale redirects and integrity hash mismatches
+- No other files need changes
 
