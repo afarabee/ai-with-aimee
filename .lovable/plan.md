@@ -1,54 +1,40 @@
 
 
-# Fix: og-meta Edge Function Returns `text/plain` Instead of `text/html`
+# Fix: og-meta Edge Function Persistent 404
 
 ## Problem
-The `og-meta` function is deployed and returns correct HTML with OG tags, but the **Content-Type header is `text/plain`** instead of `text/html; charset=utf-8`. LinkedIn's Post Inspector cannot parse OG tags from a `text/plain` response, causing the "server error" message.
+The `og-meta` edge function deploys "successfully" but returns 404 when called. The thumbnail is now set in the database, so once the function works, LinkedIn will show the correct project-specific image.
 
 ## Root Cause
-The Supabase edge runtime's `Content-Security-Policy: sandbox` directive can interfere with content type negotiation. The current approach of spreading headers in the Response constructor may not be setting Content-Type reliably.
+The import `jsr:@supabase/supabase-js@2` is not supported by this project's edge runtime version. Every other working function in the project uses `https://esm.sh/@supabase/supabase-js@2` or `@2.75.0`. The `jsr:` specifier silently fails, making the function unreachable.
 
 ## Plan
 
-### 1. Update response construction in `supabase/functions/og-meta/index.ts`
+### 1. Fix the import in `supabase/functions/og-meta/index.ts`
 
-Use the `Response` constructor with explicit `Headers` object instead of plain object spread. Also set the content type using the standard `Response` init pattern to ensure it takes priority:
+Change line 1 from:
+```typescript
+import { createClient } from "jsr:@supabase/supabase-js@2";
+```
+to:
+```typescript
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+```
 
-- Create a helper function that builds a proper `Response` with `text/html` content type
-- Use `new Response(html, { status: 200, headers: new Headers({...}) })` pattern
-- Ensure every response path (blog, project, why-aimee, static, fallback, error) uses this helper
+This matches the pattern used by `analyze-model-map` and other working functions in the project.
 
 ### 2. Deploy and verify
 
-Redeploy the function and confirm the response `Content-Type` header is `text/html; charset=utf-8`.
+After saving, the function auto-deploys. We'll call it directly to confirm it returns HTML with the project's thumbnail image in the `og:image` tag.
 
-### 3. Re-test with LinkedIn Post Inspector
+### 3. Test the full flow
 
-Paste this URL into LinkedIn's Post Inspector:
-```
-https://axmjbykoyrwbfxeifbnp.supabase.co/functions/v1/og-meta?path=/projects/chief-of-staff-personal-life-operations-app
-```
+Verify that `https://ai-with-aims.studio/share/projects/chief-of-staff-personal-life-operations-app` (via your Cloudflare Worker) returns the HTML with:
+- `og:title` = "Chief of Staff -- Personal Life Operations App"
+- `og:image` = the new thumbnail URL from the database
 
 ## Technical Details
 
-**File**: `supabase/functions/og-meta/index.ts`
-
-**Change**: Add a `htmlResponse` helper and use it for all return paths:
-
-```typescript
-function htmlResponse(html: string): Response {
-  return new Response(html, {
-    status: 200,
-    headers: new Headers({
-      "Content-Type": "text/html; charset=utf-8",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-    }),
-  });
-}
-```
-
-Then replace every `new Response(buildHTML({...}), { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } })` with `htmlResponse(buildHTML({...}))`.
-
-This is a straightforward refactor -- no logic changes, just ensuring the Content-Type header is properly set via the `Headers` API.
-
+- **File**: `supabase/functions/og-meta/index.ts` -- line 1 only
+- **No other changes** -- the `htmlResponse` helper and all logic remain the same
+- The thumbnail URL is already set in the database: `https://axmjbykoyrwbfxeifbnp.supabase.co/storage/v1/object/public/blog-images/blog/dc4d4b29-7add-45e9-b5e6-09be126ae920.png`
