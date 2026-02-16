@@ -1,10 +1,15 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.75.0";
+import { createClient } from "jsr:@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
-};
+function htmlResponse(html: string): Response {
+  return new Response(html, {
+    status: 200,
+    headers: new Headers({
+      "Content-Type": "text/html; charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    }),
+  });
+}
 
 const SITE_URL = "https://ai-with-aims.studio";
 const SITE_NAME = "AI With Aimee";
@@ -82,7 +87,7 @@ function escapeHtml(str: string): string {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: new Headers({ "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type" }) });
   }
 
   try {
@@ -106,7 +111,7 @@ Deno.serve(async (req) => {
         .maybeSingle();
 
       if (post) {
-        return new Response(
+        return htmlResponse(
           buildHTML({
             title: post.title,
             description: post.excerpt,
@@ -115,8 +120,7 @@ Deno.serve(async (req) => {
             type: "article",
             author: post.author || "Aimee Farabee",
             publishedTime: post.date_published,
-          }),
-          { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } }
+          })
         );
       }
     }
@@ -132,14 +136,13 @@ Deno.serve(async (req) => {
         .maybeSingle();
 
       if (project) {
-        return new Response(
+        return htmlResponse(
           buildHTML({
             title: project.project_title,
             description: project.subtitle,
             image: project.thumbnail || DEFAULT_IMAGE,
             url: `${SITE_URL}/projects/${project.slug}`,
-          }),
-          { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } }
+          })
         );
       }
     }
@@ -155,14 +158,13 @@ Deno.serve(async (req) => {
         .maybeSingle();
 
       if (page) {
-        return new Response(
+        return htmlResponse(
           buildHTML({
             title: `Why Aimee for ${page.company}`,
             description: page.hero_subtext || `${page.role} at ${page.company}`,
             image: DEFAULT_IMAGE,
             url: `${SITE_URL}/why-aimee/${page.slug}`,
-          }),
-          { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } }
+          })
         );
       }
     }
@@ -201,37 +203,34 @@ Deno.serve(async (req) => {
 
     const staticPage = staticPages[path];
     if (staticPage) {
-      return new Response(
+      return htmlResponse(
         buildHTML({
           title: staticPage.title,
           description: staticPage.description,
           image: DEFAULT_IMAGE,
           url: `${SITE_URL}${path === "/" ? "" : path}`,
-        }),
-        { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } }
+        })
       );
     }
 
     // Fallback
-    return new Response(
+    return htmlResponse(
       buildHTML({
         title: DEFAULT_TITLE,
         description: DEFAULT_DESCRIPTION,
         image: DEFAULT_IMAGE,
         url: SITE_URL,
-      }),
-      { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } }
+      })
     );
   } catch (error) {
     console.error("og-meta error:", error);
-    return new Response(
+    return htmlResponse(
       buildHTML({
         title: DEFAULT_TITLE,
         description: DEFAULT_DESCRIPTION,
         image: DEFAULT_IMAGE,
         url: SITE_URL,
-      }),
-      { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } }
+      })
     );
   }
 });
