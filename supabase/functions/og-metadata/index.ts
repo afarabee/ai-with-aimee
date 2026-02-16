@@ -27,8 +27,7 @@ function buildHTML(title: string, description: string, image: string, url: strin
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>${t} | ${SITE_NAME}</title>
-<meta name="description" content="${d}" />
+<title>${t}</title>
 ${extra}
 <meta property="og:title" content="${t}" />
 <meta property="og:description" content="${d}" />
@@ -37,16 +36,14 @@ ${extra}
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:url" content="${u}" />
-<meta property="og:site_name" content="${SITE_NAME}" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@aimeefara" />
 <meta name="twitter:title" content="${t}" />
 <meta name="twitter:description" content="${d}" />
 <meta name="twitter:image" content="${img}" />
 <link rel="canonical" href="${u}" />
-<meta http-equiv="refresh" content="0;url=${u}" />
 </head>
-<body><p>Redirecting to <a href="${u}">${t}</a>...</p></body>
+<body><p>${t}</p></body>
 </html>`;
 }
 
