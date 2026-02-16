@@ -1,10 +1,11 @@
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
 const SITE_URL = "https://ai-with-aims.studio";
-const SITE_NAME = "AI With Aimee";
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.png`;
 const DEFAULT_TITLE = "Aimee Farabee - Product Leader & AI Strategist";
 const DEFAULT_DESCRIPTION = "Enterprise AI enablement leader who builds, ships, and scales AI products. I train teams, design systems, and code my own solutions. Hands-on always.";
@@ -75,7 +76,7 @@ async function queryTable(table: string, select: string, filters: Record<string,
   return rows.length > 0 ? rows[0] : null;
 }
 
-Deno.serve(async (req: Request) => {
+serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -141,7 +142,7 @@ Deno.serve(async (req: Request) => {
 
     return respond(buildHTML(DEFAULT_TITLE, DEFAULT_DESCRIPTION, DEFAULT_IMAGE, SITE_URL));
   } catch (error) {
-    console.error("og-metadata error:", error);
+    console.error("get-og-metadata error:", error);
     return respond(buildHTML(DEFAULT_TITLE, DEFAULT_DESCRIPTION, DEFAULT_IMAGE, SITE_URL));
   }
 });
