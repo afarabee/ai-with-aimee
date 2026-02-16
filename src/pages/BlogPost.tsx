@@ -80,7 +80,7 @@ const BlogPost = () => {
         title={post.title}
         description={post.excerpt}
         image={post.banner_image || undefined}
-        url={`https://ai-with-aimee.lovable.app/blog/${post.slug}`}
+        url={`https://ai-with-aims.studio/blog/${post.slug}`}
         type="article"
         author={post.author || "Aimee Farabee"}
         publishedTime={post.date_published}
