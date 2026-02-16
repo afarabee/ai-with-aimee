@@ -1,41 +1,54 @@
 
 
-# Fix: Deploy og-meta Edge Function Successfully
+# Fix: og-meta Edge Function Returns `text/plain` Instead of `text/html`
 
 ## Problem
-The `og-meta` edge function file exists and the config is correct, but deploy reports success while the function returns 404. LinkedIn's Post Inspector gets a server error because the function URL isn't reachable.
+The `og-meta` function is deployed and returns correct HTML with OG tags, but the **Content-Type header is `text/plain`** instead of `text/html; charset=utf-8`. LinkedIn's Post Inspector cannot parse OG tags from a `text/plain` response, causing the "server error" message.
 
 ## Root Cause
-The `esm.sh` import (`https://esm.sh/@supabase/supabase-js@2`) can cause deploy issues in edge-runtime. Switching to the more stable `npm:` specifier should fix it.
+The Supabase edge runtime's `Content-Security-Policy: sandbox` directive can interfere with content type negotiation. The current approach of spreading headers in the Response constructor may not be setting Content-Type reliably.
 
 ## Plan
 
-### 1. Update the import in `supabase/functions/og-meta/index.ts`
+### 1. Update response construction in `supabase/functions/og-meta/index.ts`
 
-Change line 1 from:
-```typescript
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-```
-to:
-```typescript
-import { createClient } from "npm:@supabase/supabase-js@2";
-```
+Use the `Response` constructor with explicit `Headers` object instead of plain object spread. Also set the content type using the standard `Response` init pattern to ensure it takes priority:
 
-This is a single-line change. Everything else in the function stays the same.
+- Create a helper function that builds a proper `Response` with `text/html` content type
+- Use `new Response(html, { status: 200, headers: new Headers({...}) })` pattern
+- Ensure every response path (blog, project, why-aimee, static, fallback, error) uses this helper
 
 ### 2. Deploy and verify
 
-After saving, the function will auto-deploy. We'll test by calling the function URL and confirming it returns valid HTML with OG tags.
+Redeploy the function and confirm the response `Content-Type` header is `text/html; charset=utf-8`.
 
-### 3. Test with LinkedIn Post Inspector
+### 3. Re-test with LinkedIn Post Inspector
 
-Once the function responds correctly, the URL format for sharing is:
+Paste this URL into LinkedIn's Post Inspector:
 ```
 https://axmjbykoyrwbfxeifbnp.supabase.co/functions/v1/og-meta?path=/projects/chief-of-staff-personal-life-operations-app
 ```
 
 ## Technical Details
-- **File changed**: `supabase/functions/og-meta/index.ts` (line 1 only)
-- **Why**: `npm:` specifiers are more reliable than `esm.sh` URLs in Deno edge-runtime, avoiding stale redirects and integrity hash mismatches
-- No other files need changes
+
+**File**: `supabase/functions/og-meta/index.ts`
+
+**Change**: Add a `htmlResponse` helper and use it for all return paths:
+
+```typescript
+function htmlResponse(html: string): Response {
+  return new Response(html, {
+    status: 200,
+    headers: new Headers({
+      "Content-Type": "text/html; charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    }),
+  });
+}
+```
+
+Then replace every `new Response(buildHTML({...}), { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } })` with `htmlResponse(buildHTML({...}))`.
+
+This is a straightforward refactor -- no logic changes, just ensuring the Content-Type header is properly set via the `Headers` API.
 
