@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
 import { Calendar, ArrowLeft } from "lucide-react";
 import { useEffect } from "react";
 import AboutBackground from "@/components/AboutBackground";
@@ -75,6 +76,15 @@ const BlogPost = () => {
       </div>;
   }
   return <div className="min-h-screen">
+      <SEOHead
+        title={post.title}
+        description={post.excerpt}
+        image={post.banner_image || undefined}
+        url={`https://ai-with-aimee.lovable.app/blog/${post.slug}`}
+        type="article"
+        author={post.author || "Aimee Farabee"}
+        publishedTime={post.date_published}
+      />
       <Navigation />
 
       {/* Hero Banner with Animated Background */}
