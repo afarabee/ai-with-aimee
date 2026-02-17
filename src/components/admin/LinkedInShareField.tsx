@@ -10,7 +10,7 @@ interface LinkedInShareFieldProps {
 
 export default function LinkedInShareField({ slug, type }: LinkedInShareFieldProps) {
   const [copied, setCopied] = useState(false);
-  const shareUrl = `https://ai-with-aihhms.studio/${type}/${slug}`;
+  const shareUrl = `https://ai-with-aims.studio/${type}/${slug}`;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(shareUrl);
