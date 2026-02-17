@@ -94,6 +94,7 @@ export default function BlogsWriter() {
   });
 
   const formData = watch();
+  const watchedSlug = watch('slug');
 
   useEffect(() => {
     if (blogId) {
@@ -521,7 +522,7 @@ export default function BlogsWriter() {
               </div>
             </div>
             <div><Label htmlFor="author">Author</Label><Input id="author" {...register('author')} className="mt-1" /></div>
-            <div><Label htmlFor="slug">Slug *</Label><Input id="slug" {...register('slug')} className="mt-1" />{errors.slug && <p className="text-sm text-destructive mt-1">{errors.slug.message}</p>}{blogId && formData.slug && (<div className="mt-2"><Label>LinkedIn Share URL</Label><LinkedInShareField slug={formData.slug} type="blog" /></div>)}</div>
+            <div><Label htmlFor="slug">Slug *</Label><Input id="slug" {...register('slug')} className="mt-1" />{errors.slug && <p className="text-sm text-destructive mt-1">{errors.slug.message}</p>}{blogId && watchedSlug && (<div className="mt-2"><Label>LinkedIn Share URL</Label><LinkedInShareField slug={watchedSlug} type="blog" /></div>)}</div>
             <div><Label htmlFor="tags">Tags (comma-separated)</Label><Input id="tags" {...register('tags')} className="mt-1" placeholder="AI, Technology, Tutorial" /></div>
             <div>
               <Label htmlFor="banner_image">Banner Image URL</Label>
