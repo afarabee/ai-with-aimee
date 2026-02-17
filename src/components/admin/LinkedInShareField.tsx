@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import { Copy, Check } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { Copy, Check } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface LinkedInShareFieldProps {
   slug: string;
-  type: 'blog' | 'projects';
+  type: "blog" | "projects";
 }
 
 export default function LinkedInShareField({ slug, type }: LinkedInShareFieldProps) {
   const [copied, setCopied] = useState(false);
-  const shareUrl = `https://ai-with-aims.studio/${type}/${slug}`;
+  const shareUrl = `https://ai-with-aihhms.studio/${type}/${slug}`;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(shareUrl);
