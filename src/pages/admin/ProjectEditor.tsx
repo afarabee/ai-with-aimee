@@ -7,11 +7,12 @@ import { z } from 'zod';
 import MDEditor, { commands, ICommand } from '@uiw/react-md-editor';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw, Maximize2, Minimize2, RemoveFormatting, Minus, Type } from 'lucide-react';
+import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw, Maximize2, Minimize2, RemoveFormatting, Minus, Type, Copy, Check } from 'lucide-react';
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import ProjectPreview from '@/components/admin/ProjectPreview';
 import ImageUploadModal from '@/components/admin/ImageUploadModal';
 import AssetPicker from '@/components/admin/AssetPicker';
+import LinkedInShareField from '@/components/admin/LinkedInShareField';
 import { TableBuilder } from '@/components/admin/TableBuilder';
 import { EditableTableWrapper } from '@/components/admin/EditableTableWrapper';
 import { Button } from '@/components/ui/button';
@@ -519,6 +520,13 @@ export default function ProjectEditor() {
                   {formData.status === 'Archived' && <Badge className="bg-amber-500/20 text-amber-500 border-amber-500">Archived - Hidden but preserved</Badge>}
                 </div>
               </div>
+              {/* LinkedIn Share URL */}
+              {projectId && formData.project_title && (
+                <div>
+                  <Label>LinkedIn Share URL</Label>
+                  <LinkedInShareField slug={slugify(formData.project_title)} type="projects" />
+                </div>
+              )}
               <div className="flex gap-2 flex-wrap">
                 <Button type="button" onClick={saveDraft}><Save className="w-4 h-4 mr-2" />Save Draft</Button>
                 {formData.status === 'Archived' ? (

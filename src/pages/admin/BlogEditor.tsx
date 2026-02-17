@@ -6,12 +6,13 @@ import { z } from 'zod';
 import MDEditor, { commands, ICommand } from '@uiw/react-md-editor';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ArrowLeft, Eye, EyeOff, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Palette, Smile, Underline, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Palette, Smile, Underline, RotateCcw, Copy, Check } from 'lucide-react';
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import BlogPreview from '@/components/admin/BlogPreview';
 import ImageUploadModal from '@/components/admin/ImageUploadModal';
 import ImageUploadHelper from '@/components/admin/ImageUploadHelper';
 import AssetPicker from '@/components/admin/AssetPicker';
+import LinkedInShareField from '@/components/admin/LinkedInShareField';
 import { TableBuilder } from '@/components/admin/TableBuilder';
 import { EditableTableWrapper } from '@/components/admin/EditableTableWrapper';
 import { Button } from '@/components/ui/button';
@@ -773,6 +774,14 @@ export default function BlogEditor() {
                       )}
                     </div>
                   </div>
+
+                  {/* LinkedIn Share URL */}
+                  {blogId && formData.slug && (
+                    <div>
+                      <Label>LinkedIn Share URL</Label>
+                      <LinkedInShareField slug={formData.slug} type="blog" />
+                    </div>
+                  )}
 
                   <div>
                     <Label htmlFor="excerpt">Excerpt *</Label>
