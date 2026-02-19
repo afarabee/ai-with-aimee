@@ -223,6 +223,7 @@ export default function WhyAimee() {
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           -webkit-mask-composite: xor;
           mask-composite: exclude;
+          pointer-events: none;
         }
         .star-field {
           background-image: radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.3) 0%, transparent 100%),
