@@ -81,7 +81,7 @@ const DemoBanner = () => {
             </div>
             {/* Iframe */}
             <iframe
-              src="https://intelligent-ai-story-builder.lovable.app/"
+              src="https://intelligent-story-builder.lovable.app/"
               className="w-full border-0"
               style={{ height: "calc(90vh - 44px)" }}
               title="Intelligent Story Builder Demo"
