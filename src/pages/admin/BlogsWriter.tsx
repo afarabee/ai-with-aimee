@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { slugify } from '@/utils/slugify';
 import { applySpanStyle, applyDivStyle } from '@/utils/editorStyleUtils';
 import { handleListKeyDown } from '@/utils/editorListUtils';
-import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw, Maximize2, Minimize2, RemoveFormatting, Minus, Type } from 'lucide-react';
+import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw, Maximize2, Minimize2, RemoveFormatting, Minus, Type, FileUp } from 'lucide-react';
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import PasswordGate from '@/components/admin/PasswordGate';
 import AboutBackground from '@/components/AboutBackground';
