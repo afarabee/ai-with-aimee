@@ -1,31 +1,40 @@
 
 
-## Plan: Add "Import from JSON" to ProjectEditor
+# Fix: Repurpose the working `chat-admin` function for OG metadata
 
-**Single file edit: `src/pages/admin/ProjectEditor.tsx`**
+## The Problem
 
-Replicate the exact BlogsWriter JSON import pattern:
+Every new function we create deploys "successfully" but returns 404 with zero logs. The platform gateway isn't registering new function routes. However, **existing functions like `chat-admin` are reachable** (it returned a 410 response, proving the route works).
 
-1. **New imports** — Add `FileUp` from lucide-react, `Dialog`/`DialogContent`/`DialogHeader`/`DialogTitle`/`DialogFooter` from UI components, `Textarea` from UI components.
+## The Solution
 
-2. **New state variables** — `jsonImportModalOpen`, `jsonText`, `jsonError`, `confirmOverwriteOpen` (all alongside existing state around lines 76-89).
+Instead of creating a new function, we'll **repurpose the `chat-admin` function** to serve OG metadata. Since `chat-admin` is already disabled (returns "This endpoint is no longer active"), we can safely replace its code with the `serve-meta` logic.
 
-3. **`applyJsonToForm` function** — Maps JSON fields to form via `setValue()`:
-   - `project_title`, `subtitle`, `excerpt`, `github_link`, `project_page_link`, `thumbnail`, `status` → direct string setValue
-   - `technologies` → handle array (join with `", "`) or string
-   - `display_order` → handle as number
-   - `date_published` → convert ISO to `YYYY-MM-DD` format
-   - `slug` → setValue (though the form auto-generates slug from title on save, this allows override)
-   - `body` → set via `setBody()` (managed outside react-hook-form)
-   - Skip null/undefined values; skip `id`, `created_at`, `updated_at`
+### Steps:
 
-4. **`handleJsonImport` function** — Parse JSON, show inline error if invalid, check `isDirty` for overwrite confirmation, then call `applyJsonToForm`.
+1. **Replace `chat-admin/index.ts`** with the current `serve-meta/index.ts` code (the OG metadata logic)
+2. **Keep `serve-meta/` as-is** for now (no harm in leaving it)
+3. **Deploy `chat-admin`** -- since this route already works, the new code should be immediately reachable
+4. **Test** the function at the `chat-admin` URL
 
-5. **Import button in toolbar** (line 491) — Add `FileUp` "Import JSON" button next to existing Save Draft button.
+### What you'll need to update in Cloudflare
 
-6. **Import Dialog** — Textarea with helper text listing all project fields, Cancel/Import buttons, inline error display.
+Change the Worker URL to use `chat-admin` instead of `serve-meta`:
 
-7. **Overwrite AlertDialog** — Confirmation before replacing populated form values.
+```
+https://axmjbykoyrwbfxeifbnp.supabase.co/functions/v1/chat-admin?path=/projects/chief-of-staff-personal-life-operations-app
+```
 
-8. **Success toast** — "Project fields populated from JSON. Review and save when ready."
+Yes, the name is misleading (`chat-admin` serving metadata), but it will actually work because the route is already registered in the platform gateway.
 
+## Why this should work
+
+- `chat-admin` returned a 410 response when we called it, proving the route is live and reachable
+- We're not creating a new route -- just updating the code behind an existing one
+- The deploy mechanism works for updating existing functions (we've seen this with other functions)
+
+## Technical details
+
+- **Modified file**: `supabase/functions/chat-admin/index.ts` -- replaced with serve-meta logic
+- **No new files or routes needed**
+- **Your action**: Update Cloudflare Worker URL from `serve-meta` (or `og-metadata`) to `chat-admin`
