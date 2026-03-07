@@ -617,6 +617,43 @@ export default function BlogsWriter() {
       <AlertDialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Archive Blog?</AlertDialogTitle><AlertDialogDescription>This will change the status to Archived.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={archiveBlog}>Archive</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
       <AlertDialog open={clearDialogOpen} onOpenChange={setClearDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Clear form?</AlertDialogTitle><AlertDialogDescription>All unsaved changes will be lost.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={handleClearForm}>Clear</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
       <AlertDialog open={showNavigateAwayDialog} onOpenChange={setShowNavigateAwayDialog}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Unsaved Changes</AlertDialogTitle><AlertDialogDescription>You have unsaved changes. What would you like to do?</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter className="flex-col sm:flex-row gap-2"><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => navigate('/admin/blogs')} className="bg-destructive hover:bg-destructive/90">Exit Without Saving</AlertDialogAction><AlertDialogAction onClick={async () => { await saveDraft(); navigate('/admin/blogs'); }}>Save Changes</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
+      <Dialog open={jsonImportModalOpen} onOpenChange={setJsonImportModalOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Import from JSON</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <Label>Paste your blog JSON here</Label>
+            <Textarea
+              value={jsonText}
+              onChange={(e) => { setJsonText(e.target.value); setJsonError(''); }}
+              rows={12}
+              placeholder='{ "title": "My Blog", "body": "..." }'
+              className="font-mono text-sm"
+            />
+            <p className="text-xs text-muted-foreground">
+              Accepted fields: slug, title, subtitle, author, category, tags, date_published, status, excerpt, banner_image, body
+            </p>
+            {jsonError && <p className="text-sm text-destructive font-medium">{jsonError}</p>}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setJsonImportModalOpen(false)}>Cancel</Button>
+            <Button onClick={handleJsonImport}>Import</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <AlertDialog open={confirmOverwriteOpen} onOpenChange={setConfirmOverwriteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Replace form values?</AlertDialogTitle>
+            <AlertDialogDescription>This will replace the current form values with the imported JSON data. Continue?</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setPendingJsonData(null)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { if (pendingJsonData) applyJsonToForm(pendingJsonData); setConfirmOverwriteOpen(false); }}>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       </div>
     </PasswordGate>
   );
