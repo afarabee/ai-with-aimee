@@ -1,32 +1,40 @@
 
 
-## Plan: Add "Import from JSON" Button to BlogsWriter
+# Fix: Repurpose the working `chat-admin` function for OG metadata
 
-### What changes
+## The Problem
 
-**Single file edit: `src/pages/admin/BlogsWriter.tsx`**
+Every new function we create deploys "successfully" but returns 404 with zero logs. The platform gateway isn't registering new function routes. However, **existing functions like `chat-admin` are reachable** (it returned a 410 response, proving the route works).
 
-1. **New state variables** — `jsonImportModalOpen` (boolean), `jsonText` (string), `jsonError` (string), `confirmOverwriteOpen` (boolean)
+## The Solution
 
-2. **Import button** — Add an "Import from JSON" button with `FileUp` icon in the top toolbar (line 479), next to the existing Save Draft / view mode buttons. Also visible in both new and edit modes.
+Instead of creating a new function, we'll **repurpose the `chat-admin` function** to serve OG metadata. Since `chat-admin` is already disabled (returns "This endpoint is no longer active"), we can safely replace its code with the `serve-meta` logic.
 
-3. **Import modal** — A `Dialog` with:
-   - Large `Textarea` labeled "Paste your blog JSON here"
-   - Helper text listing accepted fields
-   - Error message display (inline, not toast) for invalid JSON
-   - "Cancel" and "Import" buttons
+### Steps:
 
-4. **Import logic**:
-   - Parse JSON; if invalid, show inline error, keep modal open
-   - If form `isDirty` (has existing content), show confirmation dialog: "This will replace the current form values. Continue?"
-   - On confirm, map fields (`slug`, `title`, `subtitle`, `author`, `category`, `tags`, `date_published`, `status`, `excerpt`, `banner_image`, `body`) to form via `setValue()` — only for non-null/non-undefined values
-   - Handle `tags` as array (join with ", ") or string
-   - Handle `date_published` by converting ISO to date string
-   - Set `body` state separately (since it's managed outside react-hook-form)
-   - Close modal, show success toast
-   - Skip `id`, `created_at`, `updated_at`, `deleted_at`
+1. **Replace `chat-admin/index.ts`** with the current `serve-meta/index.ts` code (the OG metadata logic)
+2. **Keep `serve-meta/` as-is** for now (no harm in leaving it)
+3. **Deploy `chat-admin`** -- since this route already works, the new code should be immediately reachable
+4. **Test** the function at the `chat-admin` URL
 
-5. **Overwrite confirmation** — Reuse the existing `AlertDialog` pattern for a confirmation before overwriting populated fields.
+### What you'll need to update in Cloudflare
 
-### No other files need changes. The existing form, save logic, and database schema remain untouched.
+Change the Worker URL to use `chat-admin` instead of `serve-meta`:
 
+```
+https://axmjbykoyrwbfxeifbnp.supabase.co/functions/v1/chat-admin?path=/projects/chief-of-staff-personal-life-operations-app
+```
+
+Yes, the name is misleading (`chat-admin` serving metadata), but it will actually work because the route is already registered in the platform gateway.
+
+## Why this should work
+
+- `chat-admin` returned a 410 response when we called it, proving the route is live and reachable
+- We're not creating a new route -- just updating the code behind an existing one
+- The deploy mechanism works for updating existing functions (we've seen this with other functions)
+
+## Technical details
+
+- **Modified file**: `supabase/functions/chat-admin/index.ts` -- replaced with serve-meta logic
+- **No new files or routes needed**
+- **Your action**: Update Cloudflare Worker URL from `serve-meta` (or `og-metadata`) to `chat-admin`

@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { slugify } from '@/utils/slugify';
 import { applySpanStyle, applyDivStyle } from '@/utils/editorStyleUtils';
 import { handleListKeyDown } from '@/utils/editorListUtils';
-import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw, Maximize2, Minimize2, RemoveFormatting, Minus, Type } from 'lucide-react';
+import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw, Maximize2, Minimize2, RemoveFormatting, Minus, Type, FileUp } from 'lucide-react';
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import PasswordGate from '@/components/admin/PasswordGate';
 import AboutBackground from '@/components/AboutBackground';
@@ -26,6 +26,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 
 const blogSchema = z.object({
   title: z.string().min(1, 'Title required').max(200),
@@ -87,6 +88,11 @@ export default function BlogsWriter() {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [cursorImageModalOpen, setCursorImageModalOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState(0);
+  const [jsonImportModalOpen, setJsonImportModalOpen] = useState(false);
+  const [jsonText, setJsonText] = useState('');
+  const [jsonError, setJsonError] = useState('');
+  const [confirmOverwriteOpen, setConfirmOverwriteOpen] = useState(false);
+  const [pendingJsonData, setPendingJsonData] = useState<Record<string, any> | null>(null);
 
   const { register, handleSubmit, setValue, watch, reset, getValues, formState: { errors } } = useForm<BlogFormData>({
     resolver: zodResolver(blogSchema),
@@ -236,6 +242,51 @@ export default function BlogsWriter() {
     setInitialBody('');
     navigate('/admin/blogs/new', { replace: true }); 
     setClearDialogOpen(false); 
+  };
+
+  const applyJsonToForm = (data: Record<string, any>) => {
+    const fieldMap: (keyof BlogFormData)[] = ['slug', 'title', 'subtitle', 'author', 'tags', 'date_published', 'status', 'excerpt', 'banner_image', 'body'];
+    fieldMap.forEach((field) => {
+      const val = data[field];
+      if (val === null || val === undefined) return;
+      if (field === 'tags' && Array.isArray(val)) {
+        setValue('tags', val.join(', '));
+      } else if (field === 'date_published') {
+        try { setValue('date_published', new Date(val).toISOString().split('T')[0]); } catch { setValue('date_published', val); }
+      } else if (field === 'body') {
+        setBody(val);
+        setValue('body', val);
+      } else {
+        setValue(field, val);
+      }
+    });
+    // Handle category → not in schema but in DB; set via tags or ignore if no form field
+    setJsonImportModalOpen(false);
+    setJsonText('');
+    setJsonError('');
+    setPendingJsonData(null);
+    toast.success('Blog fields populated from JSON. Review and save when ready.');
+  };
+
+  const handleJsonImport = () => {
+    setJsonError('');
+    let parsed: Record<string, any>;
+    try {
+      parsed = JSON.parse(jsonText);
+    } catch {
+      setJsonError('Invalid JSON. Please check your formatting and try again.');
+      return;
+    }
+    if (typeof parsed !== 'object' || Array.isArray(parsed)) {
+      setJsonError('Invalid JSON. Expected an object, not an array.');
+      return;
+    }
+    if (isDirty) {
+      setPendingJsonData(parsed);
+      setConfirmOverwriteOpen(true);
+    } else {
+      applyJsonToForm(parsed);
+    }
   };
 
   const emojiCommand: ICommand = { 
@@ -476,7 +527,7 @@ export default function BlogsWriter() {
       <AboutBackground />
       <div className="min-h-screen bg-background w-full">
       {!isFullScreen && (
-        <div className="border-b border-border bg-card"><div className="max-w-[1800px] mx-auto px-6 py-4"><div className="flex items-center justify-between"><div className="flex items-center gap-4"><Button variant="ghost" size="sm" onClick={handleBackClick}><ArrowLeft className="w-4 h-4 mr-2" />Back</Button><h1 className="text-2xl font-bold">{blogId ? 'Edit Blog' : 'New Blog'}</h1></div><div className="flex gap-2"><Button variant={viewMode === 'edit' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('edit')}>Edit</Button><Button variant="outline" size="sm" onClick={saveDraft}><Save className="w-4 h-4 mr-2" />Save Draft</Button><Button variant={viewMode === 'split' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('split')}>Split</Button><Button variant={viewMode === 'preview' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('preview')}><Eye className="w-4 h-4 mr-2" />Preview</Button><Button variant="outline" size="sm" onClick={toggleFullScreen} title="Focus mode"><Maximize2 className="w-4 h-4" /></Button></div></div></div></div>
+        <div className="border-b border-border bg-card"><div className="max-w-[1800px] mx-auto px-6 py-4"><div className="flex items-center justify-between"><div className="flex items-center gap-4"><Button variant="ghost" size="sm" onClick={handleBackClick}><ArrowLeft className="w-4 h-4 mr-2" />Back</Button><h1 className="text-2xl font-bold">{blogId ? 'Edit Blog' : 'New Blog'}</h1></div><div className="flex gap-2"><Button variant="outline" size="sm" onClick={() => { setJsonText(''); setJsonError(''); setJsonImportModalOpen(true); }}><FileUp className="w-4 h-4 mr-2" />Import JSON</Button><Button variant={viewMode === 'edit' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('edit')}>Edit</Button><Button variant="outline" size="sm" onClick={saveDraft}><Save className="w-4 h-4 mr-2" />Save Draft</Button><Button variant={viewMode === 'split' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('split')}>Split</Button><Button variant={viewMode === 'preview' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('preview')}><Eye className="w-4 h-4 mr-2" />Preview</Button><Button variant="outline" size="sm" onClick={toggleFullScreen} title="Focus mode"><Maximize2 className="w-4 h-4" /></Button></div></div></div></div>
       )}
       {isFullScreen && (
         <div className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-card/95 backdrop-blur-sm">
@@ -566,6 +617,43 @@ export default function BlogsWriter() {
       <AlertDialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Archive Blog?</AlertDialogTitle><AlertDialogDescription>This will change the status to Archived.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={archiveBlog}>Archive</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
       <AlertDialog open={clearDialogOpen} onOpenChange={setClearDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Clear form?</AlertDialogTitle><AlertDialogDescription>All unsaved changes will be lost.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={handleClearForm}>Clear</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
       <AlertDialog open={showNavigateAwayDialog} onOpenChange={setShowNavigateAwayDialog}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Unsaved Changes</AlertDialogTitle><AlertDialogDescription>You have unsaved changes. What would you like to do?</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter className="flex-col sm:flex-row gap-2"><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => navigate('/admin/blogs')} className="bg-destructive hover:bg-destructive/90">Exit Without Saving</AlertDialogAction><AlertDialogAction onClick={async () => { await saveDraft(); navigate('/admin/blogs'); }}>Save Changes</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
+      <Dialog open={jsonImportModalOpen} onOpenChange={setJsonImportModalOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Import from JSON</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <Label>Paste your blog JSON here</Label>
+            <Textarea
+              value={jsonText}
+              onChange={(e) => { setJsonText(e.target.value); setJsonError(''); }}
+              rows={12}
+              placeholder='{ "title": "My Blog", "body": "..." }'
+              className="font-mono text-sm"
+            />
+            <p className="text-xs text-muted-foreground">
+              Accepted fields: slug, title, subtitle, author, category, tags, date_published, status, excerpt, banner_image, body
+            </p>
+            {jsonError && <p className="text-sm text-destructive font-medium">{jsonError}</p>}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setJsonImportModalOpen(false)}>Cancel</Button>
+            <Button onClick={handleJsonImport}>Import</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <AlertDialog open={confirmOverwriteOpen} onOpenChange={setConfirmOverwriteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Replace form values?</AlertDialogTitle>
+            <AlertDialogDescription>This will replace the current form values with the imported JSON data. Continue?</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setPendingJsonData(null)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { if (pendingJsonData) applyJsonToForm(pendingJsonData); setConfirmOverwriteOpen(false); }}>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       </div>
     </PasswordGate>
   );
