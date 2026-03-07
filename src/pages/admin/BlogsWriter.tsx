@@ -244,6 +244,51 @@ export default function BlogsWriter() {
     setClearDialogOpen(false); 
   };
 
+  const applyJsonToForm = (data: Record<string, any>) => {
+    const fieldMap: (keyof BlogFormData)[] = ['slug', 'title', 'subtitle', 'author', 'category', 'tags', 'date_published', 'status', 'excerpt', 'banner_image', 'body'];
+    fieldMap.forEach((field) => {
+      const val = data[field];
+      if (val === null || val === undefined) return;
+      if (field === 'tags' && Array.isArray(val)) {
+        setValue('tags', val.join(', '));
+      } else if (field === 'date_published') {
+        try { setValue('date_published', new Date(val).toISOString().split('T')[0]); } catch { setValue('date_published', val); }
+      } else if (field === 'body') {
+        setBody(val);
+        setValue('body', val);
+      } else {
+        setValue(field, val);
+      }
+    });
+    // Handle category → not in schema but in DB; set via tags or ignore if no form field
+    setJsonImportModalOpen(false);
+    setJsonText('');
+    setJsonError('');
+    setPendingJsonData(null);
+    toast.success('Blog fields populated from JSON. Review and save when ready.');
+  };
+
+  const handleJsonImport = () => {
+    setJsonError('');
+    let parsed: Record<string, any>;
+    try {
+      parsed = JSON.parse(jsonText);
+    } catch {
+      setJsonError('Invalid JSON. Please check your formatting and try again.');
+      return;
+    }
+    if (typeof parsed !== 'object' || Array.isArray(parsed)) {
+      setJsonError('Invalid JSON. Expected an object, not an array.');
+      return;
+    }
+    if (isDirty) {
+      setPendingJsonData(parsed);
+      setConfirmOverwriteOpen(true);
+    } else {
+      applyJsonToForm(parsed);
+    }
+  };
+
   const emojiCommand: ICommand = { 
     name: 'emoji', 
     keyCommand: 'emoji', 
