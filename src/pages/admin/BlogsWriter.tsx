@@ -245,7 +245,7 @@ export default function BlogsWriter() {
   };
 
   const applyJsonToForm = (data: Record<string, any>) => {
-    const fieldMap: (keyof BlogFormData)[] = ['slug', 'title', 'subtitle', 'author', 'category', 'tags', 'date_published', 'status', 'excerpt', 'banner_image', 'body'];
+    const fieldMap: (keyof BlogFormData)[] = ['slug', 'title', 'subtitle', 'author', 'tags', 'date_published', 'status', 'excerpt', 'banner_image', 'body'];
     fieldMap.forEach((field) => {
       const val = data[field];
       if (val === null || val === undefined) return;
