@@ -88,6 +88,11 @@ export default function BlogsWriter() {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [cursorImageModalOpen, setCursorImageModalOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState(0);
+  const [jsonImportModalOpen, setJsonImportModalOpen] = useState(false);
+  const [jsonText, setJsonText] = useState('');
+  const [jsonError, setJsonError] = useState('');
+  const [confirmOverwriteOpen, setConfirmOverwriteOpen] = useState(false);
+  const [pendingJsonData, setPendingJsonData] = useState<Record<string, any> | null>(null);
 
   const { register, handleSubmit, setValue, watch, reset, getValues, formState: { errors } } = useForm<BlogFormData>({
     resolver: zodResolver(blogSchema),
