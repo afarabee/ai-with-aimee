@@ -491,6 +491,48 @@ export default function ProjectEditor() {
     }
   };
 
+  const applyJsonToForm = (data: Record<string, unknown>) => {
+    const stringFields = ['project_title', 'subtitle', 'excerpt', 'github_link', 'project_page_link', 'thumbnail', 'status', 'slug'] as const;
+    stringFields.forEach((field) => {
+      if (data[field] != null) setValue(field as any, String(data[field]));
+    });
+    if (data.technologies != null) {
+      setValue('technologies', Array.isArray(data.technologies) ? data.technologies.join(', ') : String(data.technologies));
+    }
+    if (data.display_order != null) {
+      setValue('display_order', Number(data.display_order));
+    }
+    if (data.date_published != null) {
+      const d = new Date(String(data.date_published));
+      if (!isNaN(d.getTime())) setValue('date_published', d.toISOString().split('T')[0]);
+    }
+    if (data.body != null) {
+      setBody(String(data.body));
+      setValue('body', String(data.body));
+    }
+    setJsonImportModalOpen(false);
+    setJsonText('');
+    setJsonError('');
+    toast.success('Project fields populated from JSON. Review and save when ready.');
+  };
+
+  const handleJsonImport = () => {
+    try {
+      const parsed = JSON.parse(jsonText);
+      if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+        setJsonError('Invalid JSON. Expected an object, not an array or primitive.');
+        return;
+      }
+      if (isDirty) {
+        setConfirmOverwriteOpen(true);
+      } else {
+        applyJsonToForm(parsed);
+      }
+    } catch {
+      setJsonError('Invalid JSON. Please check your formatting and try again.');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {!isFullScreen && (
