@@ -89,6 +89,10 @@ export default function ProjectEditor() {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [cursorImageModalOpen, setCursorImageModalOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState(0);
+  const [jsonImportModalOpen, setJsonImportModalOpen] = useState(false);
+  const [jsonText, setJsonText] = useState('');
+  const [jsonError, setJsonError] = useState('');
+  const [confirmOverwriteOpen, setConfirmOverwriteOpen] = useState(false);
 
   const { register, handleSubmit, setValue, watch, getValues, reset, formState: { errors } } = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
