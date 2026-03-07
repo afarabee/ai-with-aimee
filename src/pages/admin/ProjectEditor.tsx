@@ -603,6 +603,29 @@ export default function ProjectEditor() {
       <AlertDialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Archive Project</AlertDialogTitle><AlertDialogDescription>This will archive the project and hide it from public view. You can restore it later by changing its status back to Active.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={archiveProject} className="bg-amber-500 hover:bg-amber-600">Archive</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
       <AlertDialog open={clearDialogOpen} onOpenChange={setClearDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Clear Form</AlertDialogTitle><AlertDialogDescription>All unsaved changes will be lost.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={handleClearForm}>Clear</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
       <AlertDialog open={showNavigateAwayDialog} onOpenChange={(open) => { setShowNavigateAwayDialog(open); if (!open) navGuard.setPendingNavigation(null); }}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Unsaved Changes</AlertDialogTitle><AlertDialogDescription>You have unsaved changes. What would you like to do?</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter className="flex-col sm:flex-row gap-2"><AlertDialogCancel onClick={() => navGuard.setPendingNavigation(null)}>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => { const target = navGuard.pendingNavigation; navGuard.setPendingNavigation(null); if (target) navigate(target); }} className="bg-destructive hover:bg-destructive/90">Exit Without Saving</AlertDialogAction><AlertDialogAction onClick={async () => { await saveDraft(); const target = navGuard.pendingNavigation; navGuard.setPendingNavigation(null); if (target) navigate(target); }}>Save Changes</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
+      <Dialog open={jsonImportModalOpen} onOpenChange={setJsonImportModalOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader><DialogTitle>Import from JSON</DialogTitle></DialogHeader>
+          <div className="space-y-3">
+            <Textarea value={jsonText} onChange={(e) => { setJsonText(e.target.value); setJsonError(''); }} placeholder="Paste your project JSON here" className="min-h-[200px] font-mono text-sm" />
+            <p className="text-xs text-muted-foreground">Paste a JSON object with any of these fields: project_title, subtitle, technologies, github_link, project_page_link, status, thumbnail, display_order, body, date_published, slug, excerpt</p>
+            {jsonError && <p className="text-sm text-destructive">{jsonError}</p>}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setJsonImportModalOpen(false)}>Cancel</Button>
+            <Button onClick={handleJsonImport}>Import</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <AlertDialog open={confirmOverwriteOpen} onOpenChange={setConfirmOverwriteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader><AlertDialogTitle>Replace Form Values?</AlertDialogTitle><AlertDialogDescription>This will replace the current form values. Continue?</AlertDialogDescription></AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { setConfirmOverwriteOpen(false); try { applyJsonToForm(JSON.parse(jsonText)); } catch {} }}>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
