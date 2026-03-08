@@ -79,22 +79,6 @@ const Navigation = () => {
               Projects
             </NavLink>
             <NavLink 
-              to="/model-map"
-              className={navLinkClass}
-              style={({ isActive }) => navLinkStyle(isActive)}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.textShadow = '0 0 10px hsl(180 100% 56% / 0.8)';
-              }}
-              onMouseLeave={(e) => {
-                const isActive = e.currentTarget.classList.contains('active');
-                e.currentTarget.style.textShadow = isActive 
-                  ? '0 0 8px hsl(320 95% 50% / 0.8)' 
-                  : '';
-              }}
-            >
-              Benchmarks
-            </NavLink>
-            <NavLink 
               to="/blog"
               className={navLinkClass}
               style={({ isActive }) => navLinkStyle(isActive)}
@@ -109,6 +93,22 @@ const Navigation = () => {
               }}
             >
               Blog
+            </NavLink>
+            <NavLink 
+              to="/model-map"
+              className={navLinkClass}
+              style={({ isActive }) => navLinkStyle(isActive)}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.textShadow = '0 0 10px hsl(180 100% 56% / 0.8)';
+              }}
+              onMouseLeave={(e) => {
+                const isActive = e.currentTarget.classList.contains('active');
+                e.currentTarget.style.textShadow = isActive 
+                  ? '0 0 8px hsl(320 95% 50% / 0.8)' 
+                  : '';
+              }}
+            >
+              Benchmarks
             </NavLink>
             <a 
               href="/#contact"
@@ -169,20 +169,20 @@ const Navigation = () => {
               Projects
             </NavLink>
             <NavLink 
-              to="/model-map"
-              onClick={() => setMobileMenuOpen(false)}
-              className={({ isActive }) => `block py-2 nav-link w-full text-left ${isActive ? 'border-l-2' : ''}`}
-              style={({ isActive }) => navLinkStyle(isActive)}
-            >
-              Benchmarks
-            </NavLink>
-            <NavLink 
               to="/blog"
               onClick={() => setMobileMenuOpen(false)}
               className={({ isActive }) => `block py-2 nav-link w-full text-left ${isActive ? 'border-l-2' : ''}`}
               style={({ isActive }) => navLinkStyle(isActive)}
             >
               Blog
+            </NavLink>
+            <NavLink 
+              to="/model-map"
+              onClick={() => setMobileMenuOpen(false)}
+              className={({ isActive }) => `block py-2 nav-link w-full text-left ${isActive ? 'border-l-2' : ''}`}
+              style={({ isActive }) => navLinkStyle(isActive)}
+            >
+              Benchmarks
             </NavLink>
             <a 
               href="/#contact"
