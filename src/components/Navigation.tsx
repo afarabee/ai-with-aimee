@@ -169,20 +169,20 @@ const Navigation = () => {
               Projects
             </NavLink>
             <NavLink 
-              to="/model-map"
-              onClick={() => setMobileMenuOpen(false)}
-              className={({ isActive }) => `block py-2 nav-link w-full text-left ${isActive ? 'border-l-2' : ''}`}
-              style={({ isActive }) => navLinkStyle(isActive)}
-            >
-              Benchmarks
-            </NavLink>
-            <NavLink 
               to="/blog"
               onClick={() => setMobileMenuOpen(false)}
               className={({ isActive }) => `block py-2 nav-link w-full text-left ${isActive ? 'border-l-2' : ''}`}
               style={({ isActive }) => navLinkStyle(isActive)}
             >
               Blog
+            </NavLink>
+            <NavLink 
+              to="/model-map"
+              onClick={() => setMobileMenuOpen(false)}
+              className={({ isActive }) => `block py-2 nav-link w-full text-left ${isActive ? 'border-l-2' : ''}`}
+              style={({ isActive }) => navLinkStyle(isActive)}
+            >
+              Benchmarks
             </NavLink>
             <a 
               href="/#contact"
