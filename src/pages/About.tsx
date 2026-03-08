@@ -54,7 +54,7 @@ const About = () => {
                   <img key="headshot-v3" alt="Aimee Farabee - AI Strategist and Product Director" className="w-full h-full object-cover" style={{
                   objectPosition: '50% 20%',
                   transform: 'scale(1.15)'
-                }} src={aimeeHeadshot} />
+                }} src="/lovable-uploads/9fb93f8c-2a29-4ee6-88ea-e3ecaa0caa29.png" />
                 </div>
                 {/* Reflection effect */}
                 <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-3/4 h-10 rounded-full blur-2xl opacity-30" style={{
