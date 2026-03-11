@@ -242,8 +242,8 @@ export default function WhyAimee() {
         <div className="absolute inset-0 bg-gradient-to-b from-cyan-900/10 via-transparent to-transparent" />
         <div className="relative max-w-3xl mx-auto px-6 pt-16 pb-12 text-center">
           <p
-            className="text-base sm:text-lg font-bold tracking-widest text-pink-400 uppercase mb-4"
-            style={{ animation: 'fadeSlideUp 0.5s ease-out 0s both', fontFamily: "'Orbitron', sans-serif" }}
+            className="text-base sm:text-lg font-bold tracking-widest uppercase mb-4"
+            style={{ animation: 'fadeSlideUp 0.5s ease-out 0s both', fontFamily: "'Orbitron', sans-serif", background: 'linear-gradient(90deg, #ff00ff, #ff69b4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
           >
             Aimee Farabee — {data.company}
           </p>
