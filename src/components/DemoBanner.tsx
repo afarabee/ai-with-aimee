@@ -81,7 +81,7 @@ const DemoBanner = () => {
             </div>
             {/* Iframe */}
             <iframe
-            src="https://intelligent-po.genai-aims.com/"
+            src="https://intelligent-po.genai-aims.com/?embed=true"
             className="w-full border-0 flex-1 min-h-0"
             title="Intelligent Story Builder Demo"
             allow="clipboard-write" />
