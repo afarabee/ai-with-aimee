@@ -10,7 +10,7 @@ const HeroSection = () => {
   const phrases = ["AI Strategist", "AI Pragmatist", "AI Catalyst"];
   useEffect(() => {
     const currentPhrase = phrases[currentPhraseIndex];
-    let timeout: NodeJS.Timeout;
+    let timeout: ReturnType<typeof setTimeout>;
     if (!isDeleting && displayText === currentPhrase) {
       timeout = setTimeout(() => setIsDeleting(true), 2000);
     } else if (isDeleting && displayText === "") {

@@ -11,7 +11,7 @@ const BlogSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [hasEntered, setHasEntered] = useState(false);
-  const rotationTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const rotationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {

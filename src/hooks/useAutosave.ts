@@ -5,7 +5,7 @@ export function useAutosave<T>(
   onSave: (data: T) => Promise<void>,
   delay: number = 30000
 ) {
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const isDirtyRef = useRef(false);
 
   useEffect(() => {
