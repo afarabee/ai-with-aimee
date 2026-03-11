@@ -60,7 +60,7 @@ const DemoBanner = () => {
         onClick={() => setIsModalOpen(false)}>
         
           <div
-          className="relative w-[90vw] h-[90vh] rounded-xl border border-border/60 bg-card overflow-hidden shadow-[0_0_60px_hsl(var(--color-cyan)/0.15)]"
+          className="relative w-[90vw] h-[90vh] rounded-xl border border-border/60 bg-card overflow-hidden shadow-[0_0_60px_hsl(var(--color-cyan)/0.15)] flex flex-col"
           onClick={(e) => e.stopPropagation()}>
           
             {/* Modal Header */}
@@ -82,8 +82,7 @@ const DemoBanner = () => {
             {/* Iframe */}
             <iframe
             src="https://intelligent-po.genai-aims.com/"
-            className="w-full border-0"
-            style={{ height: "calc(90vh - 44px)" }}
+            className="w-full border-0 flex-1 min-h-0"
             title="Intelligent Story Builder Demo"
             allow="clipboard-write" />
           
