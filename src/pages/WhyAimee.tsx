@@ -279,12 +279,7 @@ export default function WhyAimee() {
         <section className="max-w-3xl mx-auto px-6 py-10">
           <h2
             className="text-center text-xl font-black tracking-wide uppercase mb-8"
-            style={{
-              fontFamily: "'Orbitron', sans-serif",
-              background: 'linear-gradient(90deg, #ff00ff, #ff69b4)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}
+            style={{ fontFamily: "'Orbitron', sans-serif", color: '#ff00ff' }}
           >
             Proven Impact
           </h2>
