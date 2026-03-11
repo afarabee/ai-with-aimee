@@ -245,7 +245,7 @@ export default function WhyAimee() {
             className="text-base sm:text-lg font-bold tracking-widest text-pink-400 uppercase mb-4"
             style={{ animation: 'fadeSlideUp 0.5s ease-out 0s both', fontFamily: "'Orbitron', sans-serif" }}
           >
-            Aimee Farabee — Why Me for {data.company}
+            Aimee Farabee — {data.company}
           </p>
           <div
             className="inline-block rounded-xl px-5 py-2.5 text-sm font-semibold text-slate-900 bg-gradient-to-r from-cyan-400 to-emerald-400 neon-border mb-5"

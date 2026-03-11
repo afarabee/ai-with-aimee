@@ -120,7 +120,7 @@ serve(async (req: Request) => {
       });
 
       if (page) {
-        return respond(buildHTML(`Why Aimee for ${page.company}`, page.hero_subtext || `${page.role} at ${page.company}`, DEFAULT_IMAGE, `${SITE_URL}/why-aimee/${page.slug}`));
+        return respond(buildHTML(`Aimee Farabee — ${page.company}`, page.hero_subtext || `${page.role} at ${page.company}`, DEFAULT_IMAGE, `${SITE_URL}/why-aimee/${page.slug}`));
       }
     }
 
