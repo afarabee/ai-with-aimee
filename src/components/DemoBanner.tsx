@@ -10,7 +10,7 @@ const DemoBanner = () => {
     } else {
       document.body.style.overflow = "";
     }
-    return () => { document.body.style.overflow = ""; };
+    return () => {document.body.style.overflow = "";};
   }, [isModalOpen]);
 
   return (
@@ -34,7 +34,7 @@ const DemoBanner = () => {
                 <h2 className="neon-text-cyan font-rajdhani font-bold text-3xl md:text-4xl mb-3">
                   See AI in Action
                 </h2>
-                <p className="text-lg text-pink-400/90 font-medium mb-4">
+                <p className="text-lg font-medium mb-4 text-secondary">
                   Don't just read about what I build—experience it yourself.
                 </p>
                 <p className="text-base text-gray-300 mb-8 max-w-2xl">
@@ -42,8 +42,8 @@ const DemoBanner = () => {
                 </p>
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="btn-hero px-8 py-4 text-base font-montserrat inline-flex items-center gap-2"
-                >
+                  className="btn-hero px-8 py-4 text-base font-montserrat inline-flex items-center gap-2">
+                  
                   <Rocket className="w-5 h-5" />
                   <span>Launch Interactive Demo →</span>
                 </button>
@@ -54,15 +54,15 @@ const DemoBanner = () => {
       </section>
 
       {/* Story Builder Modal */}
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-          onClick={() => setIsModalOpen(false)}
-        >
+      {isModalOpen &&
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+        onClick={() => setIsModalOpen(false)}>
+        
           <div
-            className="relative w-[90vw] h-[90vh] rounded-xl border border-border/60 bg-card overflow-hidden shadow-[0_0_60px_hsl(var(--color-cyan)/0.15)]"
-            onClick={(e) => e.stopPropagation()}
-          >
+          className="relative w-[90vw] h-[90vh] rounded-xl border border-border/60 bg-card overflow-hidden shadow-[0_0_60px_hsl(var(--color-cyan)/0.15)]"
+          onClick={(e) => e.stopPropagation()}>
+          
             {/* Modal Header */}
             <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/40 bg-card/80">
               <span className="font-mono text-sm text-muted-foreground flex items-center gap-2">
@@ -73,25 +73,25 @@ const DemoBanner = () => {
                 Intelligent Story Builder
               </span>
               <button
-                onClick={() => setIsModalOpen(false)}
-                className="rounded-sm p-1 text-muted-foreground hover:text-foreground transition-colors"
-              >
+              onClick={() => setIsModalOpen(false)}
+              className="rounded-sm p-1 text-muted-foreground hover:text-foreground transition-colors">
+              
                 <X className="w-5 h-5" />
               </button>
             </div>
             {/* Iframe */}
             <iframe
-              src="https://intelligent-story-builder.lovable.app/"
-              className="w-full border-0"
-              style={{ height: "calc(90vh - 44px)" }}
-              title="Intelligent Story Builder Demo"
-              allow="clipboard-write"
-            />
+            src="https://intelligent-story-builder.lovable.app/"
+            className="w-full border-0"
+            style={{ height: "calc(90vh - 44px)" }}
+            title="Intelligent Story Builder Demo"
+            allow="clipboard-write" />
+          
           </div>
         </div>
-      )}
-    </>
-  );
+      }
+    </>);
+
 };
 
 export default DemoBanner;
