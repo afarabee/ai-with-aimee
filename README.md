@@ -21,6 +21,11 @@ Senior Director-level Healthcare Product Leader & AI Strategist with 15+ years o
 | `/blog/:slug` | Individual blog post |
 | `/model-map` | AI model benchmarks visualization |
 | `/resume` | Downloadable resume page |
+| `/why-aimee/:slug` | Personalized pitch pages (unlisted) |
+
+### Interactive Demo
+
+The homepage features an embedded interactive demo powered by [intelligent-po.genai-aims.com](https://intelligent-po.genai-aims.com/), launched via the "Launch Interactive Demo" banner.
 
 ## Admin CMS
 
@@ -37,6 +42,7 @@ All admin routes live under `/admin` and are protected by a session-based passwo
 - **Models & Tools** — Track AI models and tools for benchmarking
 - **Test Lab** — Run and score prompt tests across models and tools
 - **Model Map** — AI-generated benchmark insights and comparisons
+- **Why Aimee** — Create and manage personalized pitch pages for target companies
 
 ## Tech Stack
 
@@ -86,6 +92,7 @@ All admin routes live under `/admin` and are protected by a session-based passwo
 | `model_map_insights` | AI-generated benchmark comparisons |
 | `newsletter_queue` | Newsletter drafts and scheduling |
 | `user_roles` | Admin role assignments |
+| `why_aimee` | Personalized pitch page content and metadata |
 
 ## Project Structure
 
