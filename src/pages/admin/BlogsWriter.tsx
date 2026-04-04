@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,9 +7,9 @@ import MDEditor, { commands, ICommand } from '@uiw/react-md-editor';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { slugify } from '@/utils/slugify';
-import { applySpanStyle, applyDivStyle } from '@/utils/editorStyleUtils';
+// editorStyleUtils removed — toolbar now produces clean markdown only
 import { handleListKeyDown } from '@/utils/editorListUtils';
-import { ArrowLeft, Eye, Image, Save, Trash2, AlignLeft, AlignCenter, AlignRight, AlignJustify, Smile, Palette, Underline, RotateCcw, Maximize2, Minimize2, RemoveFormatting, Minus, Type, FileUp } from 'lucide-react';
+import { ArrowLeft, Eye, Image, Save, Trash2, Smile, Underline, Maximize2, Minimize2, RemoveFormatting, Minus, FileUp } from 'lucide-react';
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import PasswordGate from '@/components/admin/PasswordGate';
 import AboutBackground from '@/components/AboutBackground';
@@ -43,31 +43,7 @@ const blogSchema = z.object({
 
 type BlogFormData = z.infer<typeof blogSchema>;
 
-// Custom commands using style merging utilities
-const fontSizeSmall: ICommand = { name: 'fontSizeSmall', keyCommand: 'fontSizeSmall', buttonProps: { 'aria-label': 'Small text', title: 'Small text' }, icon: <span style={{ fontSize: '12px', fontWeight: 'bold' }}>S</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'font-size: 14px')) };
-const fontSizeNormal: ICommand = { name: 'fontSizeNormal', keyCommand: 'fontSizeNormal', buttonProps: { 'aria-label': 'Normal text', title: 'Normal text' }, icon: <span style={{ fontSize: '14px', fontWeight: 'bold' }}>M</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'font-size: 16px')) };
-const fontSizeLarge: ICommand = { name: 'fontSizeLarge', keyCommand: 'fontSizeLarge', buttonProps: { 'aria-label': 'Large text', title: 'Large text' }, icon: <span style={{ fontSize: '16px', fontWeight: 'bold' }}>L</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'font-size: 20px')) };
-const fontSizeXL: ICommand = { name: 'fontSizeXL', keyCommand: 'fontSizeXL', buttonProps: { 'aria-label': 'XL text', title: 'Extra large text' }, icon: <span style={{ fontSize: '18px', fontWeight: 'bold' }}>XL</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'font-size: 24px')) };
-const colorBlack: ICommand = { name: 'colorBlack', keyCommand: 'colorBlack', buttonProps: { 'aria-label': 'Black text', title: 'Black text' }, icon: <span style={{ color: '#000000', fontWeight: 'bold' }}>A</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'color: #000000')) };
-const colorCyan: ICommand = { name: 'colorCyan', keyCommand: 'colorCyan', buttonProps: { 'aria-label': 'Cyan text (brand)', title: 'Cyan text (brand)' }, icon: <span style={{ color: '#00D4FF', fontWeight: 'bold' }}>A</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'color: #00D4FF')) };
-const colorPink: ICommand = { name: 'colorPink', keyCommand: 'colorPink', buttonProps: { 'aria-label': 'Pink text (brand)', title: 'Pink text (brand)' }, icon: <span style={{ color: '#FF0080', fontWeight: 'bold' }}>A</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'color: #FF0080')) };
-const colorGray: ICommand = { name: 'colorGray', keyCommand: 'colorGray', buttonProps: { 'aria-label': 'Gray text (muted)', title: 'Gray text (muted)' }, icon: <span style={{ color: '#6B7280', fontWeight: 'bold' }}>A</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'color: #6B7280')) };
-const colorRed: ICommand = { name: 'colorRed', keyCommand: 'colorRed', buttonProps: { 'aria-label': 'Red text (emphasis)', title: 'Red text (emphasis)' }, icon: <span style={{ color: '#EF4444', fontWeight: 'bold' }}>A</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'color: #EF4444')) };
-const colorGreen: ICommand = { name: 'colorGreen', keyCommand: 'colorGreen', buttonProps: { 'aria-label': 'Green text (success)', title: 'Green text (success)' }, icon: <span style={{ color: '#10B981', fontWeight: 'bold' }}>A</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'color: #10B981')) };
-const colorYellow: ICommand = { name: 'colorYellow', keyCommand: 'colorYellow', buttonProps: { 'aria-label': 'Yellow text (accent)', title: 'Yellow text (accent)' }, icon: <span style={{ color: '#f9f940', fontWeight: 'bold' }}>A</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'color: #f9f940')) };
-const colorBlue: ICommand = { name: 'colorBlue', keyCommand: 'colorBlue', buttonProps: { 'aria-label': 'Blue text (info)', title: 'Blue text (info)' }, icon: <span style={{ color: '#3B82F6', fontWeight: 'bold' }}>A</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'color: #3B82F6')) };
-const alignLeft: ICommand = { name: 'alignLeft', keyCommand: 'alignLeft', buttonProps: { 'aria-label': 'Align left', title: 'Align left' }, icon: <AlignLeft size={14} />, execute: (state, api) => api.replaceSelection(applyDivStyle(state.selectedText, 'text-align: left')) };
-const alignCenter: ICommand = { name: 'alignCenter', keyCommand: 'alignCenter', buttonProps: { 'aria-label': 'Align center', title: 'Align center' }, icon: <AlignCenter size={14} />, execute: (state, api) => api.replaceSelection(applyDivStyle(state.selectedText, 'text-align: center')) };
-const alignRight: ICommand = { name: 'alignRight', keyCommand: 'alignRight', buttonProps: { 'aria-label': 'Align right', title: 'Align right' }, icon: <AlignRight size={14} />, execute: (state, api) => api.replaceSelection(applyDivStyle(state.selectedText, 'text-align: right')) };
-const alignJustify: ICommand = { name: 'alignJustify', keyCommand: 'alignJustify', buttonProps: { 'aria-label': 'Justify', title: 'Justify text' }, icon: <AlignJustify size={14} />, execute: (state, api) => api.replaceSelection(applyDivStyle(state.selectedText, 'text-align: justify')) };
 const underline: ICommand = { name: 'underline', keyCommand: 'underline', buttonProps: { 'aria-label': 'Underline text', title: 'Underline text' }, icon: <Underline size={14} />, execute: (state, api) => api.replaceSelection(`<u>${state.selectedText || 'text'}</u>`) };
-const fontDefault: ICommand = { name: 'fontDefault', keyCommand: 'fontDefault', buttonProps: { 'aria-label': 'Default font', title: 'Default font' }, icon: <span style={{ fontWeight: 'bold' }}>Aa</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, 'font-family: inherit')) };
-const fontCode: ICommand = { name: 'fontCode', keyCommand: 'fontCode', buttonProps: { 'aria-label': 'Code font', title: 'Code font (monospace)' }, icon: <span style={{ fontFamily: "'Fira Code', monospace", fontSize: '12px' }}>Aa</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, "font-family: 'Fira Code', monospace")) };
-const fontHandwritten: ICommand = { name: 'fontHandwritten', keyCommand: 'fontHandwritten', buttonProps: { 'aria-label': 'Handwritten font', title: 'Handwritten font' }, icon: <span style={{ fontFamily: "'Caveat', cursive", fontSize: '14px' }}>Aa</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, "font-family: 'Caveat', cursive")) };
-const fontScript: ICommand = { name: 'fontScript', keyCommand: 'fontScript', buttonProps: { 'aria-label': 'Script font', title: 'Script font (elegant)' }, icon: <span style={{ fontFamily: "'Dancing Script', cursive", fontSize: '14px' }}>Aa</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, "font-family: 'Dancing Script', cursive")) };
-const fontSerif: ICommand = { name: 'fontSerif', keyCommand: 'fontSerif', buttonProps: { 'aria-label': 'Serif font', title: 'Serif font (classic)' }, icon: <span style={{ fontFamily: "'Playfair Display', serif", fontSize: '12px' }}>Aa</span>, execute: (state, api) => api.replaceSelection(applySpanStyle(state.selectedText, "font-family: 'Playfair Display', serif")) };
-// clearFormatting is defined inside the component to work reliably with the editor selection
-// Heading commands are defined inside the component to work reliably with the editor selection
 
 
 export default function BlogsWriter() {
@@ -93,6 +69,7 @@ export default function BlogsWriter() {
   const [jsonError, setJsonError] = useState('');
   const [confirmOverwriteOpen, setConfirmOverwriteOpen] = useState(false);
   const [pendingJsonData, setPendingJsonData] = useState<Record<string, any> | null>(null);
+  const jsonFileInputRef = useRef<HTMLInputElement>(null);
 
   const { register, handleSubmit, setValue, watch, reset, getValues, formState: { errors } } = useForm<BlogFormData>({
     resolver: zodResolver(blogSchema),
@@ -289,6 +266,31 @@ export default function BlogsWriter() {
     }
   };
 
+  const handleJsonFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const parsed = JSON.parse(event.target?.result as string);
+        if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+          toast.error('Invalid JSON file. Expected an object, not an array.');
+          return;
+        }
+        if (isDirty) {
+          setPendingJsonData(parsed);
+          setConfirmOverwriteOpen(true);
+        } else {
+          applyJsonToForm(parsed);
+        }
+      } catch {
+        toast.error('Invalid JSON file. Please check the file and try again.');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
   const emojiCommand: ICommand = { 
     name: 'emoji', 
     keyCommand: 'emoji', 
@@ -312,11 +314,6 @@ export default function BlogsWriter() {
     execute: () => {} 
   };
   
-  const fontSizeGroup = commands.group([fontSizeSmall, fontSizeNormal, fontSizeLarge, fontSizeXL], { name: 'fontSize', groupName: 'fontSize', buttonProps: { 'aria-label': 'Font size', title: 'Font size' }, icon: <span style={{ fontSize: '14px', fontWeight: 'bold' }}>A</span> });
-  const textColorGroup = commands.group([colorBlack, colorCyan, colorPink, colorGray, colorRed, colorGreen, colorYellow, colorBlue], { name: 'textColor', groupName: 'textColor', buttonProps: { 'aria-label': 'Text color', title: 'Text color' }, icon: <Palette size={14} /> });
-  const textAlignGroup = commands.group([alignLeft, alignCenter, alignRight, alignJustify], { name: 'textAlign', groupName: 'textAlign', buttonProps: { 'aria-label': 'Text alignment', title: 'Text alignment' }, icon: <AlignLeft size={14} /> });
-  const fontFamilyGroup = commands.group([fontDefault, fontCode, fontHandwritten, fontScript, fontSerif], { name: 'fontFamily', groupName: 'fontFamily', buttonProps: { 'aria-label': 'Font family', title: 'Font family' }, icon: <Type size={14} /> });
-
   const clearFormatting: ICommand = {
     name: 'clearFormatting',
     keyCommand: 'clearFormatting',
@@ -489,15 +486,9 @@ export default function BlogsWriter() {
     heading3Command,
     heading4Command,
     commands.divider,
-    fontSizeGroup,
-    textColorGroup,
-    textAlignGroup,
-    clearFormatting,
-    commands.divider,
     commands.link,
     commands.quote,
     commands.code,
-    fontFamilyGroup,
     commands.divider,
     commands.unorderedListCommand,
     commands.orderedListCommand,
@@ -507,7 +498,26 @@ export default function BlogsWriter() {
     insertImageCommand,
     commands.divider,
     emojiCommand,
+    clearFormatting,
   ];
+
+  const cleanAllHtml = () => {
+    const spanDivRegex = /<(span|div)\s+style="[^"]*">([\s\S]*?)<\/\1>/g;
+    let cleaned = body;
+    let count = 0;
+    let prev = '';
+    while (prev !== cleaned) {
+      prev = cleaned;
+      cleaned = cleaned.replace(spanDivRegex, (_, _tag, content) => { count++; return content; });
+    }
+    if (count === 0) {
+      toast.info('No HTML formatting found to clean');
+      return;
+    }
+    setBody(cleaned);
+    setValue('body', cleaned);
+    toast.success(`Removed ${count} HTML formatting tag${count > 1 ? 's' : ''}. Review and save.`);
+  };
 
   const previewData = useMemo(() => ({ title: formData.title || 'Untitled', subtitle: formData.subtitle || '', author: formData.author || 'Aimee Farabee', body, banner_image: formData.banner_image, excerpt: formData.excerpt || '', date_published: new Date(formData.date_published || new Date().toISOString()) }), [formData, body]);
 
@@ -527,7 +537,7 @@ export default function BlogsWriter() {
       <AboutBackground />
       <div className="min-h-screen bg-background w-full">
       {!isFullScreen && (
-        <div className="border-b border-border bg-card"><div className="max-w-[1800px] mx-auto px-6 py-4"><div className="flex items-center justify-between"><div className="flex items-center gap-4"><Button variant="ghost" size="sm" onClick={handleBackClick}><ArrowLeft className="w-4 h-4 mr-2" />Back</Button><h1 className="text-2xl font-bold">{blogId ? 'Edit Blog' : 'New Blog'}</h1></div><div className="flex gap-2"><Button variant="outline" size="sm" onClick={() => { setJsonText(''); setJsonError(''); setJsonImportModalOpen(true); }}><FileUp className="w-4 h-4 mr-2" />Import JSON</Button><Button variant={viewMode === 'edit' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('edit')}>Edit</Button><Button variant="outline" size="sm" onClick={saveDraft}><Save className="w-4 h-4 mr-2" />Save Draft</Button><Button variant={viewMode === 'split' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('split')}>Split</Button><Button variant={viewMode === 'preview' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('preview')}><Eye className="w-4 h-4 mr-2" />Preview</Button><Button variant="outline" size="sm" onClick={toggleFullScreen} title="Focus mode"><Maximize2 className="w-4 h-4" /></Button></div></div></div></div>
+        <div className="border-b border-border bg-card"><div className="max-w-[1800px] mx-auto px-6 py-4"><div className="flex items-center justify-between"><div className="flex items-center gap-4"><Button variant="ghost" size="sm" onClick={handleBackClick}><ArrowLeft className="w-4 h-4 mr-2" />Back</Button><h1 className="text-2xl font-bold">{blogId ? 'Edit Blog' : 'New Blog'}</h1></div><div className="flex gap-2"><Button variant="outline" size="sm" onClick={() => { setJsonText(''); setJsonError(''); setJsonImportModalOpen(true); }}><FileUp className="w-4 h-4 mr-2" />Import JSON</Button><Button variant="outline" size="sm" onClick={cleanAllHtml} title="Strip legacy HTML formatting from content"><RemoveFormatting className="w-4 h-4 mr-2" />Clean HTML</Button><Button variant={viewMode === 'edit' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('edit')}>Edit</Button><Button variant="outline" size="sm" onClick={saveDraft}><Save className="w-4 h-4 mr-2" />Save Draft</Button><Button variant={viewMode === 'split' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('split')}>Split</Button><Button variant={viewMode === 'preview' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('preview')}><Eye className="w-4 h-4 mr-2" />Preview</Button><Button variant="outline" size="sm" onClick={toggleFullScreen} title="Focus mode"><Maximize2 className="w-4 h-4" /></Button></div></div></div></div>
       )}
       {isFullScreen && (
         <div className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-card/95 backdrop-blur-sm">
@@ -623,11 +633,20 @@ export default function BlogsWriter() {
             <DialogTitle>Import from JSON</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
-            <Label>Paste your blog JSON here</Label>
+            <div>
+              <input type="file" accept=".json" ref={jsonFileInputRef} className="hidden" onChange={handleJsonFileUpload} />
+              <Button variant="outline" className="w-full" onClick={() => jsonFileInputRef.current?.click()}>
+                <FileUp className="w-4 h-4 mr-2" />Upload JSON File
+              </Button>
+            </div>
+            <div className="relative flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
+              <span className="relative bg-background px-2 text-xs text-muted-foreground">or paste JSON below</span>
+            </div>
             <Textarea
               value={jsonText}
               onChange={(e) => { setJsonText(e.target.value); setJsonError(''); }}
-              rows={12}
+              rows={10}
               placeholder='{ "title": "My Blog", "body": "..." }'
               className="font-mono text-sm"
             />
