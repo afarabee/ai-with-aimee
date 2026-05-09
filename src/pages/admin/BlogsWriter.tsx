@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { slugify } from '@/utils/slugify';
 // editorStyleUtils removed — toolbar now produces clean markdown only
 import { handleListKeyDown } from '@/utils/editorListUtils';
-import { ArrowLeft, Eye, Image, Save, Trash2, Smile, Underline, Maximize2, Minimize2, RemoveFormatting, Minus, FileUp } from 'lucide-react';
+import { ArrowLeft, Eye, Image, Save, Trash2, Smile, Underline, Maximize2, Minimize2, RemoveFormatting, Minus, FileUp, RotateCcw } from 'lucide-react';
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import PasswordGate from '@/components/admin/PasswordGate';
 import AboutBackground from '@/components/AboutBackground';

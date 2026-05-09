@@ -76,15 +76,15 @@ const AboutSection = () => {
                 </p>
                 
                 <p>
-                  For more than 15 years, I've lived inside the machinery of large, complex enterprises, including Express Scripts, Cigna, American Express, and now Charles River Laboratories.
+                  For more than 16 years, I worked inside the machinery of large, complex enterprises, including Express Scripts, Cigna, and American Express. I learned how regulated industries operate, how governance gets built, and how AI can scale responsibly across thousands of users. But over time, I realized the bigger the machine, the harder it is to actually build. Decisions get diluted. Roadmaps get stomped on. The distance between an idea and a shipped product keeps growing. I wanted to be closer to the work and closer to the people it serves.
                 </p>
                 
                 <p>
-                  I've built my career at the intersection of technology, business, and human needs. My work is guided by a belief that great products do more than deliver features; they solve meaningful problems in smart, scalable ways.
+                  That's what brought me to Empower Community Care, where I'm Director of Product Management leading the buildout of an AI-powered platform from scratch. Empower's network of agencies delivers evidence-based therapy to at-risk youth and families across 2,000+ communities. The platform we're building will replace the legacy Word, email, and SharePoint workflows clinicians rely on today.
                 </p>
                 
                 <p>
-                  My recent focus has been leading the charge on early enterprise AI adoption and pioneering the strategic rollout of generative AI solutions at Charles River. To continually lead these complex, cross-functional initiatives, I secured an Applied Generative AI Specialization, deepening my hands-on expertise in AI theory, productization, and governance, guaranteeing the safe and valuable integration of new platform capabilities.
+                  My work is guided by a belief that great products do more than deliver features, they solve meaningful problems in smart, scalable ways. At Empower, that means designing a multi-tenant platform that protects some of the most sensitive data in healthcare while giving frontline practitioners tools that actually feel like help.
                 </p>
                 
                 <p>
