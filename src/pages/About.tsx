@@ -76,6 +76,8 @@ const About = () => {
               </p>
               
               <p>That's what brought me to Empower Community Care, where I'm Director of Product Management leading the buildout of an AI-powered platform from scratch. Empower's network of agencies delivers evidence-based therapy to at-risk youth and families across 2,000+ communities. The platform we're building will replace the legacy Word, email, and SharePoint workflows clinicians rely on today.</p>
+
+              <p>My work is guided by a belief that great products do more than deliver features, they solve meaningful problems in smart, scalable ways. At Empower, that means designing a multi-tenant platform that protects some of the most sensitive data in healthcare while giving frontline practitioners tools that actually feel like help.</p>
               
               <p>
                 I believe AI should not feel mysterious or intimidating. It should feel usable. It should feel safe. It should feel like a capability that lifts people up, not something that replaces them.
