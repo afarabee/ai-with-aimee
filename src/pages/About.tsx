@@ -72,7 +72,11 @@ const About = () => {
               <p>I'm Aimee Farabee, a Product Director turned AI enablement nerd and active AI builder. I turn messy, ambiguous problems into governed, scalable, genuinely human solutions.</p>
               
               <p>
-                For more than 15 years, I've lived inside the machinery of large, complex enterprises, including Express Scripts, Cigna, American Express, and Charles River Laboratories. I learned how regulated industries operate, how governance gets built, and how AI can scale responsibly across thousands of users. But over time I realized the bigger the machine, the harder it is to actually build. Decisions get diluted. Roadmaps get stomped on. The distance between an idea and a shipped product keeps growing. I wanted to be closer to the work and closer to the people it serves.
+                For more than 15 years, I've lived inside the machinery of large, complex enterprises, including Express Scripts, Cigna, American Express, and Charles River Laboratories. I learned how regulated industries operate, how governance gets built, and how AI can scale responsibly across thousands of users.
+              </p>
+
+              <p>
+                But over time I realized the bigger the machine, the harder it is to actually build. Decisions get diluted. Roadmaps get stomped on. The distance between an idea and a shipped product keeps growing. I wanted to be closer to the work and closer to the people it serves.
               </p>
               
               <p>That's what brought me to Empower Community Care, where I'm Director of Product Management leading the buildout of an AI-powered platform from scratch. Empower's network of agencies delivers evidence-based therapy to at-risk youth and families across 2,000+ communities. The platform we're building will replace the legacy Word, email, and SharePoint workflows clinicians rely on today.</p>
