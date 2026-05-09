@@ -1,9 +1,30 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.75.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+async function requireAdmin(req: Request) {
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader?.startsWith('Bearer ')) return null;
+  const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+  const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+  const userClient = createClient(supabaseUrl, anonKey, {
+    global: { headers: { Authorization: authHeader } },
+  });
+  const token = authHeader.replace('Bearer ', '');
+  const { data, error } = await userClient.auth.getClaims(token);
+  if (error || !data?.claims) return null;
+  const { data: role } = await userClient
+    .from('user_roles')
+    .select('role')
+    .eq('user_id', data.claims.sub)
+    .eq('role', 'admin')
+    .maybeSingle();
+  return role ? data.claims.sub : null;
+}
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -12,7 +33,26 @@ serve(async (req) => {
   }
 
   try {
+    const adminId = await requireAdmin(req);
+    if (!adminId) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const { imageUrl, prompt } = await req.json();
+
+    // Validate imageUrl is a data URL or from our own Supabase storage (prevent SSRF)
+    const supabaseUrlEnv = Deno.env.get('SUPABASE_URL')!;
+    const isDataUrl = typeof imageUrl === 'string' && imageUrl.startsWith('data:image/');
+    const isOwnStorage = typeof imageUrl === 'string' && imageUrl.startsWith(supabaseUrlEnv);
+    if (!isDataUrl && !isOwnStorage) {
+      return new Response(JSON.stringify({ error: 'Invalid imageUrl' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
     
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
