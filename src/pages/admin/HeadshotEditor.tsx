@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Download, RefreshCw } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import aimeeHeadshotOriginal from '@/assets/aimee-headshot-new.png';
+import { getAuthHeader } from '@/lib/authHeader';
 
 const HeadshotEditor = () => {
   const [isProcessing, setIsProcessing] = useState(false);
