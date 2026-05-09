@@ -1,3 +1,4 @@
+import { getAuthHeader } from '@/lib/authHeader';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Upload } from 'lucide-react';
@@ -68,7 +69,7 @@ export default function ImageUploadHelper({ onBannerInsert, onBodyInsert }: Imag
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload-blog-image`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          ...(await getAuthHeader()),
         },
         body: formData,
       });

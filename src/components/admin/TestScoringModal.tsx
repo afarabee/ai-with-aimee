@@ -1,3 +1,4 @@
+import { getAuthHeader } from '@/lib/authHeader';
 import { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -211,7 +212,7 @@ export default function TestScoringModal({
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+              ...(await getAuthHeader()),
             },
             body: JSON.stringify({ category: promptCategory }),
           });

@@ -1,3 +1,4 @@
+import { getAuthHeader } from '@/lib/authHeader';
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -191,7 +192,7 @@ export default function AssetGallery() {
         {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            ...(await getAuthHeader()),
           },
           body: formData,
         }
@@ -314,7 +315,7 @@ export default function AssetGallery() {
           {
             method: 'POST',
             headers: {
-              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+              ...(await getAuthHeader()),
             },
             body: formData,
           }
