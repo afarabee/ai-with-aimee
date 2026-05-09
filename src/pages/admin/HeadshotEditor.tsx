@@ -42,6 +42,7 @@ const HeadshotEditor = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(await getAuthHeader()),
         },
         body: JSON.stringify({
           imageUrl: base64Image,
